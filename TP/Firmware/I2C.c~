@@ -1,0 +1,64 @@
+#include <xc.h>
+#include "tp.h"
+#include <sys/attribs.h>
+
+void __ISR(_I2C_2_VECTOR, IPL2AUTO) I2C2Handler(void)
+{
+    //LED_ON_OFF = !LED_ON_OFF;
+    LED_ON_OFF = 1;
+    IFS1bits.I2C2MIF = 0; // Reset the flag
+}
+
+void I2C2_init(void)
+{
+    I2C2BRG = 38;
+    I2C2CONbits.DISSLW = 1;
+    I2C2CONbits.STREN = 1;
+    I2C2CONbits.RCEN = 1;
+    I2C2CONbits.ON = 1;
+}
+
+void I2C2_start(void)
+{
+    I2C2CONbits.SEN = 1;
+    //while(I2C2CONbits.SEN);
+}
+
+void I2C2_ack(void)
+{
+    I2C2CONbits.ACKDT = 0;
+    I2C2CONbits.ACKEN = 1;
+    while(I2C2CONbits.ACKEN);
+}
+
+void I2C2_nack(void)
+{
+    I2C2CONbits.ACKEN = 1;
+    while(I2C2CONbits.ACKEN);
+}
+
+void I2C2_stop(void)
+{
+    I2C2CONbits.PEN = 1;
+    while(I2C2CONbits.PEN);
+}
+
+void I2C2_write(u8 byte)
+{
+    //Load data into transmit register
+    I2C2TRN = byte;
+    while(I2C2STATbits.TRSTAT);
+}
+
+u8 I2C2_read(u8 ack)
+{
+    I2C2CONbits.RCEN = 1;
+    while(I2C2CONbits.RCEN);
+    //Reception is started, send ack/nack after read
+    if(ack == 0)
+        I2C2CONbits.ACKDT = 1;
+    else
+        I2C2_ack();
+    //Reception should be complete - pull out data
+    return(I2C2RCV);
+}

@@ -1,0 +1,9 @@
+Pouvoir faire bipper la LED au tempo desire (BPM)
+Reflechir a la meilleure maniere de stocker les infos de notes etc
+Faire un "parser" une fois cette structure definie
+
+Lister toutes les actions a faire, et leur frequence associee (ex: chaque tempo, chaque tour de bouton ...)
+Definir l'ordre de priorite des interruptions
+
+
+ALLUMAGE DES LEDS
