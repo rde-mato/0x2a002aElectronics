@@ -3,8 +3,9 @@
 #include <sys/attribs.h>
 
 extern char pattern[16][4][3];
-char qtime = 0;
-u8 twice_hz = 16;
+u8 qtime = 0;
+
+u8 twice_hz = 8;
 
 void send_qtime(void)
 {
@@ -24,8 +25,8 @@ void __ISR(_TIMER_3_VECTOR, IPL3AUTO) Timer3Handler(void)
 {
     LED_ON_OFF = !LED_ON_OFF;
 
-
-  //  led_toggle(qtime);
+    led_toggle((qtime - 1) & 0x0F);
+    led_toggle(qtime);
     qtime = (qtime + 1) & 0x0F;
     TMR2 = 0;
     IFS0bits.T3IF = 0;

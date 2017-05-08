@@ -2,8 +2,6 @@
 #include "tp.h"
 #include <sys/attribs.h>
 
-#define MAX_WRITE_BUF 10
-#define READ_BUF_SIZE 16
 
 u8 I2C2_state = E_I2C2_DONE;
 u8 I2C2_RW;
@@ -20,6 +18,15 @@ u8 read_buf_dirty;
 extern u8   ks_dirty;
 
 extern u32 buttonmatrix[16];
+
+void __ISR(_I2C_2_VECTOR, IPL4AUTO) I2C2Handler(void)
+{
+    if (I2C2_RW == I2C2_WRITE)
+        I2C2_state_machine_write();
+    else
+        I2C2_state_machine_read();
+    IFS1bits.I2C2MIF = 0; // Reset the flag
+}
 
 void I2C2_push(u8 data)
 {
@@ -56,14 +63,6 @@ void I2C2_state_machine_write(void)
     }
 }
 
-void start_read(void)
-{
-    I2C2_push(0xE0);
-    I2C2_push(0x40);
-    I2C2_read(6);
-    ks_dirty = 0;
-    read_buf_dirty = 1;
-}
 
 void I2C2_read(u8 expected_bytes)
 {
@@ -130,37 +129,3 @@ void I2C2_state_machine_read(void)
     }
 }
 
-
-void __ISR(_I2C_2_VECTOR, IPL4AUTO) I2C2Handler(void)
-{
-    if (I2C2_RW == I2C2_WRITE)
-        I2C2_state_machine_write();
-    else
-        I2C2_state_machine_read();
-    IFS1bits.I2C2MIF = 0; // Reset the flag
-}
-
-void I2C2_init(void)
-{
-    I2C2BRG = 38;
-    I2C2CONbits.DISSLW = 1;
-    I2C2CONbits.STREN = 1;
-    I2C2CONbits.RCEN = 1;
-    I2C2CONbits.ON = 1;
-}
-
-void get_new_input(u8 new[READ_BUF_SIZE]) /// ATTENTION COPIE LADRESSE PAS LE TABLEAU
-{
-    u32 ks;
-
-    ks = *((u32*)I2C2_read_buf);
-
-    u8 i;
-    for (i = 0; i < 16; i++)
-    {
-        if (buttonmatrix[i] & ks)
-            new[i] = 1;
-        else
-            new[i] = 0;
-    }
-}
