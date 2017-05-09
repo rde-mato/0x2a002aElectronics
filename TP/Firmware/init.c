@@ -6,8 +6,22 @@ extern u8   twice_hz;
 extern u8   I2C2_state;
 
 
-void I2C2_init(void)
+void I2C2_init(void) //// A GERER AVEC DES INTERRUPTS
 {
+    u8 i;
+    u32 cpt;
+    // envoi de 9 coups de clock pour reset les chips
+    F5_IO_SELECTOR = 0x0; //F5 configured for output
+    i = 0;
+    LATFbits.LATF5 = 0;
+    while (i < 18)
+    {
+        LATFbits.LATF5 = !LATFbits.LATF5;
+        ++i;
+        cpt = 0;
+        while (cpt++ < 2000);
+    }
+
     I2C2BRG = 38;
     I2C2CONbits.DISSLW = 1;
     I2C2CONbits.STREN = 1;

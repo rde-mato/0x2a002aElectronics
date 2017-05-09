@@ -21,11 +21,11 @@ extern u32 buttonmatrix[16];
 
 void __ISR(_I2C_2_VECTOR, IPL4AUTO) I2C2Handler(void)
 {
+    IFS1bits.I2C2MIF = 0; // Reset the flag
     if (I2C2_RW == I2C2_WRITE)
         I2C2_state_machine_write();
     else
         I2C2_state_machine_read();
-    IFS1bits.I2C2MIF = 0; // Reset the flag
 }
 
 void I2C2_push(u8 data)
@@ -100,6 +100,7 @@ void I2C2_state_machine_read(void)
                 I2C2CONbits.ACKEN = 1;
                 I2C2_state = E_I2C2_START_READING_BYTE;
             }
+            break;          ///
         case E_I2C2_START_READING_BYTE:
             if (I2C2_read_buf_index < I2C2_read_buf_expected - 1)
             {
