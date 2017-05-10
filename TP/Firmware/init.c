@@ -2,8 +2,8 @@
 #include "tp.h"
 
 extern char pattern[16][4][3];
-extern u8   twice_hz;
 extern u8   I2C2_state;
+extern u32   bpm;
 
 
 void I2C2_init(void) //// A GERER AVEC DES INTERRUPTS
@@ -63,7 +63,7 @@ void HT16_init(void)
     while (!(I2C2_state == E_I2C2_DONE))
         WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 
-    read_key_scan();
+    get_current_key_scan();
     while (!(I2C2_state == E_I2C2_DONE))
         WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
     
@@ -108,20 +108,37 @@ void INT_init(void)
     IPC3bits.T3IP = 3;
     IEC0bits.T3IE = 1;
 
+    // TIMER 4-5 INTERRUPT
+    IFS0bits.T5IF = 0;
+    IPC5bits.T5IP = 4;
+    // l'interruption est activee uniquement en cas de poll
+
     //I2C2 INTERRUPT
     IFS1bits.I2C2MIF = 0; // reset flag
     IPC8bits.I2C2IP = 4; // au pif
     IEC1bits.I2C2MIE = 1;
+
+    //SOFTWARE INTERRUPT
+    IFS0bits.CS0IF = 0;
+    IPC0bits.CS0IP = 2; // a revoir
+    IEC0bits.CS0IE = 1;
 
     __builtin_enable_interrupts();
 }
 
 void TIMER_init(void)
 {
+    // timer 2-3 used for bpm management
     T2CON = 0x0; // Stop timer and clear control register
     T2CONbits.T32 = 0b1; // Activate 32bits timer with T3
     TMR2 = 0; // Clear timer register
-    PR2 = FREQUENCY / twice_hz;
+    set_bpm(bpm);
+
+    // timer 4-5 used for key press management
+    T4CON = 0x0;
+    T4CONbits.T32 = 0b1;
+    TMR4 = 0;
+    PR4 = (FREQUENCY / 1000) / BUTTON_POLL_DELAY_MS - 1;
 }
 
 void init_pattern(void)

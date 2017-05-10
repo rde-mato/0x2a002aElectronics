@@ -3,9 +3,10 @@
 #include <sys/attribs.h>
 
 extern char pattern[16][4][3];
-u8 qtime = 0;
+u32     bpm = 142;
+u8      qtime = 0;
 
-u8 twice_hz = 8;
+
 
 void send_qtime(void)
 {
@@ -20,6 +21,10 @@ void send_qtime(void)
     }
 }
 
+void set_bpm(void)
+{
+    PR2 = FREQUENCY / (bpm / 15); // bpm * 4 / 60
+}
 
 void __ISR(_TIMER_3_VECTOR, IPL3AUTO) Timer3Handler(void)
 {
@@ -30,4 +35,11 @@ void __ISR(_TIMER_3_VECTOR, IPL3AUTO) Timer3Handler(void)
     qtime = (qtime + 1) & 0x0F;
     TMR2 = 0;
     IFS0bits.T3IF = 0;
+}
+
+void __ISR(_TIMER_5_VECTOR, IPL4AUTO) Timer5Handler(void)
+{
+    poll_input();
+    TMR4 = 0; // a priori pas necessaire
+    IFS0bits.T5IF = 0;
 }
