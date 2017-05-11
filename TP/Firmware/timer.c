@@ -5,6 +5,9 @@
 extern char pattern[16][4][3];
 u32     bpm = 142;
 u8      qtime = 0;
+extern u8   HT16_read_request;
+extern u32  poll_count;
+
 
 
 
@@ -37,9 +40,11 @@ void __ISR(_TIMER_3_VECTOR, IPL3AUTO) Timer3Handler(void)
     IFS0bits.T3IF = 0;
 }
 
-//void __ISR(_TIMER_5_VECTOR, IPL4AUTO) Timer5Handler(void)
-//{
-//    poll_input();
-//    TMR4 = 0; // a priori pas necessaire
-//    IFS0bits.T5IF = 0;
-//}
+
+void __ISR(_TIMER_5_VECTOR, IPL4AUTO) Timer5Handler(void)
+{
+    IFS0bits.T5IF = 0;
+    TMR4 = 0; // a priori pas necessaire
+    ++poll_count;
+    HT16_read_request = 1;
+}

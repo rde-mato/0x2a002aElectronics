@@ -60,8 +60,10 @@ void HT16_init(void)
     while (!(I2C2_state == E_I2C2_DONE))
         WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 
-    read_key_scan();
-    while (!(I2C2_state == E_I2C2_DONE))
+    I2C2_push(0xE0);
+    I2C2_push(0x40);
+    I2C2_read(6);
+    while (!(I2C2_state == E_I2C2_READ_RESULT))
         WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 }
 

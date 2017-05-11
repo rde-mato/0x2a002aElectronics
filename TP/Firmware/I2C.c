@@ -3,7 +3,9 @@
 #include <sys/attribs.h>
 
 
-u8 I2C2_state = E_I2C2_DONE;
+u8  I2C2_state = E_I2C2_DONE;
+u8  I2C2_read_request = E_NONE;
+
 u8 I2C2_RW;
 
 u8 I2C2_write_buf[MAX_WRITE_BUF] = { 0 };
@@ -15,17 +17,37 @@ u8 I2C2_read_buf_expected;
 u8 I2C2_read_buf_index = 0;
 
 u8 read_buf_dirty;
-extern u8   ks_dirty;
 
-extern u32 buttonmatrix[16];
+extern u8   display_buf_dirty;
+extern u8   HT16_read_request;
 
-void __ISR(_I2C_2_VECTOR, IPL4AUTO) I2C2Handler(void)
+void    process_I2C2_read_results(void)
 {
-    IFS1bits.I2C2MIF = 0; // Reset the flag
-    if (I2C2_RW == I2C2_WRITE)
-        I2C2_state_machine_write();
-    else
-        I2C2_state_machine_read();
+   switch (I2C2_read_request)
+        {
+            case E_KEYSCAN:
+                format_key_scan();
+                process_key_scan();
+                break;
+        }
+    I2C2_read_request = E_NONE;
+    I2C2_state = E_I2C2_DONE;
+}
+
+void    process_I2C2_triggers()
+{
+    if (display_buf_dirty)
+        led_refresh();
+    else if (HT16_read_request)
+         key_scan();
+}
+
+void    manage_I2C2(void)
+{
+    if (I2C2_state == E_I2C2_READ_RESULT)
+        process_I2C2_read_results();
+    if (I2C2_state == E_I2C2_DONE)
+        process_I2C2_triggers();
 }
 
 void I2C2_push(u8 data)
@@ -62,7 +84,6 @@ void I2C2_state_machine_write(void)
             break;
     }
 }
-
 
 void I2C2_read(u8 expected_bytes)
 {
@@ -124,9 +145,18 @@ void I2C2_state_machine_read(void)
                 I2C2_write_buf_size = 0;
                 I2C2_read_buf_index = 0;
                 I2C2_read_buf_expected = 0; // PAS SUR
-                I2C2_state = E_I2C2_DONE;
+                I2C2_state = E_I2C2_READ_RESULT;
             }
             break;
     }
 }
 
+
+void __ISR(_I2C_2_VECTOR, IPL4AUTO) I2C2Handler(void)
+{
+    IFS1bits.I2C2MIF = 0; // Reset the flag
+    if (I2C2_RW == I2C2_WRITE)
+        I2C2_state_machine_write();
+    else
+        I2C2_state_machine_read();
+}
