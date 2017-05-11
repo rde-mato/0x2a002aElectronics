@@ -2,17 +2,22 @@
 #include "tp.h"
 #include <sys/attribs.h>
 
-#define LONG_PRESS_LIMIT 100
+#define LONG_PRESS_LIMIT (16000)
 
-u8  key_scan_dirty = 0;
-u8  button_buf[16];
-u32  current_key_scan = 0;
-u32  short_press_buttons = 0;
-u32  long_press_buttons = 0;
-u32  newly_pressed_buttons = 0;
-u32  newly_released_buttons = 0;
-u8  button_interrupt_state = 0;
+u8      button_pressed = 0;
+u8      key_scan_dirty = 0;
+u8      button_buf[16];
+u32     current_key_scan = 0;
+u32     previous_key_scan = 0;
+
+u32     short_press_buttons = 0;
+u32     long_press_buttons = 0;
+u32     newly_pressed_buttons = 0;
+u32     newly_released_buttons = 0;
+u8      button_interrupt_state = 0; /// a changer
 extern u8 I2C2_state;
+extern u8 I2C2_request;
+
 
 
 const u32 buttonmatrix[16] = {
@@ -44,36 +49,44 @@ extern  u32  leds_status;
 //    IFS0bits.INT2IF = 0; // Reset the flag
 //}
 
-void init_input_polling(void)
-{
-    TMR4 = 0;
-    IEC0bits.T5IE = 1; // enable interrupts
-    T4CONbits.ON = 1;
-    IFS0bits.T5IF = 1;
-}
 
 void __ISR(_EXTERNAL_2_VECTOR, IPL2AUTO) Int2Handler(void) {
-    key_scan_dirty = 1; /// a garder ?
-    init_input_polling();
+    button_pressed = 1;
+
+    IEC0bits.INT2IE = 0; // Disable interrupt for HT16
+    IFS0bits.INT2IF = 0; // Reset the flag for HT16 interrupt
+
+    TMR4 = 0;
+//    IEC0bits.T5IE = 1; // enable interrupts for timer 4-5
+    T4CONbits.ON = 1;
+//    IFS0bits.T5IF = 1; // declenchement manuel de l'interrupt pour premiere iteration
 }
 
 void __ISR(_CORE_SOFTWARE_0_VECTOR, IPL2AUTO) ButtonActionsHandler(void) {
+    if (button_interrupt_state == 2)
+    {
+        u8 i = 0;
+        while (i < 32)
+        {
+            if (newly_released_buttons & (1 << i))
+                led_toggle(i);
+            i++;
+        }
+    }
     IFS0bits.CS0IF = 0;
 }
 
 
-void poll_input(void)
+void process_key_scan(void)
 {
-    u32 previous_key_scan;
     u32 changed_buttons;
     u32 unchanged_pressed_buttons;
-    u32 poll_count[32] = {0};
+    u32 current_timer;
+    u32 buttons_timers[32] = {0};
     u8  i;
 
-    previous_key_scan = current_key_scan;
-    while (!I2C2_READY);         /// A CHANGER EN STATE MACHINE ???
-        get_current_key_scan();
-    while (!I2C2_READY);         /// A CHANGER EN STATE MACHINE ???
+    current_timer = TMR4;
+    TMR4 = 0;
     changed_buttons = current_key_scan ^ previous_key_scan;
     unchanged_pressed_buttons = current_key_scan & previous_key_scan;
     newly_pressed_buttons = current_key_scan & ~previous_key_scan;
@@ -96,11 +109,12 @@ void poll_input(void)
         {
             if (unchanged_pressed_buttons & (1 << i))
             {
-                if(++(poll_count[i]) > LONG_PRESS_LIMIT)
+                buttons_timers[i] += current_timer;
+                if(buttons_timers[i] > LONG_PRESS_LIMIT)
                     long_press_buttons |= (1 << i);
             }
             else
-                poll_count[i] = 0;
+                buttons_timers[i] = 0;
             ++i;
         }
         if (long_press_buttons)
@@ -112,30 +126,39 @@ void poll_input(void)
     else            // pas forcement necessaire, a tester
     {
         while (i < 32)
-            poll_count[i++] = 0;
+            buttons_timers[i++] = 0;
     }
     if (!current_key_scan)
         end_input_polling();
-    return ;
+    previous_key_scan = current_key_scan;
+//    key_scan_dirty = 0;
 }
 
 void end_input_polling(void)
 {
-    IEC0bits.T5IE = 0;
+    IFS0bits.INT2IF = 0; // Reset the flag for HT16 interrupt - a priori inutile
+//    IEC0bits.T5IE = 0; // Disable Timer interrupt
     T4CONbits.ON = 0;
-    TMR4 = 0;
-    IFS0bits.INT2IF = 0; // Reset the flag for HT16 interrupt
+    TMR4 = 0;  // probablement inutile
+    previous_key_scan = 0;
+    current_key_scan = 0;
+    button_pressed = 0;
+    IEC0bits.INT2IE = 1; // Re-enable interrupt for HT16
 }
 
-void get_current_key_scan(void)
+void read_key_scan(void)
+{
+    I2C2_request = E_KEYSCAN;
+    I2C2_push(0xE0);
+    I2C2_push(0x40);
+    I2C2_read(6);
+}
+
+void format_key_scan(void)
 {
     u32 ks;
     u8 i;
 
-    I2C2_state = E_I2C2_WAIT; ///  A TESTER
-    I2C2_push(0xE0);
-    I2C2_push(0x40);
-    I2C2_read(6);
     ks = (I2C2_read_buf[0] << 24 )| (I2C2_read_buf[1] << 16) | (I2C2_read_buf[2] << 8) | I2C2_read_buf[3] ;
     i = 0;
     current_key_scan = 0;
@@ -145,6 +168,7 @@ void get_current_key_scan(void)
             current_key_scan |= (1 << (i));
         ++i;
     }
+  //  key_scan_dirty = 1;
 }
 
 

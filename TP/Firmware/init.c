@@ -32,47 +32,35 @@ void I2C2_init(void) //// A GERER AVEC DES INTERRUPTS
 void HT16_init(void)
 {
     int	i;
+    u8  config[5] = {
+        0x00,
+        0x21,
+        0xA1, // Int on falling edge
+        0xEF, // No dimming
+        0x81, // Blinking off display ON
+    };
 
-    I2C2_push(0xE0);
-    I2C2_push(0x00);
-    I2C2_write();
-    while (!(I2C2_state == E_I2C2_DONE))
-        WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
+    i = 0;
+    while (i < sizeof(config) / sizeof(*config))
+    {
+        I2C2_push(0xE0);
+        I2C2_push(config[i]);
+        I2C2_write();
+        while (!(I2C2_state == E_I2C2_DONE))
+            WDTCONbits.WDTCLR = 1;
+        i++;
+    }
 
-    I2C2_push(0xE0);
-    I2C2_push(0x21);
-    I2C2_write();
-    while (!(I2C2_state == E_I2C2_DONE))
-        WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
-
-    I2C2_push(0xE0);
-    I2C2_push(0xA1);// Int on falling edge
-    I2C2_write();
-    while (!(I2C2_state == E_I2C2_DONE))
-        WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
-
-    I2C2_push(0xE0);
-    I2C2_push(0xEF);// No Dimming
-    I2C2_write();
-    while (!(I2C2_state == E_I2C2_DONE))
-        WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
-
-    I2C2_push(0xE0);
-    I2C2_push(0x81); // Blinking off display ON
-    I2C2_write();
-    while (!(I2C2_state == E_I2C2_DONE))
-        WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
-
-    get_current_key_scan();
-    while (!(I2C2_state == E_I2C2_DONE))
-        WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
-    
     i = 0;
     I2C2_push(0xE0);
     I2C2_push(0x00);
     while (i++ < 8)
         I2C2_push(0x00);
     I2C2_write();
+    while (!(I2C2_state == E_I2C2_DONE))
+        WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
+
+    read_key_scan();
     while (!(I2C2_state == E_I2C2_DONE))
         WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 }

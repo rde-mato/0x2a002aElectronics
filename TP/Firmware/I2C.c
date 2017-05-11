@@ -56,7 +56,7 @@ void I2C2_state_machine_write(void)
             }
            break;
         case E_I2C2_STOP:
-            I2C2_write_buf_index = 0;// A PRIORI PAS BESOIN DE I2C2STATbits.P
+            I2C2_write_buf_index = 0;
             I2C2_write_buf_size = 0;
             I2C2_state = E_I2C2_DONE;
             break;
@@ -100,7 +100,7 @@ void I2C2_state_machine_read(void)
                 I2C2CONbits.ACKEN = 1;
                 I2C2_state = E_I2C2_START_READING_BYTE;
             }
-            break;          ///
+            break;
         case E_I2C2_START_READING_BYTE:
             if (I2C2_read_buf_index < I2C2_read_buf_expected - 1)
             {
@@ -116,9 +116,9 @@ void I2C2_state_machine_read(void)
         case E_I2C2_READ_AND_NACK:
             if (I2C2STATbits.RBF)
             {
-                I2C2_read_buf[I2C2_read_buf_index++] = I2C2RCV;
+                I2C2_read_buf[I2C2_read_buf_index] = I2C2RCV;
                 I2C2CONbits.ACKDT = 1;
-                I2C2CONbits.ACKEN = 1;
+                I2C2CONbits.ACKEN = 1; // a noter que ceci declenchera une interrupt.
                 I2C2CONbits.PEN = 1;
                 I2C2_write_buf_index = 0;
                 I2C2_write_buf_size = 0;

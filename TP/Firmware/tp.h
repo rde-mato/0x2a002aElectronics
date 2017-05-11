@@ -29,7 +29,11 @@
 #define MAX_WRITE_BUF 10
 #define READ_BUF_SIZE 4
 
-
+enum E_I2C2_REQUEST
+{
+    E_IDLE = 0,
+    E_KEYSCAN
+};
 
 enum E_I2C2_STATE {
     E_I2C2_DONE = 0,
