@@ -1,10 +1,9 @@
 #include <xc.h>
 #include "tp.h"
 
-char pattern[16][4][3];
-u32  leds_status;
-u16   display_buf[4];
-u8   display_buf_dirty = 1;
+u32     leds_status;
+u16     display_buf[4];
+u8      display_buf_dirty = 1;
 
 static u16  ledmatrix[16] = {
     0x0004, 0x8000, 0x2000, 0x1000,
@@ -12,10 +11,6 @@ static u16  ledmatrix[16] = {
     0x4000, 0x0008, 0x0200, 0x0100,
     0x0040, 0x0020, 0x0010, 0x0400,
 };
-//ks1 4: 0x0400 11: 0x0001 12: 0x0200 16: 0x0002
-
-//ks0 1: 0x8000 2: 0x1000 3: 0x0400 5: 0x2000 6: 0x4000 7: 0x0100 8: 0x0200 9: 0x0800 10: 0x0001 13: 0x0008 14: 0x0004 15: 0x0002
-
 
 
 void led_set(u8 index)
@@ -48,6 +43,7 @@ void clear_display_buffer(void)
     while (i < 4)
         display_buf[i++] = 0;
 }
+
 void leds_status_to_display_buffer(void)
 {
     u8  index;
@@ -79,3 +75,4 @@ void led_refresh(void)
     I2C2_write();
     display_buf_dirty = 0;
 }
+

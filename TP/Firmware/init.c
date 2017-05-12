@@ -1,7 +1,7 @@
 #include <xc.h>
 #include "tp.h"
 
-extern char pattern[16][4][3];
+u8          pattern[16][4][3];
 extern u8   twice_hz;
 extern u8   I2C2_state;
 
@@ -108,6 +108,13 @@ void INT_init(void)
     IPC3bits.T3IP = 3;
     IEC0bits.T3IE = 1;
 
+    // TIMER 4-5 INTERRUPT
+    IFS0bits.T5IF = 0;
+    IPC5bits.T5IP = 2;
+    IEC0bits.T5IE = 1;
+
+
+
     //I2C2 INTERRUPT
     IFS1bits.I2C2MIF = 0; // reset flag
     IPC8bits.I2C2IP = 4; // au pif
@@ -122,6 +129,13 @@ void TIMER_init(void)
     T2CONbits.T32 = 0b1; // Activate 32bits timer with T3
     TMR2 = 0; // Clear timer register
     PR2 = FREQUENCY / twice_hz;
+
+
+////////////////////////////////////////////////////////////////////////////////
+    T4CON = 0x0;
+    T4CONbits.T32 = 0b1;
+    TMR4 = 0;
+    PR4 = FREQUENCY / BUTTON_POLL_DELAY_MS;
 }
 
 void init_pattern(void)

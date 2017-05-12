@@ -7,7 +7,6 @@ extern u8 I2C2_state;
 extern u8   display_buf_dirty;
 extern u8   key_scan_dirty;
 
-
 int main(void)
 {
     init_pattern();
@@ -16,6 +15,7 @@ int main(void)
     I2C2_init();
     INT_init();
     T2CONbits.ON = 1;
+    T4CONbits.ON = 1;
 
     HT16_init();
 
@@ -26,7 +26,7 @@ int main(void)
             read_key_scan();
             execute_changes_in_button_status();
         }
-        else if (display_buf_dirty && I2C2_READY)
+        if (display_buf_dirty && I2C2_READY)
             led_refresh();
         WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
     }
