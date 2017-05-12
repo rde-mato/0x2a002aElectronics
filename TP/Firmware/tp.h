@@ -27,7 +27,7 @@
 #define I2C2_READY (I2C2_state == E_I2C2_DONE)
 
 #define MAX_WRITE_BUF 10
-#define READ_BUF_SIZE 4
+#define READ_BUF_SIZE 10
 
 
 

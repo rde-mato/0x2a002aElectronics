@@ -6,10 +6,22 @@ extern u8   twice_hz;
 extern u8   I2C2_state;
 
 
+void SPI_init(void)
+{
+    int rData;
+
+    SPI2CON = 0;
+    rData = SPI2BUF;
+    SPI2CONbits.MODE16 = 1;
+    SPI2CONbits.MSTEN = 1; //Master mode
+    SPI2BRG = 0x1;
+    SPI2CONbits.ON = 1;
+}
+
 void I2C2_init(void) //// A GERER AVEC DES INTERRUPTS
 {
     u8 i;
-    u32 cpt;
+    u16 cpt;
     // envoi de 9 coups de clock pour reset les chips
     F5_IO_SELECTOR = 0x0; //F5 configured for output
     i = 0;
@@ -107,6 +119,8 @@ void INT_init(void)
     IFS0bits.T3IF = 0;
     IPC3bits.T3IP = 3;
     IEC0bits.T3IE = 1;
+
+
 
     // TIMER 4-5 INTERRUPT
     IFS0bits.T5IF = 0;

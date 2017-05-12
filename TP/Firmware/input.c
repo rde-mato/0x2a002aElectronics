@@ -78,6 +78,8 @@ void refresh_button_status(void)
                 button_buf[i] = 0;
             }
         }
+        else
+            button_buf[i] = 0;
         ++i;
     }
 }

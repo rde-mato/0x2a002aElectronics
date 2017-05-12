@@ -13,6 +13,7 @@ int main(void)
     GPIO_init();
     TIMER_init();
     I2C2_init();
+    SPI_init();
     INT_init();
     T2CONbits.ON = 1;
     T4CONbits.ON = 1;
@@ -26,6 +27,11 @@ int main(void)
             read_key_scan();
             execute_changes_in_button_status();   //faudrait aussi attendre i2c done la ?
         }
+//        if (I2C2_READY)
+//        {
+//            refresh_button_status();
+//            execute_changes_in_button_status();
+//        }
         if (display_buf_dirty && I2C2_READY)
             led_refresh();
         WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG

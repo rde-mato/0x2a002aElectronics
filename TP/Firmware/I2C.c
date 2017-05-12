@@ -14,7 +14,7 @@ u8 I2C2_read_buf[READ_BUF_SIZE];
 u8 I2C2_read_buf_expected;
 u8 I2C2_read_buf_index = 0;
 
-u8 read_buf_tamere_dirty_plop; // LES GARS !!!! JE VEUX UNE EXPLICATION !!!!!!!!! J'ai trouve en 1h30 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! QUOI ?!
+//u8 read_buf_tamere_dirty_mabite; // LES GARS !!!! JE VEUX UNE EXPLICATION !!!!!!!!! J'ai trouve en 1h30 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! QUOI ?!
 
 void __ISR(_I2C_2_VECTOR, IPL4AUTO) I2C2Handler(void)
 {
