@@ -53,7 +53,7 @@ void read_key_scan(void)
     I2C2_push(0x40);
     I2C2_read(6);
     key_scan_dirty = 0;
-    refresh_button_status();
+    refresh_button_status();     ///// faudrait attendre i2c done nan ?
 }
 
 void refresh_button_status(void)

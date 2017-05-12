@@ -24,7 +24,7 @@ int main(void)
         if (key_scan_dirty && I2C2_READY) // changer les dirty et compgnie vers un byte de status masque.
         {
             read_key_scan();
-            execute_changes_in_button_status();
+            execute_changes_in_button_status();   //faudrait aussi attendre i2c done la ?
         }
         if (display_buf_dirty && I2C2_READY)
             led_refresh();
