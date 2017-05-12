@@ -8,11 +8,8 @@ u8      button_buf[16];
 u32     current_key_scan = 0;
 u32     previous_key_scan = 0;
 
-u32     short_press_buttons = 0;
-u32     long_press_buttons = 0;
-u32     newly_pressed_buttons = 0;
-u32     newly_released_buttons = 0;
-u8      button_interrupt_state = 0; /// a changer
+u8      event_type = 0;
+u8      event_source = 0;
 
 u32     poll_count = 0;
 u32     buttons_timers[32] = {0};
@@ -36,29 +33,19 @@ void __ISR(_EXTERNAL_2_VECTOR, IPL2AUTO) HT16IntHandler(void) {
     IFS0bits.INT2IF = 0;
 }
 
-void __ISR(_CORE_SOFTWARE_0_VECTOR, IPL2AUTO) ButtonActionsHandler(void) {
-    IFS0bits.CS0IF = 0;
-
-  //  if (button_interrupt_state == 3)
- //   {
-        u8 i = 0;
-        while (i < 32)
-        {
-            if (long_press_buttons & (1 << i))
-                led_toggle(i);
-            i++;
-        }
-        long_press_buttons = 0;
- //   }
-}
-
 void __ISR(_TIMER_5_VECTOR, IPL2AUTO) Timer5Handler(void)
 {
     IFS0bits.T5IF = 0;
     T4CONbits.ON = 0;
-    previous_key_scan = 0;
     current_key_scan = 0;
     HT16_read_request = 1;
+}
+
+void send_button_interrupt(u8 interrupt_type, u8 interrupt_button)
+{
+    event_type = interrupt_type;
+    event_source = interrupt_button;
+    IFS0bits.CS0IF = 1;
 }
 
 void process_key_scan(void)
@@ -66,6 +53,8 @@ void process_key_scan(void)
     u32 changed_buttons;
     u32 unchanged_pressed_buttons;
     u32 current_poll_count;
+    u32 newly_pressed_buttons;
+    u32 newly_released_buttons;
     u8  i;
 
     current_poll_count = poll_count;
@@ -77,17 +66,27 @@ void process_key_scan(void)
 
     if (newly_pressed_buttons)
     {
-        button_interrupt_state = 1;
-        IFS0bits.CS0IF = 1;// declencher un interrupt de type onbuttondown
+        i = 0;
+        while (i < 32)
+        {
+            if (newly_pressed_buttons & (1 << i))
+                send_button_interrupt(E_KEY_PRESSED, i);
+            ++i;
+        }
     }
     if (newly_released_buttons)
     {
-        button_interrupt_state = 2;
-        IFS0bits.CS0IF = 1;// declencher un interrupt de type onbuttondown
+        i = 0;
+        while (i < 32)
+        {
+            if (newly_released_buttons & (1 << i))
+                send_button_interrupt(E_KEY_RELEASED, i);
+            ++i;
+        }
     }
-    i = 0;
     if (unchanged_pressed_buttons)
     {
+        i = 0;
         while (i < 32)
         {
             if (unchanged_pressed_buttons & (1 << i))
@@ -95,18 +94,13 @@ void process_key_scan(void)
                 buttons_timers[i] += current_poll_count;
                 if(buttons_timers[i] > LONG_PRESS_LIMIT)
                 {
-                    long_press_buttons |= (1 << i);
+                    send_button_interrupt(E_KEY_LONG_PRESSED, i);
                     buttons_timers[i] = 0;
                 }
             }
             else
                 buttons_timers[i] = 0;
             ++i;
-        }
-        if (long_press_buttons)
-        {
-            button_interrupt_state = 3;
-            IFS0bits.CS0IF = 1;// declencher un interrupt de type onbuttondown
         }
     }
     else

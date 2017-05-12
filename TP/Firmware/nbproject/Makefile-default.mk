@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=config.c init.c UART.c BACKplop.c main.c timer.c leds.c keyboard.c I2C_driver.c I2C_management.c
+SOURCEFILES_QUOTED_IF_SPACED=config.c init.c UART.c main.c timer.c I2C_driver.c I2C_handler.c input_handler.c HT16_keys_driver.c HT16_leds_driver.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/config.o ${OBJECTDIR}/init.o ${OBJECTDIR}/UART.o ${OBJECTDIR}/BACKplop.o ${OBJECTDIR}/main.o ${OBJECTDIR}/timer.o ${OBJECTDIR}/leds.o ${OBJECTDIR}/keyboard.o ${OBJECTDIR}/I2C_driver.o ${OBJECTDIR}/I2C_management.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/config.o.d ${OBJECTDIR}/init.o.d ${OBJECTDIR}/UART.o.d ${OBJECTDIR}/BACKplop.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/timer.o.d ${OBJECTDIR}/leds.o.d ${OBJECTDIR}/keyboard.o.d ${OBJECTDIR}/I2C_driver.o.d ${OBJECTDIR}/I2C_management.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/config.o ${OBJECTDIR}/init.o ${OBJECTDIR}/UART.o ${OBJECTDIR}/main.o ${OBJECTDIR}/timer.o ${OBJECTDIR}/I2C_driver.o ${OBJECTDIR}/I2C_handler.o ${OBJECTDIR}/input_handler.o ${OBJECTDIR}/HT16_keys_driver.o ${OBJECTDIR}/HT16_leds_driver.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/config.o.d ${OBJECTDIR}/init.o.d ${OBJECTDIR}/UART.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/timer.o.d ${OBJECTDIR}/I2C_driver.o.d ${OBJECTDIR}/I2C_handler.o.d ${OBJECTDIR}/input_handler.o.d ${OBJECTDIR}/HT16_keys_driver.o.d ${OBJECTDIR}/HT16_leds_driver.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/config.o ${OBJECTDIR}/init.o ${OBJECTDIR}/UART.o ${OBJECTDIR}/BACKplop.o ${OBJECTDIR}/main.o ${OBJECTDIR}/timer.o ${OBJECTDIR}/leds.o ${OBJECTDIR}/keyboard.o ${OBJECTDIR}/I2C_driver.o ${OBJECTDIR}/I2C_management.o
+OBJECTFILES=${OBJECTDIR}/config.o ${OBJECTDIR}/init.o ${OBJECTDIR}/UART.o ${OBJECTDIR}/main.o ${OBJECTDIR}/timer.o ${OBJECTDIR}/I2C_driver.o ${OBJECTDIR}/I2C_handler.o ${OBJECTDIR}/input_handler.o ${OBJECTDIR}/HT16_keys_driver.o ${OBJECTDIR}/HT16_leds_driver.o
 
 # Source Files
-SOURCEFILES=config.c init.c UART.c BACKplop.c main.c timer.c leds.c keyboard.c I2C_driver.c I2C_management.c
+SOURCEFILES=config.c init.c UART.c main.c timer.c I2C_driver.c I2C_handler.c input_handler.c HT16_keys_driver.c HT16_leds_driver.c
 
 
 CFLAGS=
@@ -112,12 +112,6 @@ ${OBJECTDIR}/UART.o: UART.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/UART.o 
 	@${FIXDEPS} "${OBJECTDIR}/UART.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/UART.o.d" -o ${OBJECTDIR}/UART.o UART.c   
 	
-${OBJECTDIR}/BACKplop.o: BACKplop.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/BACKplop.o.d 
-	@${RM} ${OBJECTDIR}/BACKplop.o 
-	@${FIXDEPS} "${OBJECTDIR}/BACKplop.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/BACKplop.o.d" -o ${OBJECTDIR}/BACKplop.o BACKplop.c   
-	
 ${OBJECTDIR}/main.o: main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/main.o.d 
@@ -130,29 +124,35 @@ ${OBJECTDIR}/timer.o: timer.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/timer.o 
 	@${FIXDEPS} "${OBJECTDIR}/timer.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/timer.o.d" -o ${OBJECTDIR}/timer.o timer.c   
 	
-${OBJECTDIR}/leds.o: leds.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/leds.o.d 
-	@${RM} ${OBJECTDIR}/leds.o 
-	@${FIXDEPS} "${OBJECTDIR}/leds.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/leds.o.d" -o ${OBJECTDIR}/leds.o leds.c   
-	
-${OBJECTDIR}/keyboard.o: keyboard.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/keyboard.o.d 
-	@${RM} ${OBJECTDIR}/keyboard.o 
-	@${FIXDEPS} "${OBJECTDIR}/keyboard.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/keyboard.o.d" -o ${OBJECTDIR}/keyboard.o keyboard.c   
-	
 ${OBJECTDIR}/I2C_driver.o: I2C_driver.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/I2C_driver.o.d 
 	@${RM} ${OBJECTDIR}/I2C_driver.o 
 	@${FIXDEPS} "${OBJECTDIR}/I2C_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/I2C_driver.o.d" -o ${OBJECTDIR}/I2C_driver.o I2C_driver.c   
 	
-${OBJECTDIR}/I2C_management.o: I2C_management.c  nbproject/Makefile-${CND_CONF}.mk
+${OBJECTDIR}/I2C_handler.o: I2C_handler.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/I2C_management.o.d 
-	@${RM} ${OBJECTDIR}/I2C_management.o 
-	@${FIXDEPS} "${OBJECTDIR}/I2C_management.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/I2C_management.o.d" -o ${OBJECTDIR}/I2C_management.o I2C_management.c   
+	@${RM} ${OBJECTDIR}/I2C_handler.o.d 
+	@${RM} ${OBJECTDIR}/I2C_handler.o 
+	@${FIXDEPS} "${OBJECTDIR}/I2C_handler.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/I2C_handler.o.d" -o ${OBJECTDIR}/I2C_handler.o I2C_handler.c   
+	
+${OBJECTDIR}/input_handler.o: input_handler.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/input_handler.o.d 
+	@${RM} ${OBJECTDIR}/input_handler.o 
+	@${FIXDEPS} "${OBJECTDIR}/input_handler.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/input_handler.o.d" -o ${OBJECTDIR}/input_handler.o input_handler.c   
+	
+${OBJECTDIR}/HT16_keys_driver.o: HT16_keys_driver.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/HT16_keys_driver.o.d 
+	@${RM} ${OBJECTDIR}/HT16_keys_driver.o 
+	@${FIXDEPS} "${OBJECTDIR}/HT16_keys_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/HT16_keys_driver.o.d" -o ${OBJECTDIR}/HT16_keys_driver.o HT16_keys_driver.c   
+	
+${OBJECTDIR}/HT16_leds_driver.o: HT16_leds_driver.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/HT16_leds_driver.o.d 
+	@${RM} ${OBJECTDIR}/HT16_leds_driver.o 
+	@${FIXDEPS} "${OBJECTDIR}/HT16_leds_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/HT16_leds_driver.o.d" -o ${OBJECTDIR}/HT16_leds_driver.o HT16_leds_driver.c   
 	
 else
 ${OBJECTDIR}/config.o: config.c  nbproject/Makefile-${CND_CONF}.mk
@@ -173,12 +173,6 @@ ${OBJECTDIR}/UART.o: UART.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/UART.o 
 	@${FIXDEPS} "${OBJECTDIR}/UART.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/UART.o.d" -o ${OBJECTDIR}/UART.o UART.c   
 	
-${OBJECTDIR}/BACKplop.o: BACKplop.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/BACKplop.o.d 
-	@${RM} ${OBJECTDIR}/BACKplop.o 
-	@${FIXDEPS} "${OBJECTDIR}/BACKplop.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/BACKplop.o.d" -o ${OBJECTDIR}/BACKplop.o BACKplop.c   
-	
 ${OBJECTDIR}/main.o: main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/main.o.d 
@@ -191,29 +185,35 @@ ${OBJECTDIR}/timer.o: timer.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/timer.o 
 	@${FIXDEPS} "${OBJECTDIR}/timer.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/timer.o.d" -o ${OBJECTDIR}/timer.o timer.c   
 	
-${OBJECTDIR}/leds.o: leds.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/leds.o.d 
-	@${RM} ${OBJECTDIR}/leds.o 
-	@${FIXDEPS} "${OBJECTDIR}/leds.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/leds.o.d" -o ${OBJECTDIR}/leds.o leds.c   
-	
-${OBJECTDIR}/keyboard.o: keyboard.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/keyboard.o.d 
-	@${RM} ${OBJECTDIR}/keyboard.o 
-	@${FIXDEPS} "${OBJECTDIR}/keyboard.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/keyboard.o.d" -o ${OBJECTDIR}/keyboard.o keyboard.c   
-	
 ${OBJECTDIR}/I2C_driver.o: I2C_driver.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/I2C_driver.o.d 
 	@${RM} ${OBJECTDIR}/I2C_driver.o 
 	@${FIXDEPS} "${OBJECTDIR}/I2C_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/I2C_driver.o.d" -o ${OBJECTDIR}/I2C_driver.o I2C_driver.c   
 	
-${OBJECTDIR}/I2C_management.o: I2C_management.c  nbproject/Makefile-${CND_CONF}.mk
+${OBJECTDIR}/I2C_handler.o: I2C_handler.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/I2C_management.o.d 
-	@${RM} ${OBJECTDIR}/I2C_management.o 
-	@${FIXDEPS} "${OBJECTDIR}/I2C_management.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/I2C_management.o.d" -o ${OBJECTDIR}/I2C_management.o I2C_management.c   
+	@${RM} ${OBJECTDIR}/I2C_handler.o.d 
+	@${RM} ${OBJECTDIR}/I2C_handler.o 
+	@${FIXDEPS} "${OBJECTDIR}/I2C_handler.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/I2C_handler.o.d" -o ${OBJECTDIR}/I2C_handler.o I2C_handler.c   
+	
+${OBJECTDIR}/input_handler.o: input_handler.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/input_handler.o.d 
+	@${RM} ${OBJECTDIR}/input_handler.o 
+	@${FIXDEPS} "${OBJECTDIR}/input_handler.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/input_handler.o.d" -o ${OBJECTDIR}/input_handler.o input_handler.c   
+	
+${OBJECTDIR}/HT16_keys_driver.o: HT16_keys_driver.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/HT16_keys_driver.o.d 
+	@${RM} ${OBJECTDIR}/HT16_keys_driver.o 
+	@${FIXDEPS} "${OBJECTDIR}/HT16_keys_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/HT16_keys_driver.o.d" -o ${OBJECTDIR}/HT16_keys_driver.o HT16_keys_driver.c   
+	
+${OBJECTDIR}/HT16_leds_driver.o: HT16_leds_driver.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/HT16_leds_driver.o.d 
+	@${RM} ${OBJECTDIR}/HT16_leds_driver.o 
+	@${FIXDEPS} "${OBJECTDIR}/HT16_leds_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/HT16_leds_driver.o.d" -o ${OBJECTDIR}/HT16_leds_driver.o HT16_leds_driver.c   
 	
 endif
 

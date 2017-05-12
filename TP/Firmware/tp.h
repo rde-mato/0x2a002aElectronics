@@ -37,6 +37,14 @@ enum E_I2C2_READ_REQUEST
     E_KEYSCAN
 };
 
+enum E_EVENT_TYPE
+{
+    E_EVENT_NONE = 0,
+    E_KEY_PRESSED,
+    E_KEY_RELEASED,
+    E_KEY_LONG_PRESSED
+};
+
 enum E_I2C2_STATE {
     E_I2C2_DONE = 0,
     E_I2C2_WRITE,

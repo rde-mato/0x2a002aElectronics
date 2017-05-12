@@ -16,13 +16,13 @@
       <itemPath>config.c</itemPath>
       <itemPath>init.c</itemPath>
       <itemPath>UART.c</itemPath>
-      <itemPath>BACKplop.c</itemPath>
       <itemPath>main.c</itemPath>
       <itemPath>timer.c</itemPath>
-      <itemPath>leds.c</itemPath>
-      <itemPath>keyboard.c</itemPath>
       <itemPath>I2C_driver.c</itemPath>
-      <itemPath>I2C_management.c</itemPath>
+      <itemPath>I2C_handler.c</itemPath>
+      <itemPath>input_handler.c</itemPath>
+      <itemPath>HT16_keys_driver.c</itemPath>
+      <itemPath>HT16_leds_driver.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
