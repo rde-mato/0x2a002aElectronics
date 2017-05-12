@@ -31,7 +31,7 @@ void set_bpm(void)
 
 void __ISR(_TIMER_3_VECTOR, IPL3AUTO) Timer3Handler(void)
 {
-    LED_ON_OFF = !LED_ON_OFF;
+    //LED_ON_OFF = !LED_ON_OFF;
 
 //    led_toggle((qtime - 1) & 0x0F);
 //    led_toggle(qtime);
@@ -40,6 +40,8 @@ void __ISR(_TIMER_3_VECTOR, IPL3AUTO) Timer3Handler(void)
     IFS0bits.T3IF = 0;
 }
 
+<<<<<<< HEAD
+=======
 
 //void __ISR(_TIMER_5_VECTOR, IPL4AUTO) Timer5Handler(void)
 //{
@@ -48,3 +50,4 @@ void __ISR(_TIMER_3_VECTOR, IPL3AUTO) Timer3Handler(void)
 //    ++poll_count;
 //    HT16_read_request = 1;
 //}
+>>>>>>> longpush
