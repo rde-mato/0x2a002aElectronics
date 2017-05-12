@@ -100,7 +100,8 @@ void INT_init(void)
 
     // TIMER 4-5 INTERRUPT
     IFS0bits.T5IF = 0;
-    IPC5bits.T5IP = 4;
+    IPC5bits.T5IP = 2;
+    IEC0bits.T5IE = 1;
     // l'interruption est activee uniquement en cas de poll
 
     //I2C2 INTERRUPT
@@ -128,7 +129,7 @@ void TIMER_init(void)
     T4CON = 0x0;
     T4CONbits.T32 = 0b1;
     TMR4 = 0;
-    PR4 = (FREQUENCY / 1000) / BUTTON_POLL_DELAY_MS - 1;
+    PR4 = FREQUENCY / (1000 / BUTTON_POLL_DELAY_MS) - 1;
 }
 
 void init_pattern(void)

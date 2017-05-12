@@ -3,6 +3,7 @@
 #include <sys/attribs.h>
 
 extern u8 I2C2_state;
+char pattern[16][4][3];
 
 
 

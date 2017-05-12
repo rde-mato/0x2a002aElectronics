@@ -15,13 +15,14 @@
                    projectFiles="true">
       <itemPath>config.c</itemPath>
       <itemPath>init.c</itemPath>
-      <itemPath>I2C.c</itemPath>
       <itemPath>UART.c</itemPath>
       <itemPath>BACKplop.c</itemPath>
       <itemPath>main.c</itemPath>
       <itemPath>timer.c</itemPath>
       <itemPath>leds.c</itemPath>
-      <itemPath>input.c</itemPath>
+      <itemPath>keyboard.c</itemPath>
+      <itemPath>I2C_driver.c</itemPath>
+      <itemPath>I2C_management.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
