@@ -38,11 +38,14 @@ typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned long u32;
 
-enum E_I2C2_READ_REQUEST
-{
-    E_NONE = 0,
-    E_KEYSCAN
-};
+typedef void (* read_callback)(u8 *);
+typedef void (* write_callback)(void);
+
+//enum E_I2C2_READ_REQUEST
+//{
+//    E_NONE = 0,
+//    E_KEYSCAN
+//};
 
 enum E_EVENT_TYPE
 {
@@ -61,7 +64,6 @@ enum E_I2C2_STATE {
     E_I2C2_READ,
     E_I2C2_NACK,
     E_I2C2_ACK,
-    E_I2C2_STOP,
     E_I2C2_WRITING_SLAVE_ADDR_WRITE,
     E_I2C2_WRITING_COMMAND_REGISTER,
     E_I2C2_SENDING_CMD_REGISTER_STOP,
@@ -70,13 +72,12 @@ enum E_I2C2_STATE {
     E_I2C2_START_READING_BYTE,
     E_I2C2_READ_AND_ACK,
     E_I2C2_READ_AND_NACK,
-    E_I2C2_READ_RESULT
+    E_I2C2_CALLBACK
 
 };
 
 void    push_I2C2_fifo(u8 mode, u8 data);
 void 	I2C2_push(u8 data);
-void 	I2C2_write(void);
 
 
 #endif	/* OX2A002A_H */

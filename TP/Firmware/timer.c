@@ -5,7 +5,7 @@
 extern char pattern[16][4][3];
 u32     bpm = 142;
 u8      qtime = 0;
-extern u8   HT16_read_request;
+extern u8   HT16_read_keys_request;
 
 
 

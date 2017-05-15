@@ -1,10 +1,10 @@
 #include <xc.h>
 #include <sys/attribs.h>
 #include "0x2a002a.h"
+#include <stdlib.h>
 
 
 u8  I2C2_state = E_I2C2_DONE;
-u8  I2C2_read_request = E_NONE;
 
 u8 I2C2_RW;
 
@@ -16,14 +16,46 @@ u8 I2C2_read_buf[READ_BUF_SIZE];
 u8 I2C2_read_buf_expected;
 u8 I2C2_read_buf_index = 0;
 
+read_callback I2C2_read_cb = NULL;
+write_callback I2C2_write_cb = NULL;
+
 
 void I2C2_push(u8 data)
 {
     I2C2_write_buf[I2C2_write_buf_size++] = data;
 }
 
-void I2C2_write(void)
+void I2C2_write(u8 slave, u8 command, u8 *buffer, u8 size)
 {
+    int i;
+    
+    I2C2_push(slave);
+    I2C2_push(command);
+    if (buffer && size)
+    {
+        i = 0;
+        while (i < size)
+            I2C2_push(buffer[i++]);
+    }
+    I2C2_write_cb = NULL;
+    I2C2_RW = I2C2_WRITE;
+    I2C2_state = E_I2C2_WRITE;
+    I2C2CONbits.SEN = 1;
+}
+
+void I2C2_write_callback(u8 slave, u8 command, u8 *buffer, u8 size, write_callback cb)
+{
+    int i;
+
+    I2C2_push(slave);
+    I2C2_push(command);
+    if (buffer)
+    {
+        i = 0;
+        while (i < size)
+            I2C2_push(buffer[i++]);
+    }
+    I2C2_write_cb = cb;
     I2C2_RW = I2C2_WRITE;
     I2C2_state = E_I2C2_WRITE;
     I2C2CONbits.SEN = 1;
@@ -40,23 +72,29 @@ void I2C2_state_machine_write(void)
                     I2C2TRN = I2C2_write_buf[I2C2_write_buf_index++];
             else
             {
+                I2C2_state = E_I2C2_CALLBACK;
                 I2C2CONbits.PEN = 1;
-                I2C2_state = E_I2C2_STOP;
             }
            break;
-        case E_I2C2_STOP:
+        case E_I2C2_CALLBACK:
+            if (I2C2_write_cb)
+                (*I2C2_write_cb)();
             I2C2_write_buf_index = 0;
             I2C2_write_buf_size = 0;
+            I2C2_write_cb = NULL;
             I2C2_state = E_I2C2_DONE;
             break;
     }
 }
 
-void I2C2_read(u8 expected_bytes)
+void I2C2_read_callback(u8 slave, u8 command, u8 size, read_callback cb)
 {
+    I2C2_push(slave);
+    I2C2_push(command);
+    I2C2_read_cb = cb;
     I2C2_RW = I2C2_READ;
     I2C2_state = E_I2C2_WRITING_SLAVE_ADDR_WRITE;
-    I2C2_read_buf_expected = expected_bytes;
+    I2C2_read_buf_expected = size;
     I2C2CONbits.SEN = 1;
 }
 
@@ -112,8 +150,14 @@ void I2C2_state_machine_read(void)
                 I2C2_write_buf_size = 0;
                 I2C2_read_buf_index = 0;
                 I2C2_read_buf_expected = 0; // PAS SUR
-                I2C2_state = E_I2C2_READ_RESULT;
+                I2C2_state = E_I2C2_CALLBACK;
             }
+            break;
+        case E_I2C2_CALLBACK:
+            if (I2C2_read_cb)
+                (*I2C2_read_cb)(I2C2_read_buf);
+            I2C2_read_cb = NULL;
+            I2C2_state = E_I2C2_DONE;
             break;
     }
 }

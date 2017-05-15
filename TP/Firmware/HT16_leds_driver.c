@@ -3,7 +3,8 @@
 
 u32     leds_status;
 u16     display_buf[4];
-u8      display_buf_dirty = 1;
+
+u8      HT16_write_leds_request = 1;
 
 static u16  ledmatrix[16] = {
     0x0004, 0x8000, 0x2000, 0x1000,
@@ -15,23 +16,20 @@ static u16  ledmatrix[16] = {
 
 void led_set(u8 index)
 {
-    //display_buf[3 - index >> 2] |= ledmatrix[index];
     leds_status |= (1 << index);
-    display_buf_dirty = 1;
+    HT16_write_leds_request = 1;
 }
 
 void led_toggle(u8 index)
 {
-    //display_buf[3 - index / 4] ^= ledmatrix[index];
     leds_status ^= (1 << index);
-    display_buf_dirty = 1;
+    HT16_write_leds_request = 1;
 }
 
 void led_clr(u8 index)
 {
-    //display_buf[3 - index / 4] &= ~ledmatrix[index];
     leds_status &= ~(1 << index);
-    display_buf_dirty = 1;
+    HT16_write_leds_request = 1;
 }
 
 
@@ -61,18 +59,17 @@ void leds_status_to_display_buffer(void)
 void led_refresh(void)
 {
     int	i;
+    u8  buffer[8];
 
     leds_status_to_display_buffer();
-    I2C2_push(0xE0);
-    I2C2_push(0x00);
     i = 0;
     while (i < 4)
     {
-        I2C2_push(display_buf[i] >> 8);
-        I2C2_push(display_buf[i] & 0xFF);
+        buffer[2 * i] = display_buf[i] >> 8;
+        buffer[2 * i + 1] = display_buf[i] & 0xFF;
         i++;
     }
-    I2C2_write();
-    display_buf_dirty = 0;
+    I2C2_write(0xE0, 0x00, buffer, 8);
+    HT16_write_leds_request = 0;
 }
 
