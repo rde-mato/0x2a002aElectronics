@@ -25,13 +25,13 @@ void send_qtime(void)
 
 void set_bpm(void)
 {
-    PR2 = FREQUENCY / (bpm / 15); // bpm * 4 / 60
+    PR2 = FREQUENCY / 4;//(bpm / 15); // bpm * 4 / 60
 }
 
 void __ISR(_TIMER_3_VECTOR, IPL3AUTO) Timer3Handler(void)
 {
     LED_ON_OFF = !LED_ON_OFF;
-
+    SPI2_write();
 //    led_toggle((qtime - 1) & 0x0F);
 //    led_toggle(qtime);
     qtime = (qtime + 1) & 0x0F;

@@ -24,6 +24,7 @@
       <itemPath>HT16_keys_driver.c</itemPath>
       <itemPath>HT16_leds_driver.c</itemPath>
       <itemPath>main_encoder_driver.c</itemPath>
+      <itemPath>SPI_driver.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

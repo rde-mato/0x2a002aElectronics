@@ -14,6 +14,8 @@ int main(void)
     INT_init();
     T2CONbits.ON = 1;
 
+
+    SPI2_init();
     HT16_init();
     led_toggle(0);
     while (42)

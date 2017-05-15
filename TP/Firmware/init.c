@@ -5,11 +5,25 @@ extern char pattern[16][4][3];
 extern u8   I2C2_state;
 extern u32   bpm;
 
+void SPI2_init(void)
+{
+    SPI2CON = 0;
+    SPI2BRG = 100; //set baudrate
+    SPI2CONbits.CKE = 1;
+    SPI2CONbits.CKP = 1; // mode 11 tás vue
+    SPI2CONbits.MODE16 = 1;
+    SPI2CONbits.MODE32 = 0;
+    SPI2CONbits.SSEN = 1;
+    //SPI2CONbits.FRMEN = 1; //framemode, actve le ss
+    SPI2CONbits.MSTEN = 1; //activer master mode
+    SPI2CONbits.ON = 1; //ON spi2
+}
+
 
 void I2C2_init(void) //// A GERER AVEC DES INTERRUPTS
 {
     u8 i;
-    u32 cpt;
+    u16 cpt;
     // envoi de 9 coups de clock pour reset les chips
     TRISFbits.TRISF5 = 0x0; //F5 configured for output
     i = 0;
@@ -62,22 +76,32 @@ void HT16_init(void)
 
 void GPIO_init(void)
 {
-    u8 i;
+    //u8 i;
 
     TRISFbits.TRISF1 = 0x0; //F1 configured for output
     TRISDbits.TRISD8 = 0x1; //D8 configured for input
     LED_ON_OFF = 0x0;
 
-    // CodG GPIO RB2 & RB3
-    TRISBbits.TRISB2 = 0x1; //configured for input
-    TRISBbits.TRISB3 = 0x1; //configured for input
-    CNCONbits.ON = 1; // enable change notification globally
-    CNENbits.CNEN4 = 1; // enable change notification individually
-    CNENbits.CNEN5 = 1; // enable change notification individually
-    CNPUEbits.CNPUE4 = 0; //disable pull up a prionri pas necessaire
-    CNPUEbits.CNPUE5 = 0; //disable pull up a prionri pas necessaire
-    i = PORTBbits.RB2; //not sure, just to clear
-    i = PORTBbits.RB3; //not sure, just to clear
+    // CodG GPIO D11
+    TRISDbits.TRISD10 = 0x1; //D10 configured for input
+    TRISDbits.TRISD11 = 0x1; //D10 configured for input
+
+    //SS di MCP bordel.... a arranger apres quand on qurq plusieur chip spi
+    TRISGbits.TRISG9 = 0x0;
+    LATGbits.LATG9 = 0x1;
+
+
+
+//    // CodG GPIO RB2 & RB3
+//    TRISBbits.TRISB2 = 0x1; //configured for input
+//    TRISBbits.TRISB3 = 0x1; //configured for input
+//    CNCONbits.ON = 1; // enable change notification globally
+//    CNENbits.CNEN4 = 1; // enable change notification individually
+//    CNENbits.CNEN5 = 1; // enable change notification individually
+//    CNPUEbits.CNPUE4 = 0; //disable pull up a prionri pas necessaire
+//    CNPUEbits.CNPUE5 = 0; //disable pull up a prionri pas necessaire
+//    i = PORTBbits.RB2; //not sure, just to clear
+//    i = PORTBbits.RB3; //not sure, just to clear
 }
 
 void INT_init(void)
@@ -101,6 +125,18 @@ void INT_init(void)
     IPC6bits.CNIP = 2; // Set priority
     IFS1bits.CNIF = 0; // reset the flag
     IEC1bits.CNIE = 1; //enable interrupt
+
+     // CodG INTERRUPT 3
+     INTCONbits.INT3EP = 1; // Interrupt on rising edge
+     IFS0bits.INT3IF = 0; // Reset the flag
+     IPC3bits.INT3IP = 2; // Set priority
+     IEC0bits.INT3IE = 1; // Enable interrupt
+
+     // CodG INTERRUPT 4
+     INTCONbits.INT4EP = 1; // Interrupt on rising edge
+     IFS0bits.INT4IF = 0; // Reset the flag
+     IPC4bits.INT4IP = 2; // Set priority
+     IEC0bits.INT4IE = 1; // Enable interrupt
 
     // TIMER 2-3 INTERRUPT
     IFS0bits.T3IF = 0;
