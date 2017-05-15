@@ -31,6 +31,7 @@ void I2C2_init(void) //// A GERER AVEC DES INTERRUPTS
 
 void HT16_init(void)
 {
+    u8  message[8] = {0};
     int	i;
     u8  config[5] = {
         0x00,
@@ -43,27 +44,18 @@ void HT16_init(void)
     i = 0;
     while (i < sizeof(config) / sizeof(*config))
     {
-        I2C2_push(0xE0);
-        I2C2_push(config[i]);
-        I2C2_write();
+        I2C2_write(0xE0, config[i], NULL, 0);
         while (!(I2C2_state == E_I2C2_DONE))
             WDTCONbits.WDTCLR = 1;
         i++;
     }
 
-    i = 0;
-    I2C2_push(0xE0);
-    I2C2_push(0x00);
-    while (i++ < 8)
-        I2C2_push(0x00);
-    I2C2_write();
+    I2C2_write(0xE0, 0x00, message, 8);
     while (!(I2C2_state == E_I2C2_DONE))
         WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 
-    I2C2_push(0xE0);
-    I2C2_push(0x40);
-    I2C2_read(6);
-    while (!(I2C2_state == E_I2C2_READ_RESULT))
+    I2C2_read_callback(0xE0, 0x40, 6, NULL);
+    while (!(I2C2_state == E_I2C2_DONE))
         WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 }
 
@@ -108,11 +100,6 @@ void INT_init(void)
     IFS1bits.I2C2MIF = 0; // reset flag
     IPC8bits.I2C2IP = 4; // au pif
     IEC1bits.I2C2MIE = 1;
-
-    //SOFTWARE INTERRUPT
-    IFS0bits.CS0IF = 0;
-    IPC0bits.CS0IP = 2; // a revoir
-    IEC0bits.CS0IE = 1;
 
     __builtin_enable_interrupts();
 }

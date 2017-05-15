@@ -1,12 +1,11 @@
 #include <xc.h>
-#include "0x2a002a.h"
 #include <sys/attribs.h>
+#include "0x2a002a.h"
 
 extern char pattern[16][4][3];
 u32     bpm = 142;
 u8      qtime = 0;
-extern u8   HT16_read_request;
-extern u32  poll_count;
+extern u8   HT16_read_keys_request;
 
 
 

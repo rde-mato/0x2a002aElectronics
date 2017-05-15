@@ -1,0 +1,4 @@
+# Ignore compiled source #
+**/*.o
+TP/Firmware/build
+TP/Firmware/dist
