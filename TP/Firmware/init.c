@@ -109,11 +109,6 @@ void INT_init(void)
     IPC8bits.I2C2IP = 4; // au pif
     IEC1bits.I2C2MIE = 1;
 
-    //SOFTWARE INTERRUPT
-    IFS0bits.CS0IF = 0;
-    IPC0bits.CS0IP = 2; // a revoir
-    IEC0bits.CS0IE = 1;
-
     __builtin_enable_interrupts();
 }
 

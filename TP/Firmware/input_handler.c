@@ -4,11 +4,10 @@
 
 
 extern u32     current_key_scan;
-extern u8      event_type;
-extern u8      event_source;
 
-void __ISR(_CORE_SOFTWARE_0_VECTOR, IPL2AUTO) ButtonActionsHandler(void) {
-    IFS0bits.CS0IF = 0;
+
+void event_handler(u8 event_type, u8 event_source)
+{
     switch (event_type)
     {
         case E_KEY_PRESSED:

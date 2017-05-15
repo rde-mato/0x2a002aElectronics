@@ -8,9 +8,6 @@ u8      button_buf[16];
 u32     current_key_scan = 0;
 u32     previous_key_scan = 0;
 
-u8      event_type = 0;
-u8      event_source = 0;
-
 u32     poll_count = 0;
 u32     buttons_timers[32] = {0};
 
@@ -41,13 +38,6 @@ void __ISR(_TIMER_5_VECTOR, IPL2AUTO) Timer5Handler(void)
     HT16_read_request = 1;
 }
 
-void send_button_interrupt(u8 interrupt_type, u8 interrupt_button)
-{
-    event_type = interrupt_type;
-    event_source = interrupt_button;
-    IFS0bits.CS0IF = 1;
-}
-
 void process_key_scan(void)
 {
     u32 changed_buttons;
@@ -70,7 +60,7 @@ void process_key_scan(void)
         while (i < 32)
         {
             if (newly_pressed_buttons & (1 << i))
-                send_button_interrupt(E_KEY_PRESSED, i);
+                event_handler(E_KEY_PRESSED, i);
             ++i;
         }
     }
@@ -80,7 +70,7 @@ void process_key_scan(void)
         while (i < 32)
         {
             if (newly_released_buttons & (1 << i))
-                send_button_interrupt(E_KEY_RELEASED, i);
+                event_handler(E_KEY_RELEASED, i);
             ++i;
         }
     }
@@ -94,7 +84,7 @@ void process_key_scan(void)
                 buttons_timers[i] += current_poll_count;
                 if(buttons_timers[i] > LONG_PRESS_LIMIT)
                 {
-                    send_button_interrupt(E_KEY_LONG_PRESSED, i);
+                    event_handler(E_KEY_LONG_PRESSED, i);
                     buttons_timers[i] = 0;
                 }
             }
