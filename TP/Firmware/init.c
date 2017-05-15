@@ -50,7 +50,7 @@ void HT16_init(void)
         i++;
     }
 
-    I2C2_write(0xE0, 0xE0, message, 8);
+    I2C2_write(0xE0, 0x00, message, 8);
     while (!(I2C2_state == E_I2C2_DONE))
         WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 
