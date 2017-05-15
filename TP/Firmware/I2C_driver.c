@@ -1,7 +1,6 @@
 #include <xc.h>
 #include <sys/attribs.h>
 #include "0x2a002a.h"
-#include <stdlib.h>
 
 
 u8  I2C2_state = E_I2C2_DONE;

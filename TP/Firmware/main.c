@@ -15,7 +15,7 @@ int main(void)
     T2CONbits.ON = 1;
 
     HT16_init();
-
+    led_toggle(0);
     while (42)
     {
         manage_I2C2();

@@ -11,7 +11,7 @@ void I2C2_init(void) //// A GERER AVEC DES INTERRUPTS
     u8 i;
     u32 cpt;
     // envoi de 9 coups de clock pour reset les chips
-    F5_IO_SELECTOR = 0x0; //F5 configured for output
+    TRISFbits.TRISF5 = 0x0; //F5 configured for output
     i = 0;
     LATFbits.LATF5 = 0;
     while (i < 18)
@@ -62,9 +62,13 @@ void HT16_init(void)
 
 void GPIO_init(void)
 {
-    F1_IO_SELECTOR = 0x0; //F1 configured for output
-    D8_IO_SELECTOR = 0x1; //D8 configured for input
+    TRISFbits.TRISF1 = 0x0; //F1 configured for output
+    TRISDbits.TRISD8 = 0x1; //D8 configured for input
     LED_ON_OFF = 0x0;
+
+
+    // CodG GPIO D11
+    TRISDbits.TRISD11 = 0x1; //D11 configured for input
 }
 
 void INT_init(void)
@@ -83,6 +87,18 @@ void INT_init(void)
     IFS0bits.INT2IF = 0; // Reset the flag
     IPC2bits.INT2IP = 2; // Set priority
     IEC0bits.INT2IE = 1; // Enable interrupt
+
+    // CodG INTERRUPT 3
+    INTCONbits.INT3EP = 1; // Interrupt on rising edge
+    IFS0bits.INT3IF = 0; // Reset the flag
+    IPC3bits.INT3IP = 2; // Set priority
+    IEC0bits.INT3IE = 1; // Enable interrupt
+
+
+//    INTCONbits.INT4EP = 1; // Interrupt on rising edge
+//    IFS0bits.INT4IF = 0; // Reset the flag
+//    IPC4bits.INT4IP = 2; // Set priority
+//    IEC0bits.INT4IE = 1; // Enable interrupt
 
 
     // TIMER 2-3 INTERRUPT

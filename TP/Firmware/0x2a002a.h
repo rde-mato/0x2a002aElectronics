@@ -4,10 +4,6 @@
 #include <stdint.h>
 
 #define LED_ON_OFF LATFbits.LATF1
-#define BUTTON_SWITCH_OPEN PORTDbits.RD8
-#define F1_IO_SELECTOR TRISFbits.TRISF1
-#define F5_IO_SELECTOR TRISFbits.TRISF5
-#define D8_IO_SELECTOR TRISDbits.TRISD8
 #define FREQUENCY (8000000ul)
 #define BUTTON_POLL_DELAY_MS 50
 #define LONG_PRESS_LIMIT 100
@@ -41,12 +37,6 @@ typedef unsigned long u32;
 typedef void (* read_callback)(u8 *);
 typedef void (* write_callback)(void);
 
-//enum E_I2C2_READ_REQUEST
-//{
-//    E_NONE = 0,
-//    E_KEYSCAN
-//};
-
 enum E_EVENT_TYPE
 {
     E_EVENT_NONE = 0,
@@ -73,11 +63,6 @@ enum E_I2C2_STATE {
     E_I2C2_READ_AND_ACK,
     E_I2C2_READ_AND_NACK,
     E_I2C2_CALLBACK
-
 };
-
-void    push_I2C2_fifo(u8 mode, u8 data);
-void 	I2C2_push(u8 data);
-
 
 #endif	/* OX2A002A_H */
