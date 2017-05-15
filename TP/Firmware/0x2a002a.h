@@ -37,12 +37,19 @@ typedef unsigned long u32;
 typedef void (* read_callback)(u8 *);
 typedef void (* write_callback)(void);
 
+enum E_EVENT_SOURCE
+{
+    E_SOURCE_ENCODER_MAIN
+};
+
 enum E_EVENT_TYPE
 {
     E_EVENT_NONE = 0,
     E_KEY_PRESSED,
     E_KEY_RELEASED,
-    E_KEY_LONG_PRESSED
+    E_KEY_LONG_PRESSED,
+    E_ENCODER_TURNED_RIGHT,
+    E_ENCODER_TURNED_LEFT
 };
 
 enum E_I2C2_STATE {
