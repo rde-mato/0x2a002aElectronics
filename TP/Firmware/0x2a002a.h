@@ -1,5 +1,5 @@
-#ifndef TP_H
-#define	TP_H
+#ifndef OX2A002A_H
+#define	OX2A002A_H
 
 #include <stdint.h>
 
@@ -80,4 +80,4 @@ void 	I2C2_push(u8 data);
 void 	I2C2_write(void);
 
 
-#endif	/* TP_H */
+#endif	/* OX2A002A_H */

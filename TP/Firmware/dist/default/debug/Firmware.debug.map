@@ -1135,24 +1135,24 @@ END GROUP
  .debug_pubnames
                 0x00000592       0x28 c:/program files (x86)/microchip/xc32/v1.34/bin/bin/../../lib/gcc/pic32mx/4.5.2/../../../../pic32mx/lib\libpic32.a(defaultinterrupt.o)
 
-.debug_info     0x00000000     0x57c9
+.debug_info     0x00000000     0x585f
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000       0xd2 c:/program files (x86)/microchip/xc32/v1.34/bin/bin/../../lib/gcc/pic32mx/4.5.2/../../../../pic32mx/lib\software-debug-break.o
- .debug_info    0x000000d2       0xd4 build/default/debug/config.o
- .debug_info    0x000001a6     0x1f66 build/default/debug/init.o
- .debug_info    0x0000210c      0x62b build/default/debug/UART.o
- .debug_info    0x00002737      0x4ea build/default/debug/main.o
- .debug_info    0x00002c21      0x65c build/default/debug/timer.o
- .debug_info    0x0000327d      0xb19 build/default/debug/I2C_driver.o
- .debug_info    0x00003d96      0x477 build/default/debug/I2C_handler.o
- .debug_info    0x0000420d      0x4fc build/default/debug/input_handler.o
- .debug_info    0x00004709      0x99f build/default/debug/HT16_keys_driver.o
- .debug_info    0x000050a8      0x30b build/default/debug/HT16_leds_driver.o
- .debug_info    0x000053b3       0xe2 c:/program files (x86)/microchip/xc32/v1.34/bin/bin/../../lib/gcc/pic32mx/4.5.2/../../../../pic32mx/lib\libpic32.a(default-bootstrap-exception-handler.o)
- .debug_info    0x00005495       0xbc c:/program files (x86)/microchip/xc32/v1.34/bin/bin/../../lib/gcc/pic32mx/4.5.2/../../../../pic32mx/lib\libpic32.a(default-on-reset.o)
- .debug_info    0x00005551       0xc4 c:/program files (x86)/microchip/xc32/v1.34/bin/bin/../../lib/gcc/pic32mx/4.5.2/../../../../pic32mx/lib\libpic32.a(default-on-bootstrap.o)
- .debug_info    0x00005615       0xde c:/program files (x86)/microchip/xc32/v1.34/bin/bin/../../lib/gcc/pic32mx/4.5.2/../../../../pic32mx/lib\libpic32.a(default-general-exception-handler.o)
- .debug_info    0x000056f3       0xd6 c:/program files (x86)/microchip/xc32/v1.34/bin/bin/../../lib/gcc/pic32mx/4.5.2/../../../../pic32mx/lib\libpic32.a(defaultinterrupt.o)
+ .debug_info    0x000000d2       0xe3 build/default/debug/config.o
+ .debug_info    0x000001b5     0x1f75 build/default/debug/init.o
+ .debug_info    0x0000212a      0x63a build/default/debug/UART.o
+ .debug_info    0x00002764      0x4f9 build/default/debug/main.o
+ .debug_info    0x00002c5d      0x66b build/default/debug/timer.o
+ .debug_info    0x000032c8      0xb28 build/default/debug/I2C_driver.o
+ .debug_info    0x00003df0      0x486 build/default/debug/I2C_handler.o
+ .debug_info    0x00004276      0x50b build/default/debug/input_handler.o
+ .debug_info    0x00004781      0x9ae build/default/debug/HT16_keys_driver.o
+ .debug_info    0x0000512f      0x31a build/default/debug/HT16_leds_driver.o
+ .debug_info    0x00005449       0xe2 c:/program files (x86)/microchip/xc32/v1.34/bin/bin/../../lib/gcc/pic32mx/4.5.2/../../../../pic32mx/lib\libpic32.a(default-bootstrap-exception-handler.o)
+ .debug_info    0x0000552b       0xbc c:/program files (x86)/microchip/xc32/v1.34/bin/bin/../../lib/gcc/pic32mx/4.5.2/../../../../pic32mx/lib\libpic32.a(default-on-reset.o)
+ .debug_info    0x000055e7       0xc4 c:/program files (x86)/microchip/xc32/v1.34/bin/bin/../../lib/gcc/pic32mx/4.5.2/../../../../pic32mx/lib\libpic32.a(default-on-bootstrap.o)
+ .debug_info    0x000056ab       0xde c:/program files (x86)/microchip/xc32/v1.34/bin/bin/../../lib/gcc/pic32mx/4.5.2/../../../../pic32mx/lib\libpic32.a(default-general-exception-handler.o)
+ .debug_info    0x00005789       0xd6 c:/program files (x86)/microchip/xc32/v1.34/bin/bin/../../lib/gcc/pic32mx/4.5.2/../../../../pic32mx/lib\libpic32.a(defaultinterrupt.o)
 
 .debug_abbrev   0x00000000      0xaf1
  *(.debug_abbrev)
@@ -1173,24 +1173,24 @@ END GROUP
  .debug_abbrev  0x00000aa7       0x25 c:/program files (x86)/microchip/xc32/v1.34/bin/bin/../../lib/gcc/pic32mx/4.5.2/../../../../pic32mx/lib\libpic32.a(default-general-exception-handler.o)
  .debug_abbrev  0x00000acc       0x25 c:/program files (x86)/microchip/xc32/v1.34/bin/bin/../../lib/gcc/pic32mx/4.5.2/../../../../pic32mx/lib\libpic32.a(defaultinterrupt.o)
 
-.debug_line     0x00000000      0xbd7
+.debug_line     0x00000000      0xc5e
  *(.debug_line)
  .debug_line    0x00000000       0x8a c:/program files (x86)/microchip/xc32/v1.34/bin/bin/../../lib/gcc/pic32mx/4.5.2/../../../../pic32mx/lib\software-debug-break.o
  .debug_line    0x0000008a       0x1d build/default/debug/config.o
- .debug_line    0x000000a7      0x181 build/default/debug/init.o
- .debug_line    0x00000228       0xcc build/default/debug/UART.o
- .debug_line    0x000002f4       0xbe build/default/debug/main.o
- .debug_line    0x000003b2       0xdf build/default/debug/timer.o
- .debug_line    0x00000491      0x13e build/default/debug/I2C_driver.o
- .debug_line    0x000005cf       0x83 build/default/debug/I2C_handler.o
- .debug_line    0x00000652       0xd4 build/default/debug/input_handler.o
- .debug_line    0x00000726      0x137 build/default/debug/HT16_keys_driver.o
- .debug_line    0x0000085d       0xac build/default/debug/HT16_leds_driver.o
- .debug_line    0x00000909       0x97 c:/program files (x86)/microchip/xc32/v1.34/bin/bin/../../lib/gcc/pic32mx/4.5.2/../../../../pic32mx/lib\libpic32.a(default-bootstrap-exception-handler.o)
- .debug_line    0x000009a0       0x84 c:/program files (x86)/microchip/xc32/v1.34/bin/bin/../../lib/gcc/pic32mx/4.5.2/../../../../pic32mx/lib\libpic32.a(default-on-reset.o)
- .debug_line    0x00000a24       0x88 c:/program files (x86)/microchip/xc32/v1.34/bin/bin/../../lib/gcc/pic32mx/4.5.2/../../../../pic32mx/lib\libpic32.a(default-on-bootstrap.o)
- .debug_line    0x00000aac       0x95 c:/program files (x86)/microchip/xc32/v1.34/bin/bin/../../lib/gcc/pic32mx/4.5.2/../../../../pic32mx/lib\libpic32.a(default-general-exception-handler.o)
- .debug_line    0x00000b41       0x96 c:/program files (x86)/microchip/xc32/v1.34/bin/bin/../../lib/gcc/pic32mx/4.5.2/../../../../pic32mx/lib\libpic32.a(defaultinterrupt.o)
+ .debug_line    0x000000a7      0x190 build/default/debug/init.o
+ .debug_line    0x00000237       0xdb build/default/debug/UART.o
+ .debug_line    0x00000312       0xcd build/default/debug/main.o
+ .debug_line    0x000003df       0xee build/default/debug/timer.o
+ .debug_line    0x000004cd      0x14d build/default/debug/I2C_driver.o
+ .debug_line    0x0000061a       0x92 build/default/debug/I2C_handler.o
+ .debug_line    0x000006ac       0xe3 build/default/debug/input_handler.o
+ .debug_line    0x0000078f      0x146 build/default/debug/HT16_keys_driver.o
+ .debug_line    0x000008d5       0xbb build/default/debug/HT16_leds_driver.o
+ .debug_line    0x00000990       0x97 c:/program files (x86)/microchip/xc32/v1.34/bin/bin/../../lib/gcc/pic32mx/4.5.2/../../../../pic32mx/lib\libpic32.a(default-bootstrap-exception-handler.o)
+ .debug_line    0x00000a27       0x84 c:/program files (x86)/microchip/xc32/v1.34/bin/bin/../../lib/gcc/pic32mx/4.5.2/../../../../pic32mx/lib\libpic32.a(default-on-reset.o)
+ .debug_line    0x00000aab       0x88 c:/program files (x86)/microchip/xc32/v1.34/bin/bin/../../lib/gcc/pic32mx/4.5.2/../../../../pic32mx/lib\libpic32.a(default-on-bootstrap.o)
+ .debug_line    0x00000b33       0x95 c:/program files (x86)/microchip/xc32/v1.34/bin/bin/../../lib/gcc/pic32mx/4.5.2/../../../../pic32mx/lib\libpic32.a(default-general-exception-handler.o)
+ .debug_line    0x00000bc8       0x96 c:/program files (x86)/microchip/xc32/v1.34/bin/bin/../../lib/gcc/pic32mx/4.5.2/../../../../pic32mx/lib\libpic32.a(defaultinterrupt.o)
 
 .debug_frame    0x00000000      0x584
  *(.debug_frame)
