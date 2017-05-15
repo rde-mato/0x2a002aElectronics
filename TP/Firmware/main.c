@@ -1,6 +1,6 @@
 #include <xc.h>
-#include "0x2a002a.h"
 #include <sys/attribs.h>
+#include "0x2a002a.h"
 
 extern u8 I2C2_state;
 char pattern[16][4][3];

@@ -1,6 +1,6 @@
 #include <xc.h>
-#include "0x2a002a.h"
 #include <sys/attribs.h>
+#include "0x2a002a.h"
 
 
 u8      HT16_read_request = 0;

@@ -31,6 +31,13 @@
 #define MAX_WRITE_BUF 10
 #define READ_BUF_SIZE 10
 
+typedef signed char s8;
+typedef signed short s16;
+typedef signed long s32;
+typedef unsigned char u8;
+typedef unsigned short u16;
+typedef unsigned long u32;
+
 enum E_I2C2_READ_REQUEST
 {
     E_NONE = 0,
@@ -66,14 +73,6 @@ enum E_I2C2_STATE {
     E_I2C2_READ_RESULT
 
 };
-
-
-typedef signed char s8;
-typedef signed short s16;
-typedef signed long s32;
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned long u32;
 
 void    push_I2C2_fifo(u8 mode, u8 data);
 void 	I2C2_push(u8 data);

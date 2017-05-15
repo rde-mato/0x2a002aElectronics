@@ -1,6 +1,6 @@
 #include <xc.h>
-#include "0x2a002a.h"
 #include <sys/attribs.h>
+#include "0x2a002a.h"
 
 
 extern u32     current_key_scan;
