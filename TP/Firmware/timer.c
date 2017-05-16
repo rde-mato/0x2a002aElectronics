@@ -7,6 +7,7 @@ u32     bpm = 142;
 u8      qtime = 0;
 extern u8   HT16_read_keys_request;
 
+extern u8  SPI2_write_request;
 
 
 
@@ -31,7 +32,12 @@ void set_bpm(void)
 void __ISR(_TIMER_3_VECTOR, IPL3AUTO) Timer3Handler(void)
 {
     LED_ON_OFF = !LED_ON_OFF;
-    SPI2_write();
+
+
+        u8 GPIO_BANK_0[4] = {0x41, 0x12, 0x00, 0x00};
+        SPI2_write_callback(GPIO_BANK_0, 4, NULL);
+
+
 //    led_toggle((qtime - 1) & 0x0F);
 //    led_toggle(qtime);
     qtime = (qtime + 1) & 0x0F;

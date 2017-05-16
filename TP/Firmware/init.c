@@ -7,13 +7,17 @@ extern u32   bpm;
 
 void SPI2_init(void)
 {
+
+    // brg divider ?
     SPI2CON = 0;
-    SPI2BRG = 100; //set baudrate
+    SPI2BUF = 0;
+    SPI2BRG = 3; //set baudrate 1 ou 10 Mhz suivant 80 ou 8 Mhz du pbclk
+    SPI2STATbits.SPIROV = 0;
     SPI2CONbits.CKE = 1;
-    SPI2CONbits.CKP = 1; // mode 11 tás vue
-    SPI2CONbits.MODE16 = 1;
+    SPI2CONbits.CKP = 0; // mode 00 tás vue
+    SPI2CONbits.MODE16 = 0;
     SPI2CONbits.MODE32 = 0;
-    SPI2CONbits.SSEN = 1;
+    SPI2CONbits.SSEN = 0;
     //SPI2CONbits.FRMEN = 1; //framemode, actve le ss
     SPI2CONbits.MSTEN = 1; //activer master mode
     SPI2CONbits.ON = 1; //ON spi2
@@ -153,6 +157,13 @@ void INT_init(void)
     IFS1bits.I2C2MIF = 0; // reset flag
     IPC8bits.I2C2IP = 4; // au pif
     IEC1bits.I2C2MIE = 1;
+
+    //SPI2 Interrupt
+    IFS1bits.SPI2TXIF = 0; // reset flag
+    IFS1bits.SPI2RXIF = 0; // reset flag
+    IPC7bits.SPI2IP = 4; // au pif
+    IEC1bits.SPI2TXIE = 1;
+    IEC1bits.SPI2RXIE = 1;
 
     __builtin_enable_interrupts();
 }
