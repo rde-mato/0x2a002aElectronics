@@ -12,10 +12,10 @@ int main(void)
     TIMER_init();
     I2C2_init();
     INT_init();
+    SPI2_init();
     T2CONbits.ON = 1;
 
 
-    SPI2_init();
     HT16_init();
     led_toggle(0);
     while (42)
