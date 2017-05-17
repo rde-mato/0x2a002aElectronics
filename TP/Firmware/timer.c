@@ -26,16 +26,40 @@ void send_qtime(void)
 
 void set_bpm(void)
 {
-    PR2 = FREQUENCY / 4;//(bpm / 15); // bpm * 4 / 60
+    PR2 = FREQUENCY / 400;//(bpm / 15); // bpm * 4 / 60
 }
+
+//extern SPI2_read_buf_index;
+//u16 reponse = 0x2323;
 
 void __ISR(_TIMER_3_VECTOR, IPL3AUTO) Timer3Handler(void)
 {
     LED_ON_OFF = !LED_ON_OFF;
 
 
-        u8 GPIO_BANK_0[4] = {0x41, 0x12, 0x00, 0x00};
-        SPI2_write_callback(GPIO_BANK_0, 4, NULL);
+//        u8 GPIO_BANK_0[4] = {0x41, 0x12, 0x00, 0x00};
+//        SPI2_write_callback(GPIO_BANK_0, 4, NULL);
+
+//        u8 GPPU[4] = {0x41, 0x0C, 0x00, 0x00};
+//        SPI2_write_callback(GPPU, 4, NULL);
+//SPI2_read_buf_index = 0;
+//    MCP_init();
+
+    
+//
+//        SPI2BUF = 0x4112;
+//        while (SPI2STATbits.SPIBUSY) ;
+//        reponse = SPI2BUF;
+//
+//
+//
+//
+//
+//
+
+
+
+
 
 
 //    led_toggle((qtime - 1) & 0x0F);
