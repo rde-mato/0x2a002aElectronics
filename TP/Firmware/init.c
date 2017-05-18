@@ -8,20 +8,18 @@ extern u32   bpm;
 void SPI2_init(void)
 {
     __builtin_disable_interrupts();
-    // brg divider ?
     
     SPI2CON = 0;
     SPI2BUF = 0;
-    SPI2BRG = 30; //set baudrate 1 ou 10 Mhz suivant 80 ou 8 Mhz du pbclk
-    SPI2STATbits.SPIROV = 0;
-    SPI2CONbits.CKE = 0;  //pas certain ............................................
+    SPI2BRG = 3; //set baudrate 1Mhz suivant 8 Mhz du pbclk
+   // SPI2STATbits.SPIROV = 0;
+    SPI2CONbits.CKE = 1;
     SPI2CONbits.CKP = 0; // mode 00 tás vue
-    SPI2CONbits.MODE16 = 1;
-    SPI2CONbits.MODE32 = 0;
-    SPI2CONbits.SSEN = 0;
-    //SPI2CONbits.FRMEN = 1; //framemode, actve le ss
+   // SPI2CONbits.MODE16 = 0;
+    SPI2CONbits.MODE32 = 1;
     SPI2CONbits.MSTEN = 1; //activer master mode
     SPI2CONbits.ON = 1; //ON spi2
+
     __builtin_disable_interrupts();
 }
 
@@ -79,11 +77,14 @@ void HT16_init(void)
         WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 }
 
+void MCP_init(void)
+{
+    SPI2_transmit32bits(0x4004FFFF); // active les interrupts sur tous les ports
+}
+
 
 void GPIO_init(void)
 {
-    //u8 i;
-
     TRISFbits.TRISF1 = 0x0; //F1 configured for output
     TRISDbits.TRISD8 = 0x1; //D8 configured for input
     LED_ON_OFF = 0x0;
@@ -92,25 +93,12 @@ void GPIO_init(void)
     TRISDbits.TRISD10 = 0x1; //D10 configured for input
     TRISDbits.TRISD11 = 0x1; //D10 configured for input
 
-
+    //GPIO pour le SPI2
     TRISGbits.TRISG7 = 0x1;
     TRISGbits.TRISG8 = 0x0;
     //SS di MCP bordel.... a arranger apres quand on qurq plusieur chip spi
-    LATGbits.LATG9 = 0x1;
     TRISGbits.TRISG9 = 0x0;
-
-
-
-//    // CodG GPIO RB2 & RB3
-//    TRISBbits.TRISB2 = 0x1; //configured for input
-//    TRISBbits.TRISB3 = 0x1; //configured for input
-//    CNCONbits.ON = 1; // enable change notification globally
-//    CNENbits.CNEN4 = 1; // enable change notification individually
-//    CNENbits.CNEN5 = 1; // enable change notification individually
-//    CNPUEbits.CNPUE4 = 0; //disable pull up a prionri pas necessaire
-//    CNPUEbits.CNPUE5 = 0; //disable pull up a prionri pas necessaire
-//    i = PORTBbits.RB2; //not sure, just to clear
-//    i = PORTBbits.RB3; //not sure, just to clear
+    LATGbits.LATG9 = 0x1;
 }
 
 void INT_init(void)
@@ -129,11 +117,6 @@ void INT_init(void)
     IFS0bits.INT2IF = 0; // Reset the flag
     IPC2bits.INT2IP = 2; // Set priority
     IEC0bits.INT2IE = 1; // Enable interrupt
-
-    // Main encoder change notification interrupts
-    IPC6bits.CNIP = 2; // Set priority
-    IFS1bits.CNIF = 0; // reset the flag
-    IEC1bits.CNIE = 1; //enable interrupt
 
      // CodG INTERRUPT 3
      INTCONbits.INT3EP = 1; // Interrupt on rising edge

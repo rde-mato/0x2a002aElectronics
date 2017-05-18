@@ -2,15 +2,12 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
-extern u16  SPI2_write_buf[10];
-extern u8  SPI2_write_buf_size;
-
-void    MCP_init()
+void MCP_write(u8 reg, u16 data)
 {
-    SPI2_write_buf[0] = 0x4102;
-    SPI2_write_buf[1] = 0x4100;
-    SPI2_write_buf[2] = 0x4113;
-    SPI2_write_buf_size = 3;
-    SPI2_send();
-    return ;
+    SPI2_transmit32bits(0x40000000 | (reg << 16) | (data & 0xFFFF));
+}
+
+u16 MCP_read_gpio(void)
+{
+    return (SPI2_transmit32bits(0x4112FFFF) & 0xFFFF);
 }
