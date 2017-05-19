@@ -30,7 +30,7 @@ void __ISR(_TIMER_3_VECTOR, IPL3AUTO) Timer3Handler(void)
 {
     LED_ON_OFF = !LED_ON_OFF;
 
-    reponse = SPI2_transmit32bits(0x4112FFFF);
+  //  reponse = SPI2_transmit32bits(0x4112FFFF);
 
     led_toggle((qtime - 1) & 0x0F);
     led_toggle(qtime);

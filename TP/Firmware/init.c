@@ -77,9 +77,14 @@ void HT16_init(void)
         WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 }
 
-void MCP_init(void)
+void MCP_init_encoders(void)
 {
     SPI2_transmit32bits(0x4004FFFF); // active les interrupts sur tous les ports
+}
+
+void MCP_init_LCD(void)
+{
+    SPI2_transmit32bits(0x40000000); // fout toutes les GPIO en output
 }
 
 
