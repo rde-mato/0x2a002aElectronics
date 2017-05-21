@@ -6,8 +6,9 @@ char pattern[16][4][3];
 
 int main(void)
 {
-    u16 cpt = 0;
-
+    u8 i = 0;
+    u8 y = -1;
+    
     init_pattern();
 
     GPIO_init();
@@ -27,18 +28,32 @@ int main(void)
     MCP_init_LCD();
 
     LCD_display_on_off(1);
-    while (++cpt < 4000) ;
-    LCD_display_start_origin(16);
-    while (++cpt < 8000) ;
-    LCD_display_set_y_address(16);
-    while (++cpt < 12000) ;
-    LCD_display_set_x_page(16);
-    while (++cpt < 16000) ;
-    LCD_display_write_data(0xAA);
+    LCD_clear();
+    LCD_display_start_origin(0);
+    LCD_display_set_y_address(0);
+    LCD_display_set_x_page(0);
 
+
+    
 
     while (42)
     {
+        y = -1;
+        while (++y < 8)
+        {
+            LCD_display_set_x_page(y);
+            i = -1;
+            while (++i < 64)
+                LCD_display_write_data(0xaa);
+        }
+        y = -1;
+        while (++y < 8)
+        {
+            LCD_display_set_x_page(y);
+            i = -1;
+            while (++i < 64)
+                LCD_display_write_data(~0xaa);
+        }
         manage_I2C2();
         WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
     }

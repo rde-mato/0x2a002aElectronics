@@ -11,7 +11,7 @@ void SPI2_init(void)
     
     SPI2CON = 0;
     SPI2BUF = 0;
-    SPI2BRG = 3; //set baudrate 1Mhz suivant 8 Mhz du pbclk
+    SPI2BRG = 0; //set baudrate 1Mhz suivant 8 Mhz du pbclk
    // SPI2STATbits.SPIROV = 0;
     SPI2CONbits.CKE = 1;
     SPI2CONbits.CKP = 0; // mode 00 tás vue
