@@ -23,6 +23,7 @@
 #define I2C2_NACK   1
 
 #define I2C2_READY (I2C2_state == E_I2C2_DONE)
+#define SPI2_READY (SPI2_state == E_SPI2_DONE)
 
 #define MAX_WRITE_BUF 10
 #define READ_BUF_SIZE 10
@@ -37,12 +38,19 @@ typedef unsigned long u32;
 typedef void (* read_callback)(u8 *);
 typedef void (* write_callback)(void);
 
+enum E_EVENT_SOURCE
+{
+    E_SOURCE_ENCODER_MAIN
+};
+
 enum E_EVENT_TYPE
 {
     E_EVENT_NONE = 0,
     E_KEY_PRESSED,
     E_KEY_RELEASED,
-    E_KEY_LONG_PRESSED
+    E_KEY_LONG_PRESSED,
+    E_ENCODER_TURNED_RIGHT,
+    E_ENCODER_TURNED_LEFT
 };
 
 enum E_I2C2_STATE {
@@ -63,6 +71,15 @@ enum E_I2C2_STATE {
     E_I2C2_READ_AND_ACK,
     E_I2C2_READ_AND_NACK,
     E_I2C2_CALLBACK
+};
+
+enum E_SPI2_STATE {
+    E_SPI2_DONE = 0,
+    E_SPI2_WRITE,
+    E_SPI2_WRITE_CALLBACK,
+    E_SPI2_READ_ADDRESS,
+    E_SPI2_READ_BYTE,
+    E_SPI2_READ_CALLBACK
 };
 
 #endif	/* OX2A002A_H */

@@ -5,11 +5,29 @@ extern char pattern[16][4][3];
 extern u8   I2C2_state;
 extern u32   bpm;
 
+void SPI2_init(void)
+{
+    __builtin_disable_interrupts();
+    
+    SPI2CON = 0;
+    SPI2BUF = 0;
+    SPI2BRG = 0; //set baudrate 1Mhz suivant 8 Mhz du pbclk
+   // SPI2STATbits.SPIROV = 0;
+    SPI2CONbits.CKE = 1;
+    SPI2CONbits.CKP = 0; // mode 00 tás vue
+   // SPI2CONbits.MODE16 = 0;
+    SPI2CONbits.MODE32 = 1;
+    SPI2CONbits.MSTEN = 1; //activer master mode
+    SPI2CONbits.ON = 1; //ON spi2
+
+    __builtin_disable_interrupts();
+}
+
 
 void I2C2_init(void) //// A GERER AVEC DES INTERRUPTS
 {
     u8 i;
-    u32 cpt;
+    u16 cpt;
     // envoi de 9 coups de clock pour reset les chips
     TRISFbits.TRISF5 = 0x0; //F5 configured for output
     i = 0;
@@ -59,6 +77,16 @@ void HT16_init(void)
         WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 }
 
+void MCP_init_encoders(void)
+{
+    SPI2_transmit32bits(0x4004FFFF); // active les interrupts sur tous les ports
+}
+
+void MCP_init_LCD(void)
+{
+    SPI2_transmit32bits(0x40000000); // fout toutes les GPIO en output
+}
+
 
 void GPIO_init(void)
 {
@@ -66,9 +94,16 @@ void GPIO_init(void)
     TRISDbits.TRISD8 = 0x1; //D8 configured for input
     LED_ON_OFF = 0x0;
 
-
     // CodG GPIO D11
-    TRISDbits.TRISD11 = 0x1; //D11 configured for input
+    TRISDbits.TRISD10 = 0x1; //D10 configured for input
+    TRISDbits.TRISD11 = 0x1; //D10 configured for input
+
+    //GPIO pour le SPI2
+    TRISGbits.TRISG7 = 0x1;
+    TRISGbits.TRISG8 = 0x0;
+    //SS di MCP bordel.... a arranger apres quand on qurq plusieur chip spi
+    TRISGbits.TRISG9 = 0x0;
+    LATGbits.LATG9 = 0x1;
 }
 
 void INT_init(void)
@@ -88,18 +123,17 @@ void INT_init(void)
     IPC2bits.INT2IP = 2; // Set priority
     IEC0bits.INT2IE = 1; // Enable interrupt
 
-    // CodG INTERRUPT 3
-    INTCONbits.INT3EP = 1; // Interrupt on rising edge
-    IFS0bits.INT3IF = 0; // Reset the flag
-    IPC3bits.INT3IP = 2; // Set priority
-    IEC0bits.INT3IE = 1; // Enable interrupt
+     // CodG INTERRUPT 3
+     INTCONbits.INT3EP = 1; // Interrupt on rising edge
+     IFS0bits.INT3IF = 0; // Reset the flag
+     IPC3bits.INT3IP = 2; // Set priority
+     IEC0bits.INT3IE = 1; // Enable interrupt
 
-
-//    INTCONbits.INT4EP = 1; // Interrupt on rising edge
-//    IFS0bits.INT4IF = 0; // Reset the flag
-//    IPC4bits.INT4IP = 2; // Set priority
-//    IEC0bits.INT4IE = 1; // Enable interrupt
-
+     // CodG INTERRUPT 4
+     INTCONbits.INT4EP = 1; // Interrupt on rising edge
+     IFS0bits.INT4IF = 0; // Reset the flag
+     IPC4bits.INT4IP = 2; // Set priority
+     IEC0bits.INT4IE = 1; // Enable interrupt
 
     // TIMER 2-3 INTERRUPT
     IFS0bits.T3IF = 0;
@@ -116,6 +150,11 @@ void INT_init(void)
     IFS1bits.I2C2MIF = 0; // reset flag
     IPC8bits.I2C2IP = 4; // au pif
     IEC1bits.I2C2MIE = 1;
+
+//    //SPI2 Interrupt
+//    IFS1bits.SPI2RXIF = 0; // reset flag
+//    IPC7bits.SPI2IP = 4; // au pif
+//    IEC1bits.SPI2RXIE = 1;
 
     __builtin_enable_interrupts();
 }

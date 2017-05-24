@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=config.c init.c UART.c main.c timer.c I2C_driver.c I2C_handler.c input_handler.c HT16_keys_driver.c HT16_leds_driver.c CodG.c
+SOURCEFILES_QUOTED_IF_SPACED=config.c init.c UART.c main.c timer.c I2C_driver.c I2C_handler.c input_handler.c HT16_keys_driver.c HT16_leds_driver.c main_encoder_driver.c SPI_driver.c MCP_driver.c LCD_driver.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/config.o ${OBJECTDIR}/init.o ${OBJECTDIR}/UART.o ${OBJECTDIR}/main.o ${OBJECTDIR}/timer.o ${OBJECTDIR}/I2C_driver.o ${OBJECTDIR}/I2C_handler.o ${OBJECTDIR}/input_handler.o ${OBJECTDIR}/HT16_keys_driver.o ${OBJECTDIR}/HT16_leds_driver.o ${OBJECTDIR}/CodG.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/config.o.d ${OBJECTDIR}/init.o.d ${OBJECTDIR}/UART.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/timer.o.d ${OBJECTDIR}/I2C_driver.o.d ${OBJECTDIR}/I2C_handler.o.d ${OBJECTDIR}/input_handler.o.d ${OBJECTDIR}/HT16_keys_driver.o.d ${OBJECTDIR}/HT16_leds_driver.o.d ${OBJECTDIR}/CodG.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/config.o ${OBJECTDIR}/init.o ${OBJECTDIR}/UART.o ${OBJECTDIR}/main.o ${OBJECTDIR}/timer.o ${OBJECTDIR}/I2C_driver.o ${OBJECTDIR}/I2C_handler.o ${OBJECTDIR}/input_handler.o ${OBJECTDIR}/HT16_keys_driver.o ${OBJECTDIR}/HT16_leds_driver.o ${OBJECTDIR}/main_encoder_driver.o ${OBJECTDIR}/SPI_driver.o ${OBJECTDIR}/MCP_driver.o ${OBJECTDIR}/LCD_driver.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/config.o.d ${OBJECTDIR}/init.o.d ${OBJECTDIR}/UART.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/timer.o.d ${OBJECTDIR}/I2C_driver.o.d ${OBJECTDIR}/I2C_handler.o.d ${OBJECTDIR}/input_handler.o.d ${OBJECTDIR}/HT16_keys_driver.o.d ${OBJECTDIR}/HT16_leds_driver.o.d ${OBJECTDIR}/main_encoder_driver.o.d ${OBJECTDIR}/SPI_driver.o.d ${OBJECTDIR}/MCP_driver.o.d ${OBJECTDIR}/LCD_driver.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/config.o ${OBJECTDIR}/init.o ${OBJECTDIR}/UART.o ${OBJECTDIR}/main.o ${OBJECTDIR}/timer.o ${OBJECTDIR}/I2C_driver.o ${OBJECTDIR}/I2C_handler.o ${OBJECTDIR}/input_handler.o ${OBJECTDIR}/HT16_keys_driver.o ${OBJECTDIR}/HT16_leds_driver.o ${OBJECTDIR}/CodG.o
+OBJECTFILES=${OBJECTDIR}/config.o ${OBJECTDIR}/init.o ${OBJECTDIR}/UART.o ${OBJECTDIR}/main.o ${OBJECTDIR}/timer.o ${OBJECTDIR}/I2C_driver.o ${OBJECTDIR}/I2C_handler.o ${OBJECTDIR}/input_handler.o ${OBJECTDIR}/HT16_keys_driver.o ${OBJECTDIR}/HT16_leds_driver.o ${OBJECTDIR}/main_encoder_driver.o ${OBJECTDIR}/SPI_driver.o ${OBJECTDIR}/MCP_driver.o ${OBJECTDIR}/LCD_driver.o
 
 # Source Files
-SOURCEFILES=config.c init.c UART.c main.c timer.c I2C_driver.c I2C_handler.c input_handler.c HT16_keys_driver.c HT16_leds_driver.c CodG.c
+SOURCEFILES=config.c init.c UART.c main.c timer.c I2C_driver.c I2C_handler.c input_handler.c HT16_keys_driver.c HT16_leds_driver.c main_encoder_driver.c SPI_driver.c MCP_driver.c LCD_driver.c
 
 
 CFLAGS=
@@ -154,11 +154,29 @@ ${OBJECTDIR}/HT16_leds_driver.o: HT16_leds_driver.c  nbproject/Makefile-${CND_CO
 	@${RM} ${OBJECTDIR}/HT16_leds_driver.o 
 	@${FIXDEPS} "${OBJECTDIR}/HT16_leds_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/HT16_leds_driver.o.d" -o ${OBJECTDIR}/HT16_leds_driver.o HT16_leds_driver.c   
 	
-${OBJECTDIR}/CodG.o: CodG.c  nbproject/Makefile-${CND_CONF}.mk
+${OBJECTDIR}/main_encoder_driver.o: main_encoder_driver.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/CodG.o.d 
-	@${RM} ${OBJECTDIR}/CodG.o 
-	@${FIXDEPS} "${OBJECTDIR}/CodG.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/CodG.o.d" -o ${OBJECTDIR}/CodG.o CodG.c   
+	@${RM} ${OBJECTDIR}/main_encoder_driver.o.d 
+	@${RM} ${OBJECTDIR}/main_encoder_driver.o 
+	@${FIXDEPS} "${OBJECTDIR}/main_encoder_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/main_encoder_driver.o.d" -o ${OBJECTDIR}/main_encoder_driver.o main_encoder_driver.c   
+	
+${OBJECTDIR}/SPI_driver.o: SPI_driver.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/SPI_driver.o.d 
+	@${RM} ${OBJECTDIR}/SPI_driver.o 
+	@${FIXDEPS} "${OBJECTDIR}/SPI_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/SPI_driver.o.d" -o ${OBJECTDIR}/SPI_driver.o SPI_driver.c   
+	
+${OBJECTDIR}/MCP_driver.o: MCP_driver.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/MCP_driver.o.d 
+	@${RM} ${OBJECTDIR}/MCP_driver.o 
+	@${FIXDEPS} "${OBJECTDIR}/MCP_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/MCP_driver.o.d" -o ${OBJECTDIR}/MCP_driver.o MCP_driver.c   
+	
+${OBJECTDIR}/LCD_driver.o: LCD_driver.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/LCD_driver.o.d 
+	@${RM} ${OBJECTDIR}/LCD_driver.o 
+	@${FIXDEPS} "${OBJECTDIR}/LCD_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/LCD_driver.o.d" -o ${OBJECTDIR}/LCD_driver.o LCD_driver.c   
 	
 else
 ${OBJECTDIR}/config.o: config.c  nbproject/Makefile-${CND_CONF}.mk
@@ -221,11 +239,29 @@ ${OBJECTDIR}/HT16_leds_driver.o: HT16_leds_driver.c  nbproject/Makefile-${CND_CO
 	@${RM} ${OBJECTDIR}/HT16_leds_driver.o 
 	@${FIXDEPS} "${OBJECTDIR}/HT16_leds_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/HT16_leds_driver.o.d" -o ${OBJECTDIR}/HT16_leds_driver.o HT16_leds_driver.c   
 	
-${OBJECTDIR}/CodG.o: CodG.c  nbproject/Makefile-${CND_CONF}.mk
+${OBJECTDIR}/main_encoder_driver.o: main_encoder_driver.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/CodG.o.d 
-	@${RM} ${OBJECTDIR}/CodG.o 
-	@${FIXDEPS} "${OBJECTDIR}/CodG.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/CodG.o.d" -o ${OBJECTDIR}/CodG.o CodG.c   
+	@${RM} ${OBJECTDIR}/main_encoder_driver.o.d 
+	@${RM} ${OBJECTDIR}/main_encoder_driver.o 
+	@${FIXDEPS} "${OBJECTDIR}/main_encoder_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/main_encoder_driver.o.d" -o ${OBJECTDIR}/main_encoder_driver.o main_encoder_driver.c   
+	
+${OBJECTDIR}/SPI_driver.o: SPI_driver.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/SPI_driver.o.d 
+	@${RM} ${OBJECTDIR}/SPI_driver.o 
+	@${FIXDEPS} "${OBJECTDIR}/SPI_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/SPI_driver.o.d" -o ${OBJECTDIR}/SPI_driver.o SPI_driver.c   
+	
+${OBJECTDIR}/MCP_driver.o: MCP_driver.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/MCP_driver.o.d 
+	@${RM} ${OBJECTDIR}/MCP_driver.o 
+	@${FIXDEPS} "${OBJECTDIR}/MCP_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/MCP_driver.o.d" -o ${OBJECTDIR}/MCP_driver.o MCP_driver.c   
+	
+${OBJECTDIR}/LCD_driver.o: LCD_driver.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/LCD_driver.o.d 
+	@${RM} ${OBJECTDIR}/LCD_driver.o 
+	@${FIXDEPS} "${OBJECTDIR}/LCD_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/LCD_driver.o.d" -o ${OBJECTDIR}/LCD_driver.o LCD_driver.c   
 	
 endif
 
