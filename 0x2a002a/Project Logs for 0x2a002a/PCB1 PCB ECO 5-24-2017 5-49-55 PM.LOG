@@ -1,0 +1,56 @@
+Removed Pin From Net: NetName=NetCod_1_1 Pin=Cod_1-1
+Removed Pin From Net: NetName=NetCod_1_2 Pin=Cod_1-2
+Removed Pin From Net: NetName=NetCod_2_1 Pin=Cod_2-1
+Removed Pin From Net: NetName=NetCod_1_2 Pin=Cod_2-2
+Removed Pin From Net: NetName=NetCod_3_1 Pin=Cod_3-1
+Removed Pin From Net: NetName=NetCod_1_2 Pin=Cod_3-2
+Removed Pin From Net: NetName=NetCod_4_1 Pin=Cod_4-1
+Removed Pin From Net: NetName=NetCod_1_2 Pin=Cod_4-2
+Removed Pin From Net: NetName=NetCod_5_1 Pin=Cod_5-1
+Removed Pin From Net: NetName=NetCod_1_2 Pin=Cod_5-2
+Removed Pin From Net: NetName=NetCod_6_1 Pin=Cod_6-1
+Removed Pin From Net: NetName=NetCod_1_2 Pin=Cod_6-2
+Removed Pin From Net: NetName=NetCod_7_1 Pin=Cod_7-1
+Removed Pin From Net: NetName=NetCod_1_2 Pin=Cod_7-2
+Removed Pin From Net: NetName=NetCod_8_1 Pin=Cod_8-1
+Removed Pin From Net: NetName=NetCod_1_2 Pin=Cod_8-2
+Removed Pin From Net: NetName=NetCod_9_1 Pin=Cod_9-1
+Removed Pin From Net: NetName=NetCod_1_2 Pin=Cod_9-2
+Change Component Comment : Designator=Cod_1 Old Comment=Switch New Comment=Cod
+Change Component Comment : Designator=Cod_2 Old Comment=Switch New Comment=Cod
+Change Component Comment : Designator=Cod_3 Old Comment=Switch New Comment=Cod
+Change Component Comment : Designator=Cod_4 Old Comment=Switch New Comment=Cod
+Change Component Comment : Designator=Cod_5 Old Comment=Switch New Comment=Cod
+Change Component Comment : Designator=Cod_6 Old Comment=Switch New Comment=Cod
+Change Component Comment : Designator=Cod_7 Old Comment=Switch New Comment=Cod
+Change Component Comment : Designator=Cod_8 Old Comment=Switch New Comment=Cod
+Change Component Comment : Designator=Cod_9 Old Comment=Switch New Comment=Cod
+Added Component: Designator=Cod_1(PEC11R-4xxxF-Sxxxx)
+Added Component: Designator=Cod_2(PEC11R-4xxxF-Sxxxx)
+Added Component: Designator=Cod_3(PEC11R-4xxxF-Sxxxx)
+Added Component: Designator=Cod_4(PEC11R-4xxxF-Sxxxx)
+Added Component: Designator=Cod_5(PEC11R-4xxxF-Sxxxx)
+Added Component: Designator=Cod_6(PEC11R-4xxxF-Sxxxx)
+Added Component: Designator=Cod_7(PEC11R-4xxxF-Sxxxx)
+Added Component: Designator=Cod_8(PEC11R-4xxxF-Sxxxx)
+Added Component: Designator=Cod_9(PEC11R-4xxxF-Sxxxx)
+Added Pin To Net: NetName=NetCod_1_1 Pin=Cod_1-1
+Added Pin To Net: NetName=NetCod_1_2 Pin=Cod_1-2
+Added Pin To Net: NetName=NetCod_2_1 Pin=Cod_2-1
+Added Pin To Net: NetName=NetCod_1_2 Pin=Cod_2-2
+Added Pin To Net: NetName=NetCod_3_1 Pin=Cod_3-1
+Added Pin To Net: NetName=NetCod_1_2 Pin=Cod_3-2
+Added Pin To Net: NetName=NetCod_4_1 Pin=Cod_4-1
+Added Pin To Net: NetName=NetCod_1_2 Pin=Cod_4-2
+Added Pin To Net: NetName=NetCod_5_1 Pin=Cod_5-1
+Added Pin To Net: NetName=NetCod_1_2 Pin=Cod_5-2
+Added Pin To Net: NetName=NetCod_6_1 Pin=Cod_6-1
+Added Pin To Net: NetName=NetCod_1_2 Pin=Cod_6-2
+Added Pin To Net: NetName=NetCod_7_1 Pin=Cod_7-1
+Added Pin To Net: NetName=NetCod_1_2 Pin=Cod_7-2
+Added Pin To Net: NetName=NetCod_8_1 Pin=Cod_8-1
+Added Pin To Net: NetName=NetCod_1_2 Pin=Cod_8-2
+Added Pin To Net: NetName=NetCod_9_1 Pin=Cod_9-1
+Added Pin To Net: NetName=NetCod_1_2 Pin=Cod_9-2
+Added Pin To Net: NetName=SD SWITCH Pin=P3-S2
+Added Pin To Net: NetName=GND Pin=P3-S3
