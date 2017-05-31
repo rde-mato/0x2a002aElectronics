@@ -1,9 +1,30 @@
-Pouvoir faire bipper la LED au tempo desire (BPM)
-Reflechir a la meilleure maniere de stocker les infos de notes etc
-Faire un "parser" une fois cette structure definie
-
-Lister toutes les actions a faire, et leur frequence associee (ex: chaque tempo, chaque tour de bouton ...)
-Definir l'ordre de priorite des interruptions
+- cleaner le code a perimetre egal
+- faire un systeme de definition de keys
+- faire un fichier avec toutes les variables globales ?
+- mettre en place le mode rec
 
 
-ALLUMAGE DES LEDS
+determiner des boutons de controle (pas dans le chenillard) et les actions associees
+mettre des patterns en memoire
+faire marcher le lcd
+garder en memoire les valeurs des parametres
+comment sauvegarder d'une session a l'autre meme en cas de machine eteinte a la main ?
+
+Variables :
+- note courante (reinitialisee a chaque demarrage de machine). Note au sein de l'octave, donc la valeur finale entre 12 et 108 peut etre recuperee facilement
+- velocite courante
+- octave courant
+- instrument courant
+- boucle courante
+- tempo
+- 8 parametres additionnels par instrument
+- play/pause
+- instruments actifs => u16
+- mode courant : play / live
+
+
+ORDRE DE LA MEMOIRE
+Instrument
+Pattern
+Beat
+Notes et velocites
