@@ -1,0 +1,128 @@
+Removed Pin From Net: NetName=3.3V Pin=C91-1
+Removed Pin From Net: NetName=3.3V Pin=C92-1
+Removed Pin From Net: NetName=NetC71_1_2 Pin=Cod_1-A
+Removed Pin From Net: NetName=NetC72_1_1 Pin=Cod_1-B
+Removed Pin From Net: NetName=GND Pin=Cod_1-C
+Removed Pin From Net: NetName=NetC71_2_2 Pin=Cod_2-A
+Removed Pin From Net: NetName=NetC72_2_1 Pin=Cod_2-B
+Removed Pin From Net: NetName=GND Pin=Cod_2-C
+Removed Pin From Net: NetName=NetC71_3_2 Pin=Cod_3-A
+Removed Pin From Net: NetName=NetC72_3_1 Pin=Cod_3-B
+Removed Pin From Net: NetName=GND Pin=Cod_3-C
+Removed Pin From Net: NetName=NetC71_4_2 Pin=Cod_4-A
+Removed Pin From Net: NetName=NetC72_4_1 Pin=Cod_4-B
+Removed Pin From Net: NetName=GND Pin=Cod_4-C
+Removed Pin From Net: NetName=NetC71_5_2 Pin=Cod_5-A
+Removed Pin From Net: NetName=NetC72_5_1 Pin=Cod_5-B
+Removed Pin From Net: NetName=GND Pin=Cod_5-C
+Removed Pin From Net: NetName=NetC71_6_2 Pin=Cod_6-A
+Removed Pin From Net: NetName=NetC72_6_1 Pin=Cod_6-B
+Removed Pin From Net: NetName=GND Pin=Cod_6-C
+Removed Pin From Net: NetName=NetC71_7_2 Pin=Cod_7-A
+Removed Pin From Net: NetName=NetC72_7_1 Pin=Cod_7-B
+Removed Pin From Net: NetName=GND Pin=Cod_7-C
+Removed Pin From Net: NetName=NetC71_8_2 Pin=Cod_8-A
+Removed Pin From Net: NetName=NetC72_8_1 Pin=Cod_8-B
+Removed Pin From Net: NetName=GND Pin=Cod_8-C
+Removed Pin From Net: NetName=NetC71_9_2 Pin=Cod_9-A
+Removed Pin From Net: NetName=NetC72_9_1 Pin=Cod_9-B
+Removed Pin From Net: NetName=GND Pin=Cod_9-C
+Change Component Designator: OldDesignator=D1_1 NewDesignator=D1_LedsPart1
+Change Component Designator: OldDesignator=D1_2 NewDesignator=D1_LedsPart2
+Change Component Designator: OldDesignator=D1_4 NewDesignator=D1_LedsPart4
+Change Component Designator: OldDesignator=D2_1 NewDesignator=D2_LedsPart1
+Change Component Designator: OldDesignator=D2_2 NewDesignator=D2_LedsPart2
+Change Component Designator: OldDesignator=D2_4 NewDesignator=D2_LedsPart4
+Change Component Designator: OldDesignator=D3_1 NewDesignator=D3_LedsPart1
+Change Component Designator: OldDesignator=D3_2 NewDesignator=D3_LedsPart2
+Change Component Designator: OldDesignator=D3_4 NewDesignator=D3_LedsPart4
+Change Component Designator: OldDesignator=D4_1 NewDesignator=D4_LedsPart1
+Change Component Designator: OldDesignator=D4_2 NewDesignator=D4_LedsPart2
+Change Component Designator: OldDesignator=D4_4 NewDesignator=D4_LedsPart4
+Change Component Designator: OldDesignator=D5_1 NewDesignator=D5_LedsPart1
+Change Component Designator: OldDesignator=D5_2 NewDesignator=D5_LedsPart2
+Change Component Designator: OldDesignator=D5_4 NewDesignator=D5_LedsPart4
+Change Component Designator: OldDesignator=D6_1 NewDesignator=D6_LedsPart1
+Change Component Designator: OldDesignator=D6_2 NewDesignator=D6_LedsPart2
+Change Component Designator: OldDesignator=D6_4 NewDesignator=D6_LedsPart4
+Change Component Designator: OldDesignator=D7_1 NewDesignator=D7_LedsPart1
+Change Component Designator: OldDesignator=D7_2 NewDesignator=D7_LedsPart2
+Change Component Designator: OldDesignator=D7_4 NewDesignator=D7_LedsPart4
+Change Component Designator: OldDesignator=D8_1 NewDesignator=D8_LedsPart1
+Change Component Designator: OldDesignator=D8_2 NewDesignator=D8_LedsPart2
+Change Component Designator: OldDesignator=D8_4 NewDesignator=D8_LedsPart4
+Change Component Designator: OldDesignator=S1_1 NewDesignator=S1_PadsPart1
+Change Component Designator: OldDesignator=S1_2 NewDesignator=S1_PadsPart2
+Change Component Designator: OldDesignator=S2_1 NewDesignator=S2_PadsPart1
+Change Component Designator: OldDesignator=S2_2 NewDesignator=S2_PadsPart2
+Change Component Designator: OldDesignator=S3_1 NewDesignator=S3_PadsPart1
+Change Component Designator: OldDesignator=S3_2 NewDesignator=S3_PadsPart2
+Change Component Designator: OldDesignator=S4_1 NewDesignator=S4_PadsPart1
+Change Component Designator: OldDesignator=S4_2 NewDesignator=S4_PadsPart2
+Change Component Designator: OldDesignator=S5_1 NewDesignator=S5_PadsPart1
+Change Component Designator: OldDesignator=S6_1 NewDesignator=S6_PadsPart1
+Change Component Designator: OldDesignator=S7_1 NewDesignator=S7_PadsPart1
+Change Component Designator: OldDesignator=S8_1 NewDesignator=S8_PadsPart1
+Change Component Designator: OldDesignator=S9_1 NewDesignator=S9_PadsPart1
+Change Component Designator: OldDesignator=S10_1 NewDesignator=S10_PadsPart1
+Change Component Designator: OldDesignator=S11_1 NewDesignator=S11_PadsPart1
+Change Component Designator: OldDesignator=S12_1 NewDesignator=S12_PadsPart1
+Added Pin To Net: NetName=5V Pin=C91-1
+Added Pin To Net: NetName=5V Pin=C92-1
+Added Pin To Net: NetName=NetC71_1_2 Pin=Cod_1-A
+Added Pin To Net: NetName=NetC72_1_1 Pin=Cod_1-B
+Added Pin To Net: NetName=GND Pin=Cod_1-C
+Added Pin To Net: NetName=NetC71_2_2 Pin=Cod_2-A
+Added Pin To Net: NetName=NetC72_2_1 Pin=Cod_2-B
+Added Pin To Net: NetName=GND Pin=Cod_2-C
+Added Pin To Net: NetName=NetC71_3_2 Pin=Cod_3-A
+Added Pin To Net: NetName=NetC72_3_1 Pin=Cod_3-B
+Added Pin To Net: NetName=GND Pin=Cod_3-C
+Added Pin To Net: NetName=NetC71_4_2 Pin=Cod_4-A
+Added Pin To Net: NetName=NetC72_4_1 Pin=Cod_4-B
+Added Pin To Net: NetName=GND Pin=Cod_4-C
+Added Pin To Net: NetName=NetC71_5_2 Pin=Cod_5-A
+Added Pin To Net: NetName=NetC72_5_1 Pin=Cod_5-B
+Added Pin To Net: NetName=GND Pin=Cod_5-C
+Added Pin To Net: NetName=NetC71_6_2 Pin=Cod_6-A
+Added Pin To Net: NetName=NetC72_6_1 Pin=Cod_6-B
+Added Pin To Net: NetName=GND Pin=Cod_6-C
+Added Pin To Net: NetName=NetC71_7_2 Pin=Cod_7-A
+Added Pin To Net: NetName=NetC72_7_1 Pin=Cod_7-B
+Added Pin To Net: NetName=GND Pin=Cod_7-C
+Added Pin To Net: NetName=NetC71_8_2 Pin=Cod_8-A
+Added Pin To Net: NetName=NetC72_8_1 Pin=Cod_8-B
+Added Pin To Net: NetName=GND Pin=Cod_8-C
+Added Pin To Net: NetName=NetC71_9_2 Pin=Cod_9-A
+Added Pin To Net: NetName=NetC72_9_1 Pin=Cod_9-B
+Added Pin To Net: NetName=GND Pin=Cod_9-C
+Added Member To Class: ClassName=1 Member=Component Cod_1 (CodA) Cod
+Added Member To Class: ClassName=CoderSwitches Member=Component Cod_1 Switch
+Added Member To Class: ClassName=LedsPart3 Member=Component D1_LedsPart3 (D1) LED
+Added Member To Class: ClassName=PadsPart2 Member=Component S5_PadsPart2 (S5) SW-PB
+Added Member To Class: ClassName=PadsPart2 Member=Component S6_PadsPart2 (S6) SW-PB
+Added Member To Class: ClassName=uC Member=Component U2 NL37WZ07USG
+Added Member To Class: ClassName=Screen Member=Component U6 LCD-128H064A
+Added Room: Name=1
+Added Room: Name=2
+Added Room: Name=3
+Added Room: Name=4
+Added Room: Name=5
+Added Room: Name=6
+Added Room: Name=7
+Added Room: Name=8
+Added Room: Name=9
+Added Room: Name=CoderSwitches
+Added Room: Name=HT16
+Added Room: Name=LedsPart1
+Added Room: Name=LedsPart2
+Added Room: Name=LedsPart3
+Added Room: Name=LedsPart4
+Added Room: Name=MCP1
+Added Room: Name=MCP2
+Added Room: Name=MEM
+Added Room: Name=PadsPart1
+Added Room: Name=PadsPart2
+Added Room: Name=PWR
+Added Room: Name=Screen
+Added Room: Name=uC

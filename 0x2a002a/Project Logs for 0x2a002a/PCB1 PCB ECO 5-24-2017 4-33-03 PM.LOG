@@ -1,0 +1,45 @@
+Added Component: Designator=Cod1_COD1(PEC11R-4xxxF-Sxxxx)
+Added Component: Designator=Cod1_COD2(PEC11R-4xxxF-Sxxxx)
+Added Component: Designator=Cod1_COD3(PEC11R-4xxxF-Sxxxx)
+Added Component: Designator=Cod1_COD4(PEC11R-4xxxF-Sxxxx)
+Added Component: Designator=Cod1_COD5(PEC11R-4xxxF-Sxxxx)
+Added Component: Designator=Cod1_COD6(PEC11R-4xxxF-Sxxxx)
+Added Component: Designator=Cod1_COD7(PEC11R-4xxxF-Sxxxx)
+Added Component: Designator=Cod1_COD8(PEC11R-4xxxF-Sxxxx)
+Added Component: Designator=Cod1_COD 9(PEC11R-4xxxF-Sxxxx)
+Added Pin To Net: NetName=NetC71_COD1_2 Pin=Cod1_COD1-A
+Added Pin To Net: NetName=NetC72_COD1_1 Pin=Cod1_COD1-B
+Added Pin To Net: NetName=GND Pin=Cod1_COD1-C
+Added Pin To Net: NetName=NetC71_COD2_2 Pin=Cod1_COD2-A
+Added Pin To Net: NetName=NetC72_COD2_1 Pin=Cod1_COD2-B
+Added Pin To Net: NetName=GND Pin=Cod1_COD2-C
+Added Pin To Net: NetName=NetC71_COD3_2 Pin=Cod1_COD3-A
+Added Pin To Net: NetName=NetC72_COD3_1 Pin=Cod1_COD3-B
+Added Pin To Net: NetName=GND Pin=Cod1_COD3-C
+Added Pin To Net: NetName=NetC71_COD4_2 Pin=Cod1_COD4-A
+Added Pin To Net: NetName=NetC72_COD4_1 Pin=Cod1_COD4-B
+Added Pin To Net: NetName=GND Pin=Cod1_COD4-C
+Added Pin To Net: NetName=NetC71_COD5_2 Pin=Cod1_COD5-A
+Added Pin To Net: NetName=NetC72_COD5_1 Pin=Cod1_COD5-B
+Added Pin To Net: NetName=GND Pin=Cod1_COD5-C
+Added Pin To Net: NetName=NetC71_COD6_2 Pin=Cod1_COD6-A
+Added Pin To Net: NetName=NetC72_COD6_1 Pin=Cod1_COD6-B
+Added Pin To Net: NetName=GND Pin=Cod1_COD6-C
+Added Pin To Net: NetName=NetC71_COD7_2 Pin=Cod1_COD7-A
+Added Pin To Net: NetName=NetC72_COD7_1 Pin=Cod1_COD7-B
+Added Pin To Net: NetName=GND Pin=Cod1_COD7-C
+Added Pin To Net: NetName=NetC71_COD8_2 Pin=Cod1_COD8-A
+Added Pin To Net: NetName=NetC72_COD8_1 Pin=Cod1_COD8-B
+Added Pin To Net: NetName=GND Pin=Cod1_COD8-C
+Added Pin To Net: NetName=NetC71_COD 9_2 Pin=Cod1_COD 9-A
+Added Pin To Net: NetName=NetC72_COD 9_1 Pin=Cod1_COD 9-B
+Added Pin To Net: NetName=GND Pin=Cod1_COD 9-C
+Added Member To Class: ClassName=COD1 Member=Component Cod1_COD1 (Cod1A) Cod
+Added Member To Class: ClassName=COD2 Member=Component Cod1_COD2 (Cod1A) Cod
+Added Member To Class: ClassName=COD3 Member=Component Cod1_COD3 (Cod1A) Cod
+Added Member To Class: ClassName=COD4 Member=Component Cod1_COD4 (Cod1A) Cod
+Added Member To Class: ClassName=COD5 Member=Component Cod1_COD5 (Cod1A) Cod
+Added Member To Class: ClassName=COD6 Member=Component Cod1_COD6 (Cod1A) Cod
+Added Member To Class: ClassName=COD7 Member=Component Cod1_COD7 (Cod1A) Cod
+Added Member To Class: ClassName=COD8 Member=Component Cod1_COD8 (Cod1A) Cod
+Added Member To Class: ClassName=COD 9 Member=Component Cod1_COD 9 (Cod1A) Cod

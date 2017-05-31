@@ -1,0 +1,37 @@
+Added Component: Designator=D1(SMC Vishay)
+Added Component: Designator=P0(PWR)
+Added Pin To Net: NetName=NetD1_1 Pin=D1-1
+Added Pin To Net: NetName=NetC1_1 Pin=D1-2
+Added Pin To Net: NetName=NetD1_1 Pin=P0-1
+Added Pin To Net: NetName=GND Pin=P0-2
+Change Net Name : Old Net Name=NetD51_PadsPart1_2 New Net Name=NetD51_1_2
+Change Net Name : Old Net Name=NetD51_PadsPart2_2 New Net Name=NetD51_2_2
+Change Net Name : Old Net Name=NetR501_PadsPart1_2 New Net Name=NetR501_1_2
+Change Net Name : Old Net Name=NetR501_PadsPart2_2 New Net Name=NetR501_2_2
+Change Net Name : Old Net Name=NetR502_PadsPart1_2 New Net Name=NetR502_1_2
+Change Net Name : Old Net Name=NetR502_PadsPart2_2 New Net Name=NetR502_2_2
+Change Net Name : Old Net Name=NetR503_PadsPart1_2 New Net Name=NetR503_1_2
+Change Net Name : Old Net Name=NetR503_PadsPart2_2 New Net Name=NetR503_2_2
+Change Net Name : Old Net Name=NetR504_PadsPart1_2 New Net Name=NetR504_1_2
+Change Net Name : Old Net Name=NetR504_PadsPart2_2 New Net Name=NetR504_2_2
+Change Net Name : Old Net Name=NetR505_PadsPart1_2 New Net Name=NetR505_1_2
+Change Net Name : Old Net Name=NetR505_PadsPart2_2 New Net Name=NetR505_2_2
+Change Net Name : Old Net Name=NetR506_PadsPart1_2 New Net Name=NetR506_1_2
+Change Net Name : Old Net Name=NetR506_PadsPart2_2 New Net Name=NetR506_2_2
+Change Net Name : Old Net Name=NetR507_PadsPart1_2 New Net Name=NetR507_1_2
+Change Net Name : Old Net Name=NetR507_PadsPart2_2 New Net Name=NetR507_2_2
+Change Net Name : Old Net Name=NetR508_PadsPart1_2 New Net Name=NetR508_1_2
+Change Net Name : Old Net Name=NetR508_PadsPart2_2 New Net Name=NetR508_2_2
+Change Net Name : Old Net Name=NetR509_PadsPart1_2 New Net Name=NetR509_1_2
+Change Net Name : Old Net Name=NetR509_PadsPart2_2 New Net Name=NetR509_2_2
+Change Net Name : Old Net Name=NetR510_PadsPart1_2 New Net Name=NetR510_1_2
+Change Net Name : Old Net Name=NetR510_PadsPart2_2 New Net Name=NetR510_2_2
+Change Net Name : Old Net Name=NetR511_PadsPart1_2 New Net Name=NetR511_1_2
+Change Net Name : Old Net Name=NetR511_PadsPart2_2 New Net Name=NetR511_2_2
+Change Net Name : Old Net Name=NetR512_PadsPart1_2 New Net Name=NetR512_1_2
+Change Net Name : Old Net Name=NetR512_PadsPart2_2 New Net Name=NetR512_2_2
+Added Member To Class: ClassName=PWR Member=Component D1 1N5401
+Added Member To Class: ClassName=PWR Member=Component P0 Power Input
+Added Member To Class: ClassName=uC Member=Component U1 PIC32MX150F128B
+Added Member To Class: ClassName=MEM Member=Component U5 SST25VF020B
+Added Member To Class: ClassName=uC Member=Component Y1 8Mhz

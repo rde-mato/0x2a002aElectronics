@@ -1,0 +1,21 @@
+Added Component: Designator=S6_2(PAD)
+Added Component: Designator=S7_2(PAD)
+Added Component: Designator=S8_2(PAD)
+Added Component: Designator=S9_2(PAD)
+Added Component: Designator=S10_2(PAD)
+Added Component: Designator=S11_2(PAD)
+Added Component: Designator=S12_2(PAD)
+Added Pin To Net: NetName=NetD51_2_2 Pin=S6_2-1
+Added Pin To Net: NetName=NetR506_2_2 Pin=S6_2-2
+Added Pin To Net: NetName=NetD51_2_2 Pin=S7_2-1
+Added Pin To Net: NetName=NetR507_2_2 Pin=S7_2-2
+Added Pin To Net: NetName=NetD51_2_2 Pin=S8_2-1
+Added Pin To Net: NetName=NetR508_2_2 Pin=S8_2-2
+Added Pin To Net: NetName=NetD51_2_2 Pin=S9_2-1
+Added Pin To Net: NetName=NetR509_2_2 Pin=S9_2-2
+Added Pin To Net: NetName=NetD51_2_2 Pin=S10_2-1
+Added Pin To Net: NetName=NetR510_2_2 Pin=S10_2-2
+Added Pin To Net: NetName=NetD51_2_2 Pin=S11_2-1
+Added Pin To Net: NetName=NetR511_2_2 Pin=S11_2-2
+Added Pin To Net: NetName=NetD51_2_2 Pin=S12_2-1
+Added Pin To Net: NetName=NetR512_2_2 Pin=S12_2-2
