@@ -9,6 +9,10 @@ mettre des patterns en memoire
 faire marcher le lcd
 garder en memoire les valeurs des parametres
 comment sauvegarder d'une session a l'autre meme en cas de machine eteinte a la main ?
+comment faire durer un message a l'écran pendant x secondes seulement ? il nous faut un timer disponible. Ou faire une fonction de timer generique, qui prend un callback. Ca permettrait de gerer aussi les appuis longs.
+dedoubler le charset pour faire la diapositive de chaque caractere
+determiner des ecrans type pour chaque situation, qui prennent en parametre les variables globales : ex : un encodeur tourne etc
+par consequent, bien s'assurer qu'un refresh de l'écran est instant, et qu'en plus il ne bouffe pas toutes les ressources du PIC ce qui serait bloquant
 
 Variables :
 - note courante (reinitialisee a chaque demarrage de machine). Note au sein de l'octave, donc la valeur finale entre 12 et 108 peut etre recuperee facilement
@@ -28,3 +32,8 @@ Instrument
 Pattern
 Beat
 Notes et velocites
+
+BESOINS EN TIMERS
+- bpm
+- appui long
+- ecrans temporaires

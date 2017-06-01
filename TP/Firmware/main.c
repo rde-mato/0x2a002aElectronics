@@ -48,16 +48,12 @@ int main(void)
 	//aller chercher dans la flash les valeurs pour chaque pattern actif
 
 	LCD_display_on_off(1);
-	LCD_clear();
-	LCD_display_start_origin(0);
-	LCD_display_set_y_address(1,0);
-	LCD_display_set_x_page(1,0);
 
-        ftputstr("Hello World!");
-
-//
-//	LCD_display_set_y_address(0);
-//	LCD_display_set_x_page(1);
+//	LCD_clear();
+//	LCD_display_start_origin(0);
+//	LCD_display_set_y_address(1,0);
+//	LCD_display_set_x_page(1,0);
+//	ftputstr("Hello World!");
 
 
 
@@ -71,20 +67,20 @@ int main(void)
 	return (0);
 
 
-//y = -1;
-//while (++y < 8)
-//{
-//	LCD_display_set_x_page(y);
-//	i = -1;
-//	while (++i < 64)
-//		LCD_display_write_data(0xaa);
-//}
-//y = -1;
-//while (++y < 8)
-//{
-//	LCD_display_set_x_page(y);
-//	i = -1;
-//	while (++i < 64)
-//		LCD_display_write_data(~0xaa);
-//}
+	//y = -1;
+	//while (++y < 8)
+	//{
+	//	LCD_display_set_x_page(y);
+	//	i = -1;
+	//	while (++i < 64)
+	//		LCD_display_write_data(0xaa);
+	//}
+	//y = -1;
+	//while (++y < 8)
+	//{
+	//	LCD_display_set_x_page(y);
+	//	i = -1;
+	//	while (++i < 64)
+	//		LCD_display_write_data(~0xaa);
+	//}
 }
