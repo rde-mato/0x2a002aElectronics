@@ -45,32 +45,32 @@ void LCD_display_on_off(u8 on)
 void LCD_display_start_origin(u8 side, u8 line)
 {
 	LCD_display_control_instruction(0,
-			(side == LCD_LEFT),
 			(side == LCD_RIGHT),
+			(side == LCD_LEFT),
 			0xC0 | (line & 0x3F));
 }
 
 void LCD_display_set_y_address(u8 side, u8 y)
 {
 	LCD_display_control_instruction(0,
-			(side == LCD_LEFT),
 			(side == LCD_RIGHT),
+			(side == LCD_LEFT),
 			0x40 | (y & 0x3F));
 }
 
 void LCD_display_set_x_page(u8 side, u8 x)
 {
 	LCD_display_control_instruction(0,
-			(side == LCD_LEFT),
 			(side == LCD_RIGHT),
+			(side == LCD_LEFT),
 			0xB8 | (x & 0x7));
 }
 
 void LCD_display_write_data(u8 side, u8 data)
 {
-	LCD_display_control_instruction(0,
-			(side == LCD_LEFT),
+	LCD_display_control_instruction(1,
 			(side == LCD_RIGHT),
+			(side == LCD_LEFT),
 			data);
 }
 
@@ -85,7 +85,21 @@ void	clear_LCD_buffer(void)
 		col = 0;
 		while (col < 128)
 			lcd_buffer[line][col++] = 0;
-		col++;
+		line++;
+	}
+}
+void	clear_LCD_chars(void)
+{
+	u8	line;
+	u8	col;
+
+	line = 0;
+	while (line < 8)
+	{
+		col = 0;
+		while (col < 21)
+			lcd_chars[line][col++] = 0;
+		line++;
 	}
 }
 
@@ -144,43 +158,16 @@ void LCD_clear(void)
 {
 	clear_LCD_buffer();
 	print_LCD_buffer();
-
-	//	u8 x = -1;
-	//	u8 y = -1;
-	//
-	//	LCD_display_start_origin(0);
-	//	LCD_display_set_y_address(1, 0);
-	//	LCD_display_set_x_page(1, 0);
-	//	while (++y < 8)
-	//	{
-	//		LCD_display_set_x_page(1, y);
-	//		x = -1;
-	//		while (++x < 64)
-	//			LCD_display_write_data(0);
-	//	}
-	//	LCD_display_start_origin(0);
-	//	LCD_display_set_y_address(0, 0);
-	//	LCD_display_set_x_page(0, 0);
-	//	while (++y < 8)
-	//	{
-	//		LCD_display_set_x_page(0, y);
-	//		x = -1;
-	//		while (++x < 64)
-	//			LCD_display_write_data(0);
-	//	}
 }
 
-void    ftputchar(char c)
+void	print_LCD_chars(void)
 {
-	int i;
+       LCD_chars_to_buffer();
+       	print_LCD_buffer();
 
-	for(i = 0; i < 5; ++i)
-	{
-		LCD_display_write_data(charset[c][i]);
-	}
 }
 
-void    ft_putline(u8 line, char *str)
+void    LCD_load_line(u8 line, char *str)
 {
 	u8	i;
 
@@ -192,15 +179,9 @@ void    ft_putline(u8 line, char *str)
 		lcd_chars[line][i] = str[i];
 		++i;
 	}
-	LCD_chars_to_buffer();
-	print_LCD_buffer();
-}
-
-void    ftputstr(char *str)
-{
-	while(*str)
+        while(i < 21)
 	{
-		ftputchar(*str);
-		++str;
+		lcd_chars[line][i] = '\0';
+		++i;
 	}
 }

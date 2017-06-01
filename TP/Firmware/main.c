@@ -24,9 +24,6 @@ u8	active_patterns[16];
 
 int main(void)
 {
-	u8 i = 0;
-	u8 y = -1;
-
 	init_pattern();
 
 	GPIO_init();
@@ -49,38 +46,11 @@ int main(void)
 
 	LCD_display_on_off(1);
 
-//	LCD_clear();
-//	LCD_display_start_origin(0);
-//	LCD_display_set_y_address(1,0);
-//	LCD_display_set_x_page(1,0);
-//	ftputstr("Hello World!");
-
-
-
 	while (42)
 	{
 		manage_I2C2();
-
-
+		manage_SPI2();
 		WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 	}
 	return (0);
-
-
-	//y = -1;
-	//while (++y < 8)
-	//{
-	//	LCD_display_set_x_page(y);
-	//	i = -1;
-	//	while (++i < 64)
-	//		LCD_display_write_data(0xaa);
-	//}
-	//y = -1;
-	//while (++y < 8)
-	//{
-	//	LCD_display_set_x_page(y);
-	//	i = -1;
-	//	while (++i < 64)
-	//		LCD_display_write_data(~0xaa);
-	//}
 }

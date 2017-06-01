@@ -28,13 +28,21 @@ void set_bpm(void)
 
 void __ISR(_TIMER_3_VECTOR, IPL3AUTO) Timer3Handler(void)
 {
+    IFS0bits.T3IF = 0;
+
+    char    line[21] = ".....................";
+
 	LED_ON_OFF = !LED_ON_OFF;
 
 	//  reponse = SPI2_transmit32bits(0x4112FFFF);
+
+        clear_LCD_chars();
+        line[qtime] = 'a' + qtime;
+      	LCD_load_line(qtime % 8, line);
+	print_LCD_chars();
 
 	led_toggle((qtime - 1) & 0x0F);
 	led_toggle(qtime);
 	qtime = (qtime + 1) & 0x0F;
 	TMR2 = 0;
-	IFS0bits.T3IF = 0;
 }

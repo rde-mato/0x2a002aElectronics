@@ -8,7 +8,7 @@ extern u32   bpm;
 void SPI2_init(void)
 {
     __builtin_disable_interrupts();
-    
+
     SPI2CON = 0;
     SPI2BUF = 0;
     SPI2BRG = 0; //set baudrate 1Mhz suivant 8 Mhz du pbclk
@@ -20,7 +20,7 @@ void SPI2_init(void)
     SPI2CONbits.MSTEN = 1; //activer master mode
     SPI2CONbits.ON = 1; //ON spi2
 
-    __builtin_disable_interrupts();
+    __builtin_enable_interrupts();
 }
 
 
@@ -151,10 +151,12 @@ void INT_init(void)
     IPC8bits.I2C2IP = 4; // au pif
     IEC1bits.I2C2MIE = 1;
 
-//    //SPI2 Interrupt
-//    IFS1bits.SPI2RXIF = 0; // reset flag
-//    IPC7bits.SPI2IP = 4; // au pif
-//    IEC1bits.SPI2RXIE = 1;
+    //SPI2 Interrupt
+    IFS1bits.SPI2RXIF = 0; // reset flag
+    IFS1bits.SPI2TXIF = 0; // reset flag
+    IPC7bits.SPI2IP = 4; // au pif
+    IEC1bits.SPI2RXIE = 1;
+    IEC1bits.SPI2TXIE = 1;
 
     __builtin_enable_interrupts();
 }
