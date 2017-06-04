@@ -18,7 +18,9 @@
 
 #define LCD_RIGHT 0
 #define LCD_LEFT 1
-#define HALF_LENGTH 100
+
+
+u8  MCP_LCD_SPI_request;
 
 u8	lcd_chars[8][21] = { 0 };
 u8	lcd_buffer[8][128] = { 0 };
@@ -27,13 +29,17 @@ inline void LCD_display_control_instruction(u8 di, u8 cs1, u8 cs2, u8 db)
 {
 	u8 conf_bits;
 
+	// on met la configuration dans le port A et on leve l'enable
 	conf_bits = ENABLE_BIT | (cs1 != 0) * CS1_bit | (cs2 != 0) * CS2_bit | (di != 0) * DI_BIT;
 	MCP_write_8_gpio_a(conf_bits);
 	MCP_write_8_gpio_b(db);
 	conf_bits &= ~(ENABLE_BIT);
 	MCP_write_8_gpio_a(conf_bits);
+	// on redescend l'enable ce qui a pour consequence d'afficher a l'écran ce qui est dans le buffer mais ne peut-on pas grouper les ecritures dans l'input register du ks0108
+	// pas forcement necessaire de soustraire le enable bit, tout mettre a zero pourrait suffire
 	conf_bits &= 0x00 | (di != 0) * DI_BIT;
 	MCP_write_8_gpio_a(conf_bits);
+	// pourquoi ce dernier write ??? quel interet ??
 }
 
 void LCD_display_on_off(u8 on)

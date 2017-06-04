@@ -72,4 +72,3 @@ void led_refresh(void)
     I2C2_write(0xE0, 0x00, buffer, 8);
     HT16_write_leds_request = 0;
 }
-
