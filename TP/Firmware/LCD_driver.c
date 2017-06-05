@@ -20,7 +20,7 @@
 #define LCD_LEFT 1
 
 
-u8  MCP_LCD_SPI_request;
+u8  MCP_LCD_SPI_request = 0;
 
 u8	lcd_chars[8][21] = { 0 };
 u8	lcd_buffer[8][128] = { 0 };
@@ -190,4 +190,9 @@ void    LCD_load_line(u8 line, char *str)
 		lcd_chars[line][i] = '\0';
 		++i;
 	}
+}
+
+void    write_LCD(void)
+{
+    ;
 }
