@@ -30,16 +30,17 @@ void __ISR(_TIMER_3_VECTOR, IPL3AUTO) Timer3Handler(void)
 {
     IFS0bits.T3IF = 0;
 
-    char    line[21] = ".....................";
+//    char    line[21] = ".....................";
+//
+//
+//	//  reponse = SPI2_transmit32bits(0x4112FFFF);
+//
+//        clear_LCD_chars();
+//        line[qtime] = 'a' + qtime;
+//      	LCD_load_line(qtime % 8, line);
+//	print_LCD_chars();
 
-	LED_ON_OFF = !LED_ON_OFF;
-
-	//  reponse = SPI2_transmit32bits(0x4112FFFF);
-
-        clear_LCD_chars();
-        line[qtime] = 'a' + qtime;
-      	LCD_load_line(qtime % 8, line);
-	print_LCD_chars();
+    	LED_ON_OFF = !LED_ON_OFF;
 
 	led_toggle((qtime - 1) & 0x0F);
 	led_toggle(qtime);

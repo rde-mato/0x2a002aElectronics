@@ -19,9 +19,6 @@
 #define LCD_RIGHT 0
 #define LCD_LEFT 1
 
-
-u8  MCP_LCD_SPI_request = 0;
-
 u8	lcd_chars[8][21] = { 0 };
 u8	lcd_buffer[8][128] = { 0 };
 

@@ -3,6 +3,8 @@
 
 extern char pattern[16][4][3];
 extern u8   I2C2_state;
+extern u8  SPI2_state;
+
 extern u32   bpm;
 
 void SPI2_init(void)
@@ -77,15 +79,66 @@ void HT16_init(void)
         WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 }
 
-void MCP_init_encoders(void)
-{
-    SPI2_transmit32bits(0x4004FFFF); // active les interrupts sur tous les ports
-}
+//u32 SPI2_transmit32bits(u32 msg) //ancienne version du transmit 32 bits
+//{
+//    u32 res;
+//
+//    SPI2CONbits.MODE32 = 1;
+//    LATGbits.LATG9 = 0x0; //SS a 0
+//    SPI2BUF = msg;
+//    while (!SPI2STATbits.SPIRBF) ;
+//    res = SPI2BUF;
+//    LATGbits.LATG9 = 0x1; //SS a 1
+//    return (res);
+//}
+
+//void MCP_init_encoders(void)
+//{
+//    SPI2_transmit32bits(0x4004FFFF); // active les interrupts sur tous les ports
+//}
+
+//void MCP_init_encoders(void)
+//{
+//    u32 res;
+//
+//    SPI2CONbits.MODE32 = 1;
+//    LATGbits.LATG9 = 0x0; //SS a 0
+//    SPI2BUF = 0x4004FFFF;
+//    while (!SPI2STATbits.SPIRBF) ;
+//    res = SPI2BUF;
+//    LATGbits.LATG9 = 0x1; //SS a 1
+//    SPI2CONbits.MODE32 = 0; // on remet a zero car defaut en 8 bits
+//    return (res);
+//}
+
+//void MCP_init_LCD(void)
+//{
+//    SPI2_transmit32bits(0x40000000); // fout toutes les GPIO en output
+//}
 
 void MCP_init_LCD(void)
 {
-    SPI2_transmit32bits(0x40000000); // fout toutes les GPIO en output
+    u32 res;
+
+    SPI2CONbits.MODE32 = 1;
+    LATGbits.LATG9 = 0x0; //SS a 0
+    SPI2BUF = 0x40000000;
+    while (!SPI2STATbits.SPIRBF) ;
+    res = SPI2BUF;
+    LATGbits.LATG9 = 0x1; //SS a 1
+    SPI2CONbits.MODE32 = 0; // on remet a zero car defaut en 8 bits
+    return (res);
 }
+
+//void MCP_init_LCD(void)
+//{
+//    SPI2_push(E_SPI2_SS_MCP_LCD, 0x40);
+//    SPI2_push(E_SPI2_SS_MCP_LCD, 0x00);
+//    SPI2_push(E_SPI2_SS_MCP_LCD, 0x00);
+//    SPI2_push(E_SPI2_SS_MCP_LCD, 0x00);
+//    SPI2_state = E_SPI2_CONFIG;     // idealement a degager
+//    IFS1bits.SPI2RXIF = 1;
+//}
 
 
 void GPIO_init(void)

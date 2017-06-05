@@ -30,21 +30,15 @@ int main(void)
 	TIMER_init();
 	I2C2_init();
 	SPI2_init();
+	MCP_init_LCD();
 
 	INT_init();
 
 	HT16_init();
-	//MCP_init();
-	//MCP_write(0x04, 0xFFFF); //pour les encodeurs
+
+	LCD_display_on_off(0);
+
 	T2CONbits.ON = 1;
-
-	//led_toggle(0);
-
-	MCP_init_LCD();
-
-	//aller chercher dans la flash les valeurs pour chaque pattern actif
-
-	LCD_display_on_off(1);
 
 	while (42)
 	{
