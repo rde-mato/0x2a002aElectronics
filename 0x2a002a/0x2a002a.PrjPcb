@@ -28,7 +28,7 @@ PowerPortNamesTakePriority=0
 PushECOToAnnotationFile=1
 DItemRevisionGUID=
 ReportSuppressedErrorsInMessages=0
-OutputPath=
+OutputPath=Project Outputs for 0x2a002a
 LogFolderPath=
 ManagedProjectGUID=
 
@@ -291,6 +291,98 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=GLLQRMMD
 
+[GeneratedDocument1]
+DocumentPath=..\..\dossierfab\BOM\Bill of Materials-0x2a002a.xlsx
+DItemRevisionGUID=
+
+[GeneratedDocument2]
+DocumentPath=..\..\dossierfab\NC Drill\PCB1-BoardEdgeRout.TXT
+DItemRevisionGUID=
+
+[GeneratedDocument3]
+DocumentPath=..\..\dossierfab\NC Drill\PCB1-RoundHoles.TXT
+DItemRevisionGUID=
+
+[GeneratedDocument4]
+DocumentPath=..\..\dossierfab\NC Drill\PCB1-SlotHoles.TXT
+DItemRevisionGUID=
+
+[GeneratedDocument5]
+DocumentPath=..\..\dossierfab\NC Drill\PCB1.DRR
+DItemRevisionGUID=
+
+[GeneratedDocument6]
+DocumentPath=..\..\dossierfab\Gerber\PCB1.EXTREP
+DItemRevisionGUID=
+
+[GeneratedDocument7]
+DocumentPath=..\..\dossierfab\Gerber\PCB1.GBL
+DItemRevisionGUID=
+
+[GeneratedDocument8]
+DocumentPath=..\..\dossierfab\Gerber\PCB1.GBO
+DItemRevisionGUID=
+
+[GeneratedDocument9]
+DocumentPath=..\..\dossierfab\Gerber\PCB1.GBP
+DItemRevisionGUID=
+
+[GeneratedDocument10]
+DocumentPath=..\..\dossierfab\Gerber\PCB1.GBS
+DItemRevisionGUID=
+
+[GeneratedDocument11]
+DocumentPath=..\..\dossierfab\Gerber\PCB1.GD1
+DItemRevisionGUID=
+
+[GeneratedDocument12]
+DocumentPath=..\..\dossierfab\Gerber\PCB1.GG1
+DItemRevisionGUID=
+
+[GeneratedDocument13]
+DocumentPath=..\..\dossierfab\Gerber\PCB1.GKO
+DItemRevisionGUID=
+
+[GeneratedDocument14]
+DocumentPath=..\..\dossierfab\Gerber\PCB1.GM1
+DItemRevisionGUID=
+
+[GeneratedDocument15]
+DocumentPath=..\..\dossierfab\Gerber\PCB1.GM32
+DItemRevisionGUID=
+
+[GeneratedDocument16]
+DocumentPath=..\..\dossierfab\Gerber\PCB1.GPB
+DItemRevisionGUID=
+
+[GeneratedDocument17]
+DocumentPath=..\..\dossierfab\Gerber\PCB1.GPT
+DItemRevisionGUID=
+
+[GeneratedDocument18]
+DocumentPath=..\..\dossierfab\Gerber\PCB1.GTL
+DItemRevisionGUID=
+
+[GeneratedDocument19]
+DocumentPath=..\..\dossierfab\Gerber\PCB1.GTO
+DItemRevisionGUID=
+
+[GeneratedDocument20]
+DocumentPath=..\..\dossierfab\Gerber\PCB1.GTP
+DItemRevisionGUID=
+
+[GeneratedDocument21]
+DocumentPath=..\..\dossierfab\Gerber\PCB1.GTS
+DItemRevisionGUID=
+
+[GeneratedDocument22]
+DocumentPath=..\..\dossierfab\Gerber\PCB1.RUL
+DItemRevisionGUID=
+
+[GeneratedDocument23]
+DocumentPath=..\..\dossierfab\Pick Place\Pick Place for PCB1.csv
+DItemRevisionGUID=
+
 [Configuration1]
 Name=Default Configuration
 ParameterCount=0
@@ -338,7 +430,7 @@ SCH_HasExpandLogicalToPhysicalSheets=-1
 SaveSettingsToOutJob=-1
 
 [Generic_EDE]
-OutputDir=
+OutputDir=Project Outputs for 0x2a002a
 
 [OutputGroup1]
 Name=Netlist Outputs
@@ -360,12 +452,137 @@ OutputName3=VHDL File
 OutputDocumentPath3=
 OutputVariantName3=
 OutputDefault3=0
+OutputType4=CadnetixNetlist
+OutputName4=Cadnetix Netlist
+OutputDocumentPath4=
+OutputVariantName4=
+OutputDefault4=0
+OutputType5=CalayNetlist
+OutputName5=Calay Netlist
+OutputDocumentPath5=
+OutputVariantName5=
+OutputDefault5=0
+OutputType6=EDIF
+OutputName6=EDIF for PCB
+OutputDocumentPath6=
+OutputVariantName6=
+OutputDefault6=0
+OutputType7=EESofNetlist
+OutputName7=EESof Netlist
+OutputDocumentPath7=
+OutputVariantName7=
+OutputDefault7=0
+OutputType8=IntergraphNetlist
+OutputName8=Intergraph Netlist
+OutputDocumentPath8=
+OutputVariantName8=
+OutputDefault8=0
+OutputType9=MentorBoardStationNetlist
+OutputName9=Mentor BoardStation Netlist
+OutputDocumentPath9=
+OutputVariantName9=
+OutputDefault9=0
+OutputType10=MultiWire
+OutputName10=MultiWire
+OutputDocumentPath10=
+OutputVariantName10=
+OutputDefault10=0
+OutputType11=OrCadPCB2Netlist
+OutputName11=Orcad/PCB2 Netlist
+OutputDocumentPath11=
+OutputVariantName11=
+OutputDefault11=0
+OutputType12=PADSNetlist
+OutputName12=PADS ASCII Netlist
+OutputDocumentPath12=
+OutputVariantName12=
+OutputDefault12=0
+OutputType13=Pcad
+OutputName13=Pcad for PCB
+OutputDocumentPath13=
+OutputVariantName13=
+OutputDefault13=0
+OutputType14=PCADnltNetlist
+OutputName14=PCADnlt Netlist
+OutputDocumentPath14=
+OutputVariantName14=
+OutputDefault14=0
+OutputType15=Protel2Netlist
+OutputName15=Protel2 Netlist
+OutputDocumentPath15=
+OutputVariantName15=
+OutputDefault15=0
+OutputType16=ProtelNetlist
+OutputName16=Protel
+OutputDocumentPath16=
+OutputVariantName16=
+OutputDefault16=0
+OutputType17=RacalNetlist
+OutputName17=Racal Netlist
+OutputDocumentPath17=
+OutputVariantName17=
+OutputDefault17=0
+OutputType18=RINFNetlist
+OutputName18=RINF Netlist
+OutputDocumentPath18=
+OutputVariantName18=
+OutputDefault18=0
+OutputType19=SciCardsNetlist
+OutputName19=SciCards Netlist
+OutputDocumentPath19=
+OutputVariantName19=
+OutputDefault19=0
+OutputType20=SIMetrixNetlist
+OutputName20=SIMetrix
+OutputDocumentPath20=
+OutputVariantName20=
+OutputDefault20=0
+OutputType21=SIMPLISNetlist
+OutputName21=SIMPLIS
+OutputDocumentPath21=
+OutputVariantName21=
+OutputDefault21=0
+OutputType22=TangoNetlist
+OutputName22=Tango Netlist
+OutputDocumentPath22=
+OutputVariantName22=
+OutputDefault22=0
+OutputType23=TelesisNetlist
+OutputName23=Telesis Netlist
+OutputDocumentPath23=
+OutputVariantName23=
+OutputDefault23=0
+OutputType24=WireListNetlist
+OutputName24=WireList Netlist
+OutputDocumentPath24=
+OutputVariantName24=
+OutputDefault24=0
+OutputType25=XSpiceNetlist
+OutputName25=XSpice Netlist
+OutputDocumentPath25=
+OutputVariantName25=
+OutputDefault25=0
 
 [OutputGroup2]
 Name=Simulator Outputs
 Description=
 TargetPrinter=Send To OneNote 2013
 PrinterOptions=Record=PrinterOptions|Copies=1|Duplex=1|TrueTypeOptions=3|Collate=1|PrintWhat=1
+OutputType1=AdvSimNetlist
+OutputName1=Mixed Sim
+OutputDocumentPath1=
+OutputVariantName1=
+OutputDefault1=0
+OutputType2=SIMetrixSimulation
+OutputName2=SIMetrix
+OutputDocumentPath2=
+OutputVariantName2=
+OutputDefault2=0
+OutputType3=SIMPLISSimulation
+OutputName3=SIMPLIS
+OutputDocumentPath3=
+OutputVariantName3=
+OutputDefault3=0
 
 [OutputGroup3]
 Name=Documentation Outputs
@@ -476,6 +693,18 @@ OutputDocumentPath17=
 OutputVariantName17=
 OutputDefault17=0
 PageOptions17=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1
+OutputType18=Logic Analyser Print
+OutputName18=Logic Analyser Prints
+OutputDocumentPath18=
+OutputVariantName18=
+OutputDefault18=0
+PageOptions18=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1
+OutputType19=Software Platform Print
+OutputName19=Software Platform Prints
+OutputDocumentPath19=
+OutputVariantName19=
+OutputDefault19=0
+PageOptions19=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1
 
 [OutputGroup4]
 Name=Assembly Outputs
@@ -817,6 +1046,26 @@ Name=Export Outputs
 Description=
 TargetPrinter=Send To OneNote 2013
 PrinterOptions=Record=PrinterOptions|Copies=1|Duplex=1|TrueTypeOptions=3|Collate=1|PrintWhat=1
+OutputType1=AutoCAD dwg/dxf PCB
+OutputName1=AutoCAD dwg/dxf File PCB
+OutputDocumentPath1=
+OutputVariantName1=
+OutputDefault1=0
+OutputType2=AutoCAD dwg/dxf Schematic
+OutputName2=AutoCAD dwg/dxf File Schematic
+OutputDocumentPath2=
+OutputVariantName2=
+OutputDefault2=0
+OutputType3=ExportIDF
+OutputName3=Export IDF
+OutputDocumentPath3=
+OutputVariantName3=
+OutputDefault3=0
+OutputType4=ExportSTEP
+OutputName4=Export STEP
+OutputDocumentPath4=
+OutputVariantName4=[No Variations]
+OutputDefault4=0
 
 [Modification Levels]
 Type1=1
