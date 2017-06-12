@@ -8,6 +8,12 @@
 #define BUTTON_POLL_DELAY_MS 50
 #define LONG_PRESS_LIMIT 100
 
+#define MCP_LCD__CONF_RESET   TRISEbits.TRISE2 = 0;
+#define MCP_LCD_RESET         LATEbits.LATE2
+#define SS_MCP_LCD                LATGbits.LATG9
+
+
+
 #define PBCLK 8000000
 #define MIDI_BAUD_RATE 31250
 #define SET_MIDI_BRG ((u16)(PBCLK / (16 * MIDI_BAUD_RATE) - 1))

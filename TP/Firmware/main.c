@@ -24,25 +24,24 @@ u8	active_patterns[16];
 
 int main(void)
 {
-	init_pattern();
-
-	GPIO_init();
-	TIMER_init();
-	I2C2_init();
+	GPIO_init();    // bien mettre a jour avec la vraie board
+        TIMER_init();
+	//I2C2_init();
 	SPI2_init();
-	MCP_init_LCD();
 
-	INT_init();
+        MCP_LCD_init();
 
-	HT16_init();
+        INT_init();
 
-	LCD_display_on_off(0);
+        //HT16_init();
 
-	T2CONbits.ON = 1;
+        //LCD_display_on_off(0);
 
+        T2CONbits.ON = 1;
+        
 	while (42)
 	{
-		manage_I2C2();
+//		manage_I2C2();
 		manage_SPI2();
 		WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 	}
