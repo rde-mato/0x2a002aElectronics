@@ -10,31 +10,40 @@ u32 reponse;
 
 void send_qtime(void)
 {
-    u8 note = 0;
+	u8 note = 0;
 
-    while (pattern[qtime][note][notevalue])
-    {
-        UART2_send(pattern[qtime][note][notestatus]);
-        UART2_send(pattern[qtime][note][notevalue]);
-        UART2_send(pattern[qtime][note][notevelo]);
-        note = (note + 1) % 4;
-    }
+	while (pattern[qtime][note][notevalue])
+	{
+		UART2_send(pattern[qtime][note][notestatus]);
+		UART2_send(pattern[qtime][note][notevalue]);
+		UART2_send(pattern[qtime][note][notevelo]);
+		note = (note + 1) % 4;
+	}
 }
 
 void set_bpm(void)
 {
-    PR2 = FREQUENCY / 4;//(bpm / 15); // bpm * 4 / 60
+	PR2 = FREQUENCY / 4;//(bpm / 15); // bpm * 4 / 60
 }
 
 void __ISR(_TIMER_3_VECTOR, IPL3AUTO) Timer3Handler(void)
 {
-    LED_ON_OFF = !LED_ON_OFF;
-
-  //  reponse = SPI2_transmit32bits(0x4112FFFF);
-
-    led_toggle((qtime - 1) & 0x0F);
-    led_toggle(qtime);
-    qtime = (qtime + 1) & 0x0F;
-    TMR2 = 0;
     IFS0bits.T3IF = 0;
+
+//    char    line[21] = ".....................";
+//
+//
+//	//  reponse = SPI2_transmit32bits(0x4112FFFF);
+//
+//        clear_LCD_chars();
+//        line[qtime] = 'a' + qtime;
+//      	LCD_load_line(qtime % 8, line);
+//	print_LCD_chars();
+
+    	LED_ON_OFF = !LED_ON_OFF;
+
+	led_toggle((qtime - 1) & 0x0F);
+	led_toggle(qtime);
+	qtime = (qtime + 1) & 0x0F;
+	TMR2 = 0;
 }
