@@ -24,25 +24,50 @@ u8	active_patterns[16];
 
 int main(void)
 {
-	init_pattern();
+    u8  res;
+    u8  buffer[3] = {0x40, 0x12, 0b001};
+//        u8 buf[2] = {0xff, 0xff};
 
-	GPIO_init();
-	TIMER_init();
-	I2C2_init();
+//	init_pattern();
+
+	GPIO_init();    // bien mettre a jour avec la vraie board
+        TIMER_init();
 	SPI2_init();
-	MCP_init_LCD();
 
-	INT_init();
 
-	HT16_init();
 
-	LCD_display_on_off(0);
+//	SPI2CONbits.MODE32 = 1;
+//        SS_MCP = 0x0; //SS a 0
+//        SPI2BUF = 0x40000000;
+//        while (!SPI2STATbits.SPIRBF) ;
+//        res = SPI2BUF;
+//        SS_MCP = 0x1; //SS a 1
+//        SPI2CONbits.MODE32 = 0;
 
-	T2CONbits.ON = 1;
 
+        MCP_LCD_init();
+
+        INT_init();
+
+        SPI2_push_buffer(0, buffer, 3);
+
+        T2CONbits.ON = 1;
+
+//        SS_MCP = 0x0; //SS a 0
+//        SPI2BUF = 0x40;
+//        while (!SPI2STATbits.SPIRBF) ;
+//        res = SPI2BUF;
+//        SPI2BUF = 0x12;
+//        while (!SPI2STATbits.SPIRBF) ;
+//        res = SPI2BUF;
+//        SPI2BUF = 0b00000111;
+//        while (!SPI2STATbits.SPIRBF) ;
+//        res = SPI2BUF;
+//        SS_MCP = 0x1; //SS a 1
+        
 	while (42)
 	{
-		manage_I2C2();
+//		manage_I2C2();
 		manage_SPI2();
 		WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 	}

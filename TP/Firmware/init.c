@@ -18,7 +18,7 @@ void SPI2_init(void)
     SPI2CONbits.CKE = 1;
     SPI2CONbits.CKP = 0; // mode 00 tás vue
    // SPI2CONbits.MODE16 = 0;
-    SPI2CONbits.MODE32 = 1;
+//    SPI2CONbits.MODE32 = 1;
     SPI2CONbits.MSTEN = 1; //activer master mode
     SPI2CONbits.ON = 1; //ON spi2
 
@@ -116,18 +116,27 @@ void HT16_init(void)
 //    SPI2_transmit32bits(0x40000000); // fout toutes les GPIO en output
 //}
 
-void MCP_init_LCD(void)
+void MCP_LCD_init(void)
 {
-    u32 res;
+        u32 res;
 
-    SPI2CONbits.MODE32 = 1;
-    LATGbits.LATG9 = 0x0; //SS a 0
-    SPI2BUF = 0x40000000;
-    while (!SPI2STATbits.SPIRBF) ;
-    res = SPI2BUF;
-    LATGbits.LATG9 = 0x1; //SS a 1
-    SPI2CONbits.MODE32 = 0; // on remet a zero car defaut en 8 bits
-    return (res);
+        MCP_LCD_RESET = 0;
+        MCP_LCD_RESET = 1;
+
+        SS_MCP_LCD = 0x0; //SS a 0
+        SPI2BUF = 0x40;
+        while (!SPI2STATbits.SPIRBF) ;
+        res = SPI2BUF;
+        SPI2BUF = 0x00;
+        while (!SPI2STATbits.SPIRBF) ;
+        res = SPI2BUF;
+        SPI2BUF = 0x00;
+        while (!SPI2STATbits.SPIRBF) ;
+        res = SPI2BUF;
+        SPI2BUF = 0x00;
+        while (!SPI2STATbits.SPIRBF) ;
+        res = SPI2BUF;
+        SS_MCP_LCD = 0x1; //SS a 1
 }
 
 //void MCP_init_LCD(void)
@@ -154,9 +163,11 @@ void GPIO_init(void)
     //GPIO pour le SPI2
     TRISGbits.TRISG7 = 0x1;
     TRISGbits.TRISG8 = 0x0;
+
     //SS di MCP bordel.... a arranger apres quand on qurq plusieur chip spi
-    TRISGbits.TRISG9 = 0x0;
+    TRISGbits.TRISG9 = 0x0; //chip select du MCP LCD
     LATGbits.LATG9 = 0x1;
+    TRISEbits.TRISE2 = 0; //reset du MCP LCD
 }
 
 void INT_init(void)
