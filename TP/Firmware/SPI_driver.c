@@ -11,7 +11,7 @@ u8  SPI2_slave = E_SPI2_SS_MCP_LCD;
 
 u8	SPI_buf_LCD[LCD_BUF_MAX] = { 0 };   /// !!!!!!!!!!!!! A CHANGER ABSOLUMENT !!!!
 u8      *SPI_slave_buffers[SLAVE_COUNT] = {SPI_buf_LCD, 0, 0, 0};
-u8      SPI_slave_sizes[SLAVE_COUNT] = {0, 0, 0, 0};
+u8      SPI_slave_counts[SLAVE_COUNT] = {0, 0, 0, 0};
 u8      SPI_slave_indexes[SLAVE_COUNT] = {0, 0, 0, 0};
 
 u8  current_slave = E_SPI2_SS_MCP_LCD;
@@ -37,7 +37,7 @@ void __ISR(_SPI_2_VECTOR, IPL4AUTO) SPI2Handler(void)           // a voir apres 
         case E_SPI2_WRITE:
             if (SPI2STATbits.SPIBUSY)
                 break ;
-            if (SPI_slave_indexes[current_slave] < SPI_slave_sizes[current_slave])
+            if (SPI_slave_indexes[current_slave] < SPI_slave_counts[current_slave])
             {
                 write8 = SPI_slave_buffers[current_slave][(SPI_slave_indexes[current_slave])++];
                 SPI2_state = E_SPI2_READ_BEFORE_WRITE;
@@ -49,7 +49,7 @@ void __ISR(_SPI_2_VECTOR, IPL4AUTO) SPI2Handler(void)           // a voir apres 
         case E_SPI2_RELEASE:
             SPI2_state = E_SPI2_DONE;
             SS_MCP_LCD = 0x1;
-            SPI_slave_sizes[current_slave] = 0;
+            SPI_slave_counts[current_slave] = 0;
             SPI_slave_indexes[current_slave] = 0;
             break;
     }
@@ -57,16 +57,20 @@ void __ISR(_SPI_2_VECTOR, IPL4AUTO) SPI2Handler(void)           // a voir apres 
 
 //void    SPI2_push(u8 slave, u8 data)
 //{
-//    SPI_slave_buffers[slave][SPI_slave_sizes[slave]++] = data;
+//    SPI_slave_buffers[slave][SPI_slave_counts[slave]++] = data;
 //}
 
 u8 SPI2_push_buffer(u8 slave, u8 *buffer, u8 size) //rajouter en argument le SS du chip quand on aura plusieur
 {
     u8  i;
 
+    IEC1bits.SPI2RXIE = 0;
+    IEC1bits.SPI2TXIE = 0;
     i = 0;
     while (i < size)
-        SPI_slave_buffers[slave][(SPI_slave_sizes[slave])++] = buffer[i++];
+        SPI_slave_buffers[slave][(SPI_slave_counts[slave])++] = buffer[i++];
+    IEC1bits.SPI2RXIE = 1;
+    IEC1bits.SPI2TXIE = 1;
 }
 
 
@@ -78,7 +82,7 @@ void    manage_SPI2(void)
         return ;
     while (i < SLAVE_COUNT)
     {
-        if (SPI_slave_sizes[i] != 0)
+        if (SPI_slave_counts[i] != 0)
         {
             current_slave = i;
             SPI2_state = E_SPI2_WRITE;
