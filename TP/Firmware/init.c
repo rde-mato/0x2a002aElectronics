@@ -9,7 +9,7 @@ extern u32   bpm;
 
 void SPI2_init(void)
 {
-    __builtin_disable_interrupts();
+//    __builtin_disable_interrupts();
 
     SPI2CON = 0;
     SPI2BUF = 0;
@@ -17,12 +17,12 @@ void SPI2_init(void)
    // SPI2STATbits.SPIROV = 0;
     SPI2CONbits.CKE = 1;
     SPI2CONbits.CKP = 0; // mode 00 tás vue
-   // SPI2CONbits.MODE16 = 0;
+    SPI2CONbits.MODE16 = 1;
 //    SPI2CONbits.MODE32 = 1;
     SPI2CONbits.MSTEN = 1; //activer master mode
     SPI2CONbits.ON = 1; //ON spi2
 
-    __builtin_enable_interrupts();
+//    __builtin_enable_interrupts();
 }
 
 
@@ -120,23 +120,29 @@ void MCP_LCD_init(void)
 {
         u32 res;
 
-        MCP_LCD_RESET = 0;
-        MCP_LCD_RESET = 1;
+//        MCP_LCD_RESET = 0;
+//        MCP_LCD_RESET = 1;
 
-        SS_MCP_LCD = 0x0; //SS a 0
-        SPI2BUF = 0x40;
+        //pins en output
+        SS_MCP_LCD = 0x0;
+        SPI2BUF = 0x4000;
         while (!SPI2STATbits.SPIRBF) ;
         res = SPI2BUF;
-        SPI2BUF = 0x00;
+        SPI2BUF = 0x0000;
         while (!SPI2STATbits.SPIRBF) ;
         res = SPI2BUF;
-        SPI2BUF = 0x00;
+        SS_MCP_LCD = 0x1;
+
+
+        //mode sequentiel off
+        SS_MCP_LCD = 0x0;
+        SPI2BUF = 0x400A;
         while (!SPI2STATbits.SPIRBF) ;
         res = SPI2BUF;
-        SPI2BUF = 0x00;
+        SPI2BUF = 0x2020;
         while (!SPI2STATbits.SPIRBF) ;
         res = SPI2BUF;
-        SS_MCP_LCD = 0x1; //SS a 1
+        SS_MCP_LCD = 0x1;
 }
 
 //void MCP_init_LCD(void)

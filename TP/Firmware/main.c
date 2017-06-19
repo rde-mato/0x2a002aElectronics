@@ -37,12 +37,29 @@ int main(void)
 
         //LCD_display_on_off(0);
 
+        SS_MCP_LCD = 0x0;
+        SPI2BUF = 0x4012;
+        while (!SPI2STATbits.SPIRBF) ;
+//        res = SPI2BUF;
+        SPI2BUF = 0xffff;
+        while (!SPI2STATbits.SPIRBF) ;
+        SPI2BUF = 0x0404;
+        while (!SPI2STATbits.SPIRBF) ;
+        SPI2BUF = 0xffff;
+        while (!SPI2STATbits.SPIRBF) ;
+        SPI2BUF = 0x5050;
+        while (!SPI2STATbits.SPIRBF) ;
+        SPI2BUF = 0x8888;
+        while (!SPI2STATbits.SPIRBF) ;
+//        res = SPI2BUF;
+        SS_MCP_LCD = 0x1;
+
         T2CONbits.ON = 1;
         
 	while (42)
 	{
 //		manage_I2C2();
-		manage_SPI2();
+//		manage_SPI2();
 		WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 	}
 	return (0);
