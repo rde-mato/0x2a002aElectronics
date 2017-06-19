@@ -38,12 +38,20 @@ int main(void)
 
         //HT16_init();
 
-        send[0] = LCD_instruction_to_enable_low(1, 0, 0, 0, 0b01000000); //    LCD_display_set_y_address(0);
-        send[1] = LCD_instruction_to_enable_low(1, 0, 0, 0, 0b10111000); //    LCD_display_set_x_page(0);
-        send[2] = LCD_instruction_to_enable_low(1, 0, 1, 0, 0b01010101); //     data
-        send[3] = LCD_instruction_to_enable_low(1, 0, 1, 0, 0b00110011); //     data
-        send[4] = LCD_instruction_to_enable_low(1, 0, 1, 0, 0b11011010); //     data
-        SPI2_push_LCD_buffer(send, 5);
+//        send[0] = LCD_instruction_to_enable_low(1, 0, 0, 0, 0b01000000); //    LCD_display_set_y_address(0);
+//        send[1] = LCD_instruction_to_enable_low(1, 0, 0, 0, 0b10111000); //    LCD_display_set_x_page(0);
+//        send[2] = LCD_instruction_to_enable_low(1, 0, 1, 0, 0b01010101); //     data
+//        send[3] = LCD_instruction_to_enable_low(1, 0, 1, 0, 0b00110011); //     data
+//        send[4] = LCD_instruction_to_enable_low(1, 0, 1, 0, 0b11011010); //     data
+//        SPI2_push_LCD_buffer(send, 5);
+
+
+        LCD_print_u8(0, 0, 0xFF);
+        LCD_print_u8(2, 3, 0xFF);
+        LCD_print_u8(2, 4, 0xFF);
+        LCD_print_u8(3, 65, 0xFF);
+
+
 
         T2CONbits.ON = 1;
         

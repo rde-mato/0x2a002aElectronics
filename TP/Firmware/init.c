@@ -147,8 +147,11 @@ void MCP_LCD_init(void)
         SS_MCP_LCD = 0x0;
         SPI2BUF = 0x4012;
         while (!SPI2STATbits.SPIRBF) ;
-        LCD_display_control_instruction(1, 1, 0, 0, 0b00111111); //    LCD_display_on_off(1);
-        LCD_display_control_instruction(1, 1, 0, 0, 0b11000000); //    LCD_display_start_origin(0);
+        LCD_blocking_control_instruction(1, 1, 0, 0, 0b00111111); //    LCD_display_on_off(1);
+        LCD_blocking_control_instruction(1, 1, 0, 0, 0b11000000); //    LCD_display_start_origin(0);
+        LCD_blocking_control_instruction(1, 1, 0, 0, 0b01000000); //    LCD_display_set_y_address(0);
+        LCD_blocking_control_instruction(1, 1, 0, 0, 0b10111000); //    LCD_display_set_x_page(0);
+        
         SS_MCP_LCD = 0x1;
 }
 

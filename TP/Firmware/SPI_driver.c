@@ -3,7 +3,7 @@
 #include "0x2a002a.h"
 
 #define SLAVE_COUNT 4
-#define LCD_BUF_MAX 128 * 8
+#define LCD_BUF_MAX 30 //128 * ( 8 + 2 )
 
 
 u8  SPI2_state = E_SPI2_DONE;
@@ -64,7 +64,6 @@ void SPI2_push_LCD_buffer(u16 *buffer, u32 size)
     IEC1bits.SPI2RXIE = 1;
     IEC1bits.SPI2TXIE = 1;
 }
-
 
 void    manage_SPI2(void)
 {
