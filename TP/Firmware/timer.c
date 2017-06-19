@@ -44,9 +44,9 @@ void __ISR(_TIMER_3_VECTOR, IPL3AUTO) Timer3Handler(void)
 //      	LCD_load_line(qtime % 8, line);
 //	print_LCD_chars();
 
-        u8  last = buffer[2] & 1;
-        buffer[2] = (0b11 & (buffer[2] >> 1)) | (last << 2);
-        SPI2_push_buffer(0, buffer, 3);
+//        u8  last = buffer[2] & 1;
+//        buffer[2] = (0b11 & (buffer[2] >> 1)) | (last << 2);
+//        SPI2_push_buffer(0, buffer, 3);
 
     	LED_ON_OFF = !LED_ON_OFF;
 

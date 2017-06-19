@@ -13,6 +13,17 @@
 #define SS_MCP_LCD                LATGbits.LATG9
 
 
+// GPIO MCP =
+// GPA                                  GPB
+// 7 6 5 4      3   2   1   0           7   to 0
+// x x x CS2    CS1 E   RW  DIouRS      DB7 to DB0
+
+#define LCD_DI_BIT      0x01
+#define LCD_RW_BIT      0x02
+#define LCD_ENABLE_BIT 0x04
+#define LCD_CS1_bit 0x08
+#define LCD_CS2_bit 0x10
+#define LCD_PORTS_ADDRESS 0x4012
 
 #define PBCLK 8000000
 #define MIDI_BAUD_RATE 31250
@@ -81,10 +92,10 @@ enum E_I2C2_STATE {
 
 enum E_SPI2_STATE {
     E_SPI2_DONE = 0,
-    E_SPI2_CONFIG,
-    E_SPI2_READ_BEFORE_WRITE,
-    E_SPI2_WRITE,
-    E_SPI2_RELEASE
+    E_SPI2_LCD_CONFIG,
+    E_SPI2_LCD_WRITE_ENABLE_HIGH,
+    E_SPI2_LCD_WRITE_ENABLE_LOW,
+    E_SPI2_LCD_RELEASE
 };
 
 enum E_SPI2_SLAVE {

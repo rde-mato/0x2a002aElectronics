@@ -143,6 +143,13 @@ void MCP_LCD_init(void)
         while (!SPI2STATbits.SPIRBF) ;
         res = SPI2BUF;
         SS_MCP_LCD = 0x1;
+
+        SS_MCP_LCD = 0x0;
+        SPI2BUF = 0x4012;
+        while (!SPI2STATbits.SPIRBF) ;
+        LCD_display_control_instruction(1, 1, 0, 0, 0b00111111); //    LCD_display_on_off(1);
+        LCD_display_control_instruction(1, 1, 0, 0, 0b11000000); //    LCD_display_start_origin(0);
+        SS_MCP_LCD = 0x1;
 }
 
 //void MCP_init_LCD(void)

@@ -21,45 +21,36 @@ u8	active_patterns[16];
 //	pour chaque instrument actif on ne garde que le pattern actif
 //	
 
-
 int main(void)
 {
+    u16 send[30] = { 0 };
+
+
 	GPIO_init();    // bien mettre a jour avec la vraie board
         TIMER_init();
 	//I2C2_init();
 	SPI2_init();
 
         MCP_LCD_init();
+        LCD_clear();
 
         INT_init();
 
         //HT16_init();
 
-        //LCD_display_on_off(0);
-
-        SS_MCP_LCD = 0x0;
-        SPI2BUF = 0x4012;
-        while (!SPI2STATbits.SPIRBF) ;
-//        res = SPI2BUF;
-        SPI2BUF = 0xffff;
-        while (!SPI2STATbits.SPIRBF) ;
-        SPI2BUF = 0x0404;
-        while (!SPI2STATbits.SPIRBF) ;
-        SPI2BUF = 0xffff;
-        while (!SPI2STATbits.SPIRBF) ;
-        SPI2BUF = 0x5050;
-        while (!SPI2STATbits.SPIRBF) ;
-        SPI2BUF = 0x8888;
-        while (!SPI2STATbits.SPIRBF) ;
-//        res = SPI2BUF;
-        SS_MCP_LCD = 0x1;
+        send[0] = LCD_instruction_to_enable_low(1, 0, 0, 0, 0b01000000); //    LCD_display_set_y_address(0);
+        send[1] = LCD_instruction_to_enable_low(1, 0, 0, 0, 0b10111000); //    LCD_display_set_x_page(0);
+        send[2] = LCD_instruction_to_enable_low(1, 0, 1, 0, 0b01010101); //     data
+        send[3] = LCD_instruction_to_enable_low(1, 0, 1, 0, 0b00110011); //     data
+        send[4] = LCD_instruction_to_enable_low(1, 0, 1, 0, 0b11011010); //     data
+        SPI2_push_LCD_buffer(send, 5);
 
         T2CONbits.ON = 1;
         
 	while (42)
 	{
 //		manage_I2C2();
-//		manage_SPI2();
+		manage_SPI2();
 		WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 	}
 	return (0);
