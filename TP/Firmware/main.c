@@ -23,38 +23,31 @@ u8	active_patterns[16];
 
 int main(void)
 {
-    u16 send[30] = { 0 };
-
-
-	GPIO_init();    // bien mettre a jour avec la vraie board
+        GPIO_init();    // bien mettre a jour avec la vraie board
         TIMER_init();
 	//I2C2_init();
 	SPI2_init();
-
         MCP_LCD_init();
-        LCD_clear();
-
+        LCD_init();
         INT_init();
-
         //HT16_init();
 
-//        send[0] = LCD_instruction_to_enable_low(1, 0, 0, 0, 0b01000000); //    LCD_display_set_y_address(0);
-//        send[1] = LCD_instruction_to_enable_low(1, 0, 0, 0, 0b10111000); //    LCD_display_set_x_page(0);
-//        send[2] = LCD_instruction_to_enable_low(1, 0, 1, 0, 0b01010101); //     data
-//        send[3] = LCD_instruction_to_enable_low(1, 0, 1, 0, 0b00110011); //     data
-//        send[4] = LCD_instruction_to_enable_low(1, 0, 1, 0, 0b11011010); //     data
-//        SPI2_push_LCD_buffer(send, 5);
+//        LCD_print_u8(0, 0, 0x00);
+//        LCD_print_u8(0, 1, 0x00);
+//        LCD_print_u8(0, 2, 0x42);
+//        LCD_print_u8(0, 3, 0x7f);
+//        LCD_print_u8(0, 4, 0x40);
+//        LCD_print_u8(0, 5, 0x00);
 
+        LCD_putchar(0, 0, '4' + 128);
+        LCD_putchar(3, 20, '2' + 128);
 
-        LCD_print_u8(0, 0, 0xFF);
-        LCD_print_u8(2, 3, 0xFF);
-        LCD_print_u8(2, 4, 0xFF);
-        LCD_print_u8(3, 65, 0xFF);
-
-
+        LCD_putstr(1, 0, "c'est qui les papas ? c'est ta mere");
 
         T2CONbits.ON = 1;
-        
+
+        LCD_print_changed_chars();
+
 	while (42)
 	{
 //		manage_I2C2();

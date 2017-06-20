@@ -118,8 +118,6 @@ void HT16_init(void)
 
 void MCP_LCD_init(void)
 {
-        u32 res;
-
 //        MCP_LCD_RESET = 0;
 //        MCP_LCD_RESET = 1;
 
@@ -127,10 +125,8 @@ void MCP_LCD_init(void)
         SS_MCP_LCD = 0x0;
         SPI2BUF = 0x4000;
         while (!SPI2STATbits.SPIRBF) ;
-        res = SPI2BUF;
         SPI2BUF = 0x0000;
         while (!SPI2STATbits.SPIRBF) ;
-        res = SPI2BUF;
         SS_MCP_LCD = 0x1;
 
 
@@ -138,20 +134,33 @@ void MCP_LCD_init(void)
         SS_MCP_LCD = 0x0;
         SPI2BUF = 0x400A;
         while (!SPI2STATbits.SPIRBF) ;
-        res = SPI2BUF;
         SPI2BUF = 0x2020;
         while (!SPI2STATbits.SPIRBF) ;
-        res = SPI2BUF;
         SS_MCP_LCD = 0x1;
+}
 
+void    LCD_init(void)
+{
+        u8  line = 0;
+        u8  col;
+
+        // clear du LCD
         SS_MCP_LCD = 0x0;
         SPI2BUF = 0x4012;
-        while (!SPI2STATbits.SPIRBF) ;
+        while (!SPI2STATbits.SPIRBF)
+            ;
         LCD_blocking_control_instruction(1, 1, 0, 0, 0b00111111); //    LCD_display_on_off(1);
         LCD_blocking_control_instruction(1, 1, 0, 0, 0b11000000); //    LCD_display_start_origin(0);
+        while (line < 8)
+        {
+            LCD_blocking_control_instruction(1, 1, 0, 0, 0b10111000 | line++);   //    LCD_display_set_x_page;
+            col = 0;
+            LCD_blocking_control_instruction(1, 1, 0, 0, 0b01000000 | col);      //    LCD_display_set_y_address(0);
+            while (col++ < 64)
+                LCD_blocking_control_instruction(1, 1, 1, 0, 0x00);
+        }
         LCD_blocking_control_instruction(1, 1, 0, 0, 0b01000000); //    LCD_display_set_y_address(0);
         LCD_blocking_control_instruction(1, 1, 0, 0, 0b10111000); //    LCD_display_set_x_page(0);
-        
         SS_MCP_LCD = 0x1;
 }
 
