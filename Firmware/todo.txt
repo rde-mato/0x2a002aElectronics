@@ -1,0 +1,51 @@
+- cleaner le code a perimetre egal
+- faire un systeme de definition de keys
+- faire un fichier avec toutes les variables globales ?
+- mettre en place le mode rec
+- voir si on ne peut pas simplifier le SPI en ne faisant que du 8 bits
+- optimiser l'affichage de l'écran (changer uniquement les chars qui changent)
+- gerer le multislave du spi
+
+
+
+determiner des boutons de controle (pas dans le chenillard) et les actions associees
+mettre des patterns en memoire
+faire marcher le lcd
+garder en memoire les valeurs des parametres
+comment sauvegarder d'une session a l'autre meme en cas de machine eteinte a la main ?
+comment faire durer un message a l'écran pendant x secondes seulement ? il nous faut un timer disponible. Ou faire une fonction de timer generique, qui prend un callback. Ca permettrait de gerer aussi les appuis longs.
+dedoubler le charset pour faire la diapositive de chaque caractere
+determiner des ecrans type pour chaque situation, qui prennent en parametre les variables globales : ex : un encodeur tourne etc
+par consequent, bien s'assurer qu'un refresh de l'écran est instant, et qu'en plus il ne bouffe pas toutes les ressources du PIC ce qui serait bloquant
+
+SPI
+besoin de faire un buffer
+comment mettre en place un systeme de priorité dans le buffer ?
+d'ailleurs qu'est ce qui est prioritaire pour le spi ? ecran ou encodeurs ou ???
+gerer l'envoi des données avec un buffer par slave ?
+possible de gérer les 32 en 4 fois 8 bits ? quel impact ?
+besoin de gerer : un mcp pour lcd, un mcp pour encodeurs, une flash, une sd
+
+Variables :
+- note courante (reinitialisee a chaque demarrage de machine). Note au sein de l'octave, donc la valeur finale entre 12 et 108 peut etre recuperee facilement
+- velocite courante
+- octave courant
+- instrument courant
+- boucle courante
+- tempo
+- 8 parametres additionnels par instrument
+- play/pause
+- instruments actifs => u16
+- mode courant : play / live
+
+
+ORDRE DE LA MEMOIRE
+Instrument
+Pattern
+Beat
+Notes et velocites
+
+BESOINS EN TIMERS
+- bpm
+- appui long
+- ecrans temporaires
