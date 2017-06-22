@@ -23,25 +23,109 @@ u8	active_patterns[16];
 
 int main(void)
 {
+    u8  read;
+
         GPIO_init();    // bien mettre a jour avec la vraie board
         TIMER_init();
 	//I2C2_init();
 	SPI2_init();
-        MCP_LCD_init();
-        LCD_init();
-        INT_init();
+        //MCP_LCD_init();
+//        LCD_init();
+       // INT_init();
         //HT16_init();
+        //MCP_ENCODERS_init();
 
-//        LCD_print_u8(0, 0, 0x00);
-//        LCD_print_u8(0, 1, 0x00);
-//        LCD_print_u8(0, 2, 0x42);
-//        LCD_print_u8(0, 3, 0x7f);
-//        LCD_print_u8(0, 4, 0x40);
-//        LCD_print_u8(0, 5, 0x00);
+        SS_FLASH = 0;
+        SPI2BUF = 0x50;
+        while (!SPI2STATbits.SPIRBF) ;
+        read = SPI2BUF;
+        SS_FLASH = 1;
 
-        LCD_putstr(0, 0, "salut");
-        LCD_putstr(1, 0, "bonjour");
-        LCD_print_changed_chars();
+        SS_FLASH = 0;
+        SPI2BUF = 0x01;
+        while (!SPI2STATbits.SPIRBF) ;
+        read = SPI2BUF;
+        SPI2BUF = 0b00000000;
+        while (!SPI2STATbits.SPIRBF) ;
+        read = SPI2BUF;
+        SS_FLASH = 1;
+
+        
+        SS_FLASH = 0;
+        SPI2BUF = 0x06;
+        while (!SPI2STATbits.SPIRBF) ;
+        read = SPI2BUF;
+        SS_FLASH = 1;
+
+        read = 10000;
+        while (read)
+        {
+            read --;
+        }
+
+
+        SS_FLASH = 0;
+        SPI2BUF = 0x05;
+        while (!SPI2STATbits.SPIRBF) ;
+        read = SPI2BUF;
+        SPI2BUF = 0x00;
+        while (!SPI2STATbits.SPIRBF) ;
+        read = SPI2BUF;
+        SS_FLASH = 1;
+
+
+        read = 10000;
+        while (read)
+        {
+            read --;
+        }
+        
+        SS_FLASH = 0;
+        SPI2BUF = 0x02;
+        while (!SPI2STATbits.SPIRBF) ;
+        read = SPI2BUF;
+        SPI2BUF = 0x00;
+        while (!SPI2STATbits.SPIRBF) ;
+        read = SPI2BUF;
+        SPI2BUF = 0x00;
+        while (!SPI2STATbits.SPIRBF) ;
+        read = SPI2BUF;
+        SPI2BUF = 0x02;
+        while (!SPI2STATbits.SPIRBF) ;
+        read = SPI2BUF;
+        SPI2BUF = 42;
+        while (!SPI2STATbits.SPIRBF) ;
+        read = SPI2BUF;
+        SS_FLASH = 1;
+
+        read = 10000;
+        while (read)
+        {
+            read --;
+        }
+
+        SS_FLASH = 1;
+        SS_FLASH = 0;
+        SPI2BUF = 0x03;
+        while (!SPI2STATbits.SPIRBF) ;
+        read = SPI2BUF;
+        SPI2BUF = 0x00;
+        while (!SPI2STATbits.SPIRBF) ;
+        read = SPI2BUF;
+        SPI2BUF = 0x00;
+        while (!SPI2STATbits.SPIRBF) ;
+        read = SPI2BUF;
+        SPI2BUF = 0x02;
+        while (!SPI2STATbits.SPIRBF) ;
+        read = SPI2BUF;
+        SPI2BUF = 0x00;
+        while (!SPI2STATbits.SPIRBF) ;
+        read = SPI2BUF;
+        SS_FLASH = 1;
+
+//        LCD_putstr(0, 0, "salut");
+//        LCD_putstr(1, 0, "bonjour");
+//        LCD_print_changed_chars();
 
         T2CONbits.ON = 1;
 

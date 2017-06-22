@@ -9,20 +9,24 @@ extern u32   bpm;
 
 void SPI2_init(void)
 {
-//    __builtin_disable_interrupts();
+
+    //GPIO pour le SPI2
+    TRISGbits.TRISG7 = 0x1;
+    TRISGbits.TRISG8 = 0x0;
+
+    //Slave select en mode test, a adapter avec vrais branchements
+    TRISGbits.TRISG9 = 0x0; //chip select du MCP LCD
+    LATGbits.LATG9 = 0x1;
 
     SPI2CON = 0;
     SPI2BUF = 0;
     SPI2BRG = 0; //set baudrate 1Mhz suivant 8 Mhz du pbclk
-   // SPI2STATbits.SPIROV = 0;
     SPI2CONbits.CKE = 1;
     SPI2CONbits.CKP = 0; // mode 00 tás vue
-    SPI2CONbits.MODE16 = 1;
-//    SPI2CONbits.MODE32 = 1;
+    SPI2CONbits.MODE16 = 0;
+    SPI2CONbits.MODE32 = 0;
     SPI2CONbits.MSTEN = 1; //activer master mode
     SPI2CONbits.ON = 1; //ON spi2
-
-//    __builtin_enable_interrupts();
 }
 
 
@@ -81,8 +85,7 @@ void HT16_init(void)
 
 void MCP_LCD_init(void)
 {
-//        MCP_LCD_RESET = 0;
-//        MCP_LCD_RESET = 1;
+        TRISEbits.TRISE2 = 0; //reset du MCP LCD // a degager quand branchement sur mclr
 
         //pins en output
         SS_MCP_LCD = 0x0;
@@ -93,6 +96,17 @@ void MCP_LCD_init(void)
         SS_MCP_LCD = 0x1;
 
 
+        //mode sequentiel off
+        SS_MCP_LCD = 0x0;
+        SPI2BUF = 0x400A;
+        while (!SPI2STATbits.SPIRBF) ;
+        SPI2BUF = 0x2020;
+        while (!SPI2STATbits.SPIRBF) ;
+        SS_MCP_LCD = 0x1;
+}
+
+void MCP_ENCODERS_init(void)
+{
         //mode sequentiel off
         SS_MCP_LCD = 0x0;
         SPI2BUF = 0x400A;
@@ -136,15 +150,6 @@ void GPIO_init(void)
     // CodG GPIO D11
     TRISDbits.TRISD10 = 0x1; //D10 configured for input
     TRISDbits.TRISD11 = 0x1; //D10 configured for input
-
-    //GPIO pour le SPI2
-    TRISGbits.TRISG7 = 0x1;
-    TRISGbits.TRISG8 = 0x0;
-
-    //SS di MCP bordel.... a arranger apres quand on qurq plusieur chip spi
-    TRISGbits.TRISG9 = 0x0; //chip select du MCP LCD
-    LATGbits.LATG9 = 0x1;
-    TRISEbits.TRISE2 = 0; //reset du MCP LCD
 }
 
 void INT_init(void)

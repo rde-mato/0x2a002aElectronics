@@ -28,6 +28,7 @@
       <itemPath>SPI_driver.c</itemPath>
       <itemPath>MCP_driver.c</itemPath>
       <itemPath>LCD_driver.c</itemPath>
+      <itemPath>flash_driver.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

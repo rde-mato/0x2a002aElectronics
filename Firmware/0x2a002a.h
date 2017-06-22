@@ -8,9 +8,10 @@
 #define BUTTON_POLL_DELAY_MS 50
 #define LONG_PRESS_LIMIT 100
 
-#define MCP_LCD__CONF_RESET   TRISEbits.TRISE2 = 0;
-#define MCP_LCD_RESET         LATEbits.LATE2
+
+//#define MCP_LCD_RESET         LATEbits.LATE2
 #define SS_MCP_LCD                LATGbits.LATG9
+#define SS_FLASH                LATGbits.LATG9
 
 
 // GPIO MCP =
