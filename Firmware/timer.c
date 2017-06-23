@@ -6,24 +6,7 @@ extern char pattern[16][4][3];
 u32     bpm = 50;
 u8      qtime = 0;
 
-u32 reponse;
-
     
-
-
-void send_qtime(void)
-{
-	u8 note = 0;
-
-	while (pattern[qtime][note][notevalue])
-	{
-		UART2_send(pattern[qtime][note][notestatus]);
-		UART2_send(pattern[qtime][note][notevalue]);
-		UART2_send(pattern[qtime][note][notevelo]);
-		note = (note + 1) % 4;
-	}
-}
-
 void set_bpm(void)
 {
 	PR2 = FREQUENCY /(bpm / 15); // bpm * 4 / 60

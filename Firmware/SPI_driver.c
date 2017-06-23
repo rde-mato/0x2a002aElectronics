@@ -56,6 +56,25 @@ void __ISR(_SPI_2_VECTOR, IPL4AUTO) SPI2Handler(void)           // a voir apres 
             SPI_LCD_index = 0;
             SPI_LCD_count = 0;
             break;
+
+
+
+//        case E_SPI2_FLASH_ERASE_CONFIG:
+//            SS_FLASH = 0x0;
+//            SPI2_state = xxx;
+//            break;
+//
+//        case E_SPI2_FLASH_WRITE_CONFIG:
+//
+//
+//        case E_SPI2_FLASH_READ_CONFIG:
+//
+//
+//        case E_SPI2_FLASH_WRITE:
+//        case E_SPI2_FLASH_READ:
+//        case E_SPI2_FLASH_ERASE:
+//        case E_SPI2_FLASH_BUSY:
+
     }
 }
 

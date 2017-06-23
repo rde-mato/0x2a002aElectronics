@@ -14,6 +14,17 @@
 #define SS_FLASH                LATGbits.LATG9
 
 
+#define FLASH_READ              0x03
+#define FLASH_4K_ERASE          0x20
+#define FLASH_BYTE_PROGRAM      0x02
+#define FLASH_AAI_WORD          0xAD
+#define FLASH_RDSR              0x05
+#define FLASH_EWSR              0x50
+#define FLASH_WRSR              0x01
+#define FLASH_WREN              0x06
+
+
+
 // GPIO MCP =
 // GPA                                  GPB
 // 7 6 5 4      3   2   1   0           7   to 0

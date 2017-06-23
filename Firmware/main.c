@@ -2,7 +2,18 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
-char	pattern[16][4][3];
+#define INSTRUMENTS_COUNT       16
+#define PATTERNS_PER_INSTRUMENT 16
+#define QTIME_PER_INSTRUMENT    16
+#define NOTES_PER_QTIME         4
+#define ATTRIBUTES_PER_NOTE     3
+
+//  1 pattern = 192 u8
+//  1 instrument = 3072 u8
+
+u8	active_patterns[INSTRUMENTS_COUNT][QTIME_PER_INSTRUMENT][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
+u8	active_instrument[PATTERNS_PER_INSTRUMENT][QTIME_PER_INSTRUMENT][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
+u8      pattern_pointers[INSTRUMENTS_COUNT][PATTERNS_PER_INSTRUMENT];
 
 u8	cur_instrument;
 u8	cur_pattern;
@@ -16,7 +27,6 @@ u8	encoders_play[16][8];
 //u16	notes_memory[16][16][16][4]; //trop grand pour etre dans la memoire mais a aller taper direct dans la flash
 u16	notes_play[16][16][4];
 u16	active_instruments;
-u8	active_patterns[16];
 
 //	pour chaque instrument actif on ne garde que le pattern actif
 //	
@@ -57,12 +67,6 @@ int main(void)
         read = SPI2BUF;
         SS_FLASH = 1;
 
-        read = 10000;
-        while (read)
-        {
-            read --;
-        }
-
 
         SS_FLASH = 0;
         SPI2BUF = 0x05;
@@ -74,11 +78,6 @@ int main(void)
         SS_FLASH = 1;
 
 
-        read = 10000;
-        while (read)
-        {
-            read --;
-        }
         
         SS_FLASH = 0;
         SPI2BUF = 0x02;

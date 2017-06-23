@@ -222,80 +222,80 @@ void TIMER_init(void)
     PR4 = FREQUENCY / (1000 / BUTTON_POLL_DELAY_MS) - 1;
 }
 
-void init_pattern(void)
-{
-    char i, j, k;
-
-    i = j = k = -1;
-    while (k++ < 16)
-        while (j++ < 4)
-            while(i++ < 3)
-                pattern[k][j][i] = 0;
-    pattern[0][0][notestatus] = 0b10010000;
-    pattern[0][0][notevalue] = 50;
-    pattern[0][0][notevelo] = 127;
-    pattern[3][0][notestatus] = 0b10000000;
-    pattern[3][0][notevalue] = 50;
-    pattern[3][0][notevelo] = 127;
-
-    pattern[2][0][notestatus] = 0b10010000;
-    pattern[2][0][notevalue] = 52;
-    pattern[2][0][notevelo] = 127;
-    pattern[5][0][notestatus] = 0b10000000;
-    pattern[5][0][notevalue] = 52;
-    pattern[5][0][notevelo] = 127;
-
-    pattern[4][0][notestatus] = 0b10010000;
-    pattern[4][0][notevalue] = 50;
-    pattern[4][0][notevelo] = 127;
-    pattern[7][0][notestatus] = 0b10000000;
-    pattern[7][0][notevalue] = 50;
-    pattern[7][0][notevelo] = 127;
-    pattern[4][1][notestatus] = 0b10010000;
-    pattern[4][1][notevalue] = 51;
-    pattern[4][1][notevelo] = 127;
-    pattern[7][1][notestatus] = 0b10000000;
-    pattern[7][1][notevalue] = 51;
-    pattern[7][1][notevelo] = 127;
-
-    pattern[6][0][notestatus] = 0b10010000;
-    pattern[6][0][notevalue] = 52;
-    pattern[6][0][notevelo] = 127;
-    pattern[9][0][notestatus] = 0b10000000;
-    pattern[9][0][notevalue] = 52;
-    pattern[9][0][notevelo] = 127;
-
-    pattern[8][0][notestatus] = 0b10010000;
-    pattern[8][0][notevalue] = 50;
-    pattern[8][0][notevelo] = 127;
-    pattern[11][0][notestatus] = 0b10000000;
-    pattern[11][0][notevalue] = 50;
-    pattern[11][0][notevelo] = 127;
-
-    pattern[10][0][notestatus] = 0b10010000;
-    pattern[10][0][notevalue] = 52;
-    pattern[10][0][notevelo] = 127;
-    pattern[13][0][notestatus] = 0b10000000;
-    pattern[13][0][notevalue] = 52;
-    pattern[13][0][notevelo] = 127;
-
-    pattern[12][0][notestatus] = 0b10010000;
-    pattern[12][0][notevalue] = 50;
-    pattern[12][0][notevelo] = 127;
-    pattern[15][0][notestatus] = 0b10000000;
-    pattern[15][0][notevalue] = 50;
-    pattern[15][0][notevelo] = 127;
-    pattern[12][1][notestatus] = 0b10010000;
-    pattern[12][1][notevalue] = 51;
-    pattern[12][1][notevelo] = 127;
-    pattern[15][1][notestatus] = 0b10000000;
-    pattern[15][1][notevalue] = 51;
-    pattern[15][1][notevelo] = 127;
-
-    pattern[14][0][notestatus] = 0b10010000;
-    pattern[14][0][notevalue] = 52;
-    pattern[14][0][notevelo] = 127;
-    pattern[1][0][notestatus] = 0b10000000;
-    pattern[1][0][notevalue] = 52;
-    pattern[1][0][notevelo] = 127;
-}
+//void init_pattern(void)
+//{
+//    char i, j, k;
+//
+//    i = j = k = -1;
+//    while (k++ < 16)
+//        while (j++ < 4)
+//            while(i++ < 3)
+//                pattern[k][j][i] = 0;
+//    pattern[0][0][notestatus] = 0b10010000;
+//    pattern[0][0][notevalue] = 50;
+//    pattern[0][0][notevelo] = 127;
+//    pattern[3][0][notestatus] = 0b10000000;
+//    pattern[3][0][notevalue] = 50;
+//    pattern[3][0][notevelo] = 127;
+//
+//    pattern[2][0][notestatus] = 0b10010000;
+//    pattern[2][0][notevalue] = 52;
+//    pattern[2][0][notevelo] = 127;
+//    pattern[5][0][notestatus] = 0b10000000;
+//    pattern[5][0][notevalue] = 52;
+//    pattern[5][0][notevelo] = 127;
+//
+//    pattern[4][0][notestatus] = 0b10010000;
+//    pattern[4][0][notevalue] = 50;
+//    pattern[4][0][notevelo] = 127;
+//    pattern[7][0][notestatus] = 0b10000000;
+//    pattern[7][0][notevalue] = 50;
+//    pattern[7][0][notevelo] = 127;
+//    pattern[4][1][notestatus] = 0b10010000;
+//    pattern[4][1][notevalue] = 51;
+//    pattern[4][1][notevelo] = 127;
+//    pattern[7][1][notestatus] = 0b10000000;
+//    pattern[7][1][notevalue] = 51;
+//    pattern[7][1][notevelo] = 127;
+//
+//    pattern[6][0][notestatus] = 0b10010000;
+//    pattern[6][0][notevalue] = 52;
+//    pattern[6][0][notevelo] = 127;
+//    pattern[9][0][notestatus] = 0b10000000;
+//    pattern[9][0][notevalue] = 52;
+//    pattern[9][0][notevelo] = 127;
+//
+//    pattern[8][0][notestatus] = 0b10010000;
+//    pattern[8][0][notevalue] = 50;
+//    pattern[8][0][notevelo] = 127;
+//    pattern[11][0][notestatus] = 0b10000000;
+//    pattern[11][0][notevalue] = 50;
+//    pattern[11][0][notevelo] = 127;
+//
+//    pattern[10][0][notestatus] = 0b10010000;
+//    pattern[10][0][notevalue] = 52;
+//    pattern[10][0][notevelo] = 127;
+//    pattern[13][0][notestatus] = 0b10000000;
+//    pattern[13][0][notevalue] = 52;
+//    pattern[13][0][notevelo] = 127;
+//
+//    pattern[12][0][notestatus] = 0b10010000;
+//    pattern[12][0][notevalue] = 50;
+//    pattern[12][0][notevelo] = 127;
+//    pattern[15][0][notestatus] = 0b10000000;
+//    pattern[15][0][notevalue] = 50;
+//    pattern[15][0][notevelo] = 127;
+//    pattern[12][1][notestatus] = 0b10010000;
+//    pattern[12][1][notevalue] = 51;
+//    pattern[12][1][notevelo] = 127;
+//    pattern[15][1][notestatus] = 0b10000000;
+//    pattern[15][1][notevalue] = 51;
+//    pattern[15][1][notevelo] = 127;
+//
+//    pattern[14][0][notestatus] = 0b10010000;
+//    pattern[14][0][notevalue] = 52;
+//    pattern[14][0][notevelo] = 127;
+//    pattern[1][0][notestatus] = 0b10000000;
+//    pattern[1][0][notevalue] = 52;
+//    pattern[1][0][notevelo] = 127;
+//}

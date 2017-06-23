@@ -1,3 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?><project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
+        <file>file:/C:/Users/bocal/Desktop/0x2a/Firmware/main.c</file>
+        <file>file:/C:/Users/bocal/Desktop/0x2a/Firmware/init.c</file>
+        <file>file:/C:/Users/bocal/Desktop/0x2a/Firmware/flash_driver.c</file>
+        <file>file:/C:/Users/bocal/Desktop/0x2a/Firmware/SPI_driver.c</file>
+        <file>file:/C:/Users/bocal/Desktop/0x2a/Firmware/0x2a002a.h</file>
+        <file>file:/C:/Users/bocal/Desktop/0x2a/Firmware/I2C_driver.c</file>
+        <file>file:/C:/Users/bocal/Desktop/0x2a/Firmware/timer.c</file>
+        <file>file:/C:/Users/bocal/Desktop/0x2a/Firmware/charset.h</file>
+        <file>file:/C:/Users/bocal/Desktop/0x2a/Firmware/config.c</file>
+    </open-files>
 </project-private>
