@@ -11,6 +11,7 @@
 
 //#define MCP_LCD_RESET         LATEbits.LATE2
 #define SS_MCP_LCD                LATGbits.LATG9
+#define SS_MCP_ENCODERS           LATGbits.LATG9
 #define SS_FLASH                LATGbits.LATG9
 
 

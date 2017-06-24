@@ -18,13 +18,13 @@ const u32 buttonmatrix[16] = {
 };
 
 
-void __ISR(_EXTERNAL_2_VECTOR, IPL2AUTO) HT16IntHandler(void) {
-    HT16_read_keys_request = 1;
-    TMR4 = 0;
-    ++poll_count;
-    T4CONbits.ON = 1;
-    IFS0bits.INT2IF = 0;
-}
+//void __ISR(_EXTERNAL_2_VECTOR, IPL2AUTO) HT16IntHandler(void) {
+//    HT16_read_keys_request = 1;
+//    TMR4 = 0;
+//    ++poll_count;
+//    T4CONbits.ON = 1;
+//    IFS0bits.INT2IF = 0;
+//}
 
 void __ISR(_TIMER_5_VECTOR, IPL2AUTO) Timer5Handler(void)
 {

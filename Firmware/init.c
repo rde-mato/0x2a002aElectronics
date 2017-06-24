@@ -1,6 +1,10 @@
 #include <xc.h>
 #include "0x2a002a.h"
 
+
+#define RISING_EDGE    1
+#define FALLING_EDGE    0
+
 extern char pattern[16][4][3];
 extern u8   I2C2_state;
 extern u8  SPI2_state;
@@ -86,6 +90,8 @@ void HT16_init(void)
 void MCP_LCD_init(void)
 {
         TRISEbits.TRISE2 = 0; //reset du MCP LCD // a degager quand branchement sur mclr
+        
+        SPI2CONbits.MODE16 = 1;
 
         //pins en output
         SS_MCP_LCD = 0x0;
@@ -103,17 +109,75 @@ void MCP_LCD_init(void)
         SPI2BUF = 0x2020;
         while (!SPI2STATbits.SPIRBF) ;
         SS_MCP_LCD = 0x1;
+
+        SPI2CONbits.MODE16 = 0;
 }
 
 void MCP_ENCODERS_init(void)
 {
-        //mode sequentiel off
-        SS_MCP_LCD = 0x0;
+//        TRISEbits.TRISE2 = 0; //reset du MCP Encoders // a degager quand branchement sur mclr
+//        TRISEbits.TRISE2 = 1; //reset du MCP Encoders // a degager quand branchement sur mclr
+        SPI2CONbits.MODE16 = 1;
+
+
+//        //mode sequentiel off
+//        SS_MCP_ENCODERS = 0x0;
+//        SPI2BUF = 0x400A;
+//        while (SPI2STATbits.SPIBUSY) ;
+//        SPI2BUF = 0x2020;
+//        while (SPI2STATbits.SPIBUSY) ;
+//        SS_MCP_ENCODERS = 0x1;
+
+        //activation des interrupts
+        SS_MCP_ENCODERS = 0x0;
+        SPI2BUF = 0x4004;
+        while (!SPI2STATbits.SPIRBF) ;
+        SPI2BUF = 0xFFFF;
+        while (!SPI2STATbits.SPIRBF) ;
+        SS_MCP_ENCODERS = 0x1;
+
+//        //pol inverse
+//        SS_MCP_ENCODERS = 0x0;
+//        SPI2BUF = 0x4002;
+//        while (!SPI2STATbits.SPIRBF) ;
+//        SPI2BUF = 0xFFFF;
+//        while (!SPI2STATbits.SPIRBF) ;
+//        SS_MCP_ENCODERS = 0x1;
+//
+//        //DEFVAL
+//        SS_MCP_ENCODERS = 0x0;
+//        SPI2BUF = 0x4006;
+//        while (!SPI2STATbits.SPIRBF) ;
+//        SPI2BUF = 0xFFFF;
+//        while (!SPI2STATbits.SPIRBF) ;
+//        SS_MCP_ENCODERS = 0x1;
+
+        //INTCON
+        SS_MCP_ENCODERS = 0x0;
+        SPI2BUF = 0x4008;
+        while (!SPI2STATbits.SPIRBF) ;
+        SPI2BUF = 0x0000;
+        while (!SPI2STATbits.SPIRBF) ;
+        SS_MCP_ENCODERS = 0x1;
+
+        //IOCON
+        SS_MCP_ENCODERS = 0x0;
         SPI2BUF = 0x400A;
         while (!SPI2STATbits.SPIRBF) ;
-        SPI2BUF = 0x2020;
+        SPI2BUF = 0x0202;
         while (!SPI2STATbits.SPIRBF) ;
-        SS_MCP_LCD = 0x1;
+        SS_MCP_ENCODERS = 0x1;
+
+        //read GPIO pour clear flags
+        SS_MCP_ENCODERS = 0x0;
+        SPI2BUF = 0x4112;
+        while (!SPI2STATbits.SPIRBF) ;
+        SPI2BUF = 0x0000;
+        while (!SPI2STATbits.SPIRBF) ;
+        SS_MCP_ENCODERS = 0x1;
+
+
+        SPI2CONbits.MODE16 = 0;
 }
 
 void    LCD_init(void)
@@ -157,17 +221,12 @@ void INT_init(void)
     __builtin_disable_interrupts();
     INTCONbits.MVEC = 1;
 
-    // BUTTON INTERRUPT 1
-    INTCONbits.INT1EP = 0; // Interrupt on falling edge
-    IFS0bits.INT1IF = 0; // Reset the flag
-    IPC1bits.INT1IP = 2; // Set priority
-    IEC0bits.INT1IE = 1; // Enable interrupt
     
-    // HT16 INTERRUPT 2
-    INTCONbits.INT2EP = 0; // Interrupt on falling edge
-    IFS0bits.INT2IF = 0; // Reset the flag
-    IPC2bits.INT2IP = 2; // Set priority
-    IEC0bits.INT2IE = 1; // Enable interrupt
+//    // HT16 INTERRUPT 2
+//    INTCONbits.INT2EP = 0; // Interrupt on falling edge
+//    IFS0bits.INT2IF = 0; // Reset the flag
+//    IPC2bits.INT2IP = 2; // Set priority
+//    IEC0bits.INT2IE = 1; // Enable interrupt
 
      // CodG INTERRUPT 3
      INTCONbits.INT3EP = 1; // Interrupt on rising edge
@@ -203,6 +262,20 @@ void INT_init(void)
     IPC7bits.SPI2IP = 4; // au pif
     IEC1bits.SPI2RXIE = 1;
     IEC1bits.SPI2TXIE = 1;
+
+     // MCD encoders interrupts - pour le moment sur INT1 et INT2
+        
+  //  TRISDbits.TRISD8 = 0x1;
+  //  TRISDbits.TRISD9 = 0x1;
+     INTCONbits.INT1EP = RISING_EDGE;
+     IFS0bits.INT1IF = 0; // Reset the flag
+     IPC1bits.INT1IP = 2; // Set priority
+     IEC0bits.INT1IE = 1; // Enable interrupt
+     
+     INTCONbits.INT2EP = RISING_EDGE;
+     IFS0bits.INT2IF = 0; // Reset the flag
+     IPC2bits.INT2IP = 2; // Set priority
+     IEC0bits.INT2IE = 1; // Enable interrupt
 
     __builtin_enable_interrupts();
 }

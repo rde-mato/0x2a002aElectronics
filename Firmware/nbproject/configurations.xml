@@ -24,11 +24,11 @@
       <itemPath>input_handler.c</itemPath>
       <itemPath>HT16_keys_driver.c</itemPath>
       <itemPath>HT16_leds_driver.c</itemPath>
-      <itemPath>main_encoder_driver.c</itemPath>
       <itemPath>SPI_driver.c</itemPath>
       <itemPath>MCP_driver.c</itemPath>
       <itemPath>LCD_driver.c</itemPath>
       <itemPath>flash_driver.c</itemPath>
+      <itemPath>encoders_driver.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
