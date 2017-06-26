@@ -50,7 +50,7 @@ int main(void)
 	while (42)
 	{
 //		manage_I2C2();
-//		manage_SPI2();
+		manage_SPI2();
 		WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 	}
 	return (0);
