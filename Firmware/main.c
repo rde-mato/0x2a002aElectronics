@@ -31,25 +31,27 @@ u16	active_instruments;
 //	pour chaque instrument actif on ne garde que le pattern actif
 //	
 
+u8  led = 0;
+
 int main(void)
 {
     GPIO_init();    // bien mettre a jour avec la vraie board
         TIMER_init();
-	//I2C2_init();
+	I2C2_init();
 	SPI2_init();
         //MCP_LCD_init();
 //        LCD_init();
-        //HT16_init();
         MCP_ENCODERS_init();
 
         INT_init();
+        HT16_init();
 
 
         T2CONbits.ON = 1;
-
+        led_toggle(led);
 	while (42)
 	{
-//		manage_I2C2();
+		manage_I2C2();
 		manage_SPI2();
 		WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 	}

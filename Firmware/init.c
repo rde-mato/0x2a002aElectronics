@@ -245,11 +245,11 @@ void INT_init(void)
     INTCONbits.MVEC = 1;
 
     
-//    // HT16 INTERRUPT 2
-//    INTCONbits.INT2EP = 0; // Interrupt on falling edge
-//    IFS0bits.INT2IF = 0; // Reset the flag
-//    IPC2bits.INT2IP = 2; // Set priority
-//    IEC0bits.INT2IE = 1; // Enable interrupt
+    // HT16 INTERRUPT 2
+    INTCONbits.INT2EP = FALLING_EDGE;
+    IFS0bits.INT2IF = 0; // Reset the flag
+    IPC2bits.INT2IP = 2; // Set priority
+    IEC0bits.INT2IE = 1; // Enable interrupt
 
      // CodG INTERRUPT 3
      INTCONbits.INT3EP = 1; // Interrupt on rising edge

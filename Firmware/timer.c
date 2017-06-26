@@ -23,9 +23,9 @@ void __ISR(_TIMER_3_VECTOR, IPL3AUTO) Timer3Handler(void)
 //        LCD_print_changed_chars();
 
     	LED_ON_OFF = !LED_ON_OFF;
-
+//
 //	led_toggle((qtime - 1) & 0x0F);
 //	led_toggle(qtime);
-	qtime = (qtime + 1) & 0x0F;
+//	qtime = (qtime + 1) & 0x0F;
 	TMR2 = 0;
 }
