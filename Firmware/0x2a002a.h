@@ -73,7 +73,7 @@ typedef void (* write_callback)(void);
 
 enum E_EVENT_SOURCE
 {
-    E_SOURCE_ENCODER_MAIN
+    E_SOURCE_ENCODER_MAIN = 8
 };
 
 enum E_EVENT_TYPE
