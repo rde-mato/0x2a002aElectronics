@@ -2,6 +2,8 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
+u16 read;
+
 //////// Encodeur General OK !
 //void __ISR(_EXTERNAL_3_VECTOR, IPL2AUTO) Main_encoder_R_Handler(void) {
 //    IFS0CLR = 0x8000; // Clear INT3IF
@@ -33,6 +35,7 @@ void __ISR(_EXTERNAL_1_VECTOR, IPL2AUTO) MCP_encoders_port_A_Handler(void) {
     while (SPI2STATbits.SPIBUSY) ;
     SPI2BUF = 0x0000;
     while (SPI2STATbits.SPIBUSY) ;
+    read = SPI2BUF;
     SS_MCP_ENCODERS = 0x1;
     SPI2CONbits.MODE16 = 0;
 

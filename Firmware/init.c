@@ -120,6 +120,14 @@ void MCP_ENCODERS_init(void)
         SPI2CONbits.MODE16 = 1;
 
 
+        //uniquement GPA0 et GPB 0 en input, reste en output
+        SS_MCP_ENCODERS = 0x0;
+        SPI2BUF = 0x4000;
+        while (!SPI2STATbits.SPIRBF) ;
+        SPI2BUF = 0x0101;
+        while (!SPI2STATbits.SPIRBF) ;
+        SS_MCP_ENCODERS = 0x1;
+
 //        //mode sequentiel off
 //        SS_MCP_ENCODERS = 0x0;
 //        SPI2BUF = 0x400A;
@@ -128,13 +136,6 @@ void MCP_ENCODERS_init(void)
 //        while (SPI2STATbits.SPIBUSY) ;
 //        SS_MCP_ENCODERS = 0x1;
 
-        //activation des interrupts
-        SS_MCP_ENCODERS = 0x0;
-        SPI2BUF = 0x4004;
-        while (!SPI2STATbits.SPIRBF) ;
-        SPI2BUF = 0xFFFF;
-        while (!SPI2STATbits.SPIRBF) ;
-        SS_MCP_ENCODERS = 0x1;
 
 //        //pol inverse
 //        SS_MCP_ENCODERS = 0x0;
@@ -143,28 +144,29 @@ void MCP_ENCODERS_init(void)
 //        SPI2BUF = 0xFFFF;
 //        while (!SPI2STATbits.SPIRBF) ;
 //        SS_MCP_ENCODERS = 0x1;
-//
-//        //DEFVAL
-//        SS_MCP_ENCODERS = 0x0;
-//        SPI2BUF = 0x4006;
-//        while (!SPI2STATbits.SPIRBF) ;
-//        SPI2BUF = 0xFFFF;
-//        while (!SPI2STATbits.SPIRBF) ;
-//        SS_MCP_ENCODERS = 0x1;
 
-        //INTCON
+        //DEFVAL
         SS_MCP_ENCODERS = 0x0;
-        SPI2BUF = 0x4008;
+        SPI2BUF = 0x4006;
         while (!SPI2STATbits.SPIRBF) ;
-        SPI2BUF = 0x0000;
+        SPI2BUF = 0xFFFF;
         while (!SPI2STATbits.SPIRBF) ;
         SS_MCP_ENCODERS = 0x1;
 
-        //IOCON
+        //INTCON => 1 pour comparaison a DEFVAL, 0 pour comparaison a previous
+        SS_MCP_ENCODERS = 0x0;
+        SPI2BUF = 0x4008;
+        while (!SPI2STATbits.SPIRBF) ;
+        SPI2BUF = 0xFFFF;
+        while (!SPI2STATbits.SPIRBF) ;
+        SS_MCP_ENCODERS = 0x1;
+
+        //IOCON => le bit (1 << 1) est a 0 pour interrupt active low et 1 pour active high
         SS_MCP_ENCODERS = 0x0;
         SPI2BUF = 0x400A;
         while (!SPI2STATbits.SPIRBF) ;
-        SPI2BUF = 0x0202;
+        SPI2BUF = 0x0000;
+//        SPI2BUF = 0x0202;
         while (!SPI2STATbits.SPIRBF) ;
         SS_MCP_ENCODERS = 0x1;
 
@@ -176,6 +178,14 @@ void MCP_ENCODERS_init(void)
         while (!SPI2STATbits.SPIRBF) ;
         SS_MCP_ENCODERS = 0x1;
 
+
+        //activation des interrupts
+        SS_MCP_ENCODERS = 0x0;
+        SPI2BUF = 0x4004;
+        while (!SPI2STATbits.SPIRBF) ;
+        SPI2BUF = 0xFFFF;
+        while (!SPI2STATbits.SPIRBF) ;
+        SS_MCP_ENCODERS = 0x1;
 
         SPI2CONbits.MODE16 = 0;
 }
@@ -267,12 +277,12 @@ void INT_init(void)
         
   //  TRISDbits.TRISD8 = 0x1;
   //  TRISDbits.TRISD9 = 0x1;
-     INTCONbits.INT1EP = RISING_EDGE;
+     INTCONbits.INT1EP = FALLING_EDGE;
      IFS0bits.INT1IF = 0; // Reset the flag
      IPC1bits.INT1IP = 2; // Set priority
      IEC0bits.INT1IE = 1; // Enable interrupt
      
-     INTCONbits.INT2EP = RISING_EDGE;
+     INTCONbits.INT2EP = FALLING_EDGE;
      IFS0bits.INT2IF = 0; // Reset the flag
      IPC2bits.INT2IP = 2; // Set priority
      IEC0bits.INT2IE = 1; // Enable interrupt
