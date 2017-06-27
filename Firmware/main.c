@@ -37,22 +37,24 @@ int main(void)
 {
     GPIO_init();    // bien mettre a jour avec la vraie board
         TIMER_init();
-	I2C2_init();
+//	I2C2_init();
 	SPI2_init();
         //MCP_LCD_init();
 //        LCD_init();
-        MCP_ENCODERS_init();
+//        MCP_ENCODERS_init();
 
-        INT_init();
-        HT16_init();
+        sd_card_init();
+
+//        INT_init();
+//        HT16_init();
 
 
         T2CONbits.ON = 1;
-        led_toggle(led);
+//        led_toggle(led);
 	while (42)
 	{
-		manage_I2C2();
-		manage_SPI2();
+//		manage_I2C2();
+//		manage_SPI2();
 		WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 	}
 	return (0);
