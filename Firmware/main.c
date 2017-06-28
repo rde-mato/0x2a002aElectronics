@@ -43,7 +43,8 @@ int main(void)
 //        LCD_init();
 //        MCP_ENCODERS_init();
 
-        sd_card_init();
+        SD_card_init();
+        SD_card_read_block(424242);
 
 //        INT_init();
 //        HT16_init();
