@@ -44,6 +44,7 @@ int main(void)
 //        MCP_ENCODERS_init();
 
         SD_card_init();
+        SD_card_write_block(424242);
         SD_card_read_block(424242);
 
 //        INT_init();

@@ -5,7 +5,7 @@
 #define SD_R1 1
 #define SD_R3 3
 #define SD_R7 7
-#define SD_RETRIES 10
+#define SD_RETRIES 12
 #define SD_BLOCK_SIZE   512
 
 #define SD_SDSC 0
@@ -16,6 +16,7 @@ u8  SD_error = 0;
 u8  SD_type = SD_SDSC;
 
 u8  SD_read_buf[SD_BLOCK_SIZE] = {0};
+u8  SD_write_buf[SD_BLOCK_SIZE] = "caca boudin";
 
 void    send_80_clk(void)
 {
@@ -214,6 +215,73 @@ u8  SD_card_read_block(u32 block)
     SPI2BUF = 0xFF;
     while (SPI2STATbits.SPIBUSY) ;
     read8 = SPI2BUF;
+
+    SS_MCP_ENCODERS = 0x1;
+    SPI2BUF = 0xFF;
+    while (SPI2STATbits.SPIBUSY) ;
+    read8 = SPI2BUF;
+    return (1);
+}
+u8  SD_card_write_block(u32 block)
+{
+    u8  R1;
+    u8  read8;
+    u32 read32;
+    u8  retries = SD_RETRIES;
+    u8 data_response;
+    u16 i = 0;
+
+    SS_MCP_ENCODERS = 0x0;
+    SPI2BUF = 0x40 | 24;
+    while (SPI2STATbits.SPIBUSY) ;
+    read8 = SPI2BUF;
+
+    SPI2CONbits.MODE32 = 1;
+
+    if (SD_type == SD_SDSC)
+        block *= SD_BLOCK_SIZE;
+    SPI2BUF = block;
+    while (SPI2STATbits.SPIBUSY) ;
+    read32 = SPI2BUF;
+
+    SPI2CONbits.MODE32 = 0;
+
+    SPI2BUF = 0x01;
+    while (SPI2STATbits.SPIBUSY) ;
+    read8 = SPI2BUF;
+
+    while (retries--)
+    {
+        SPI2BUF = 0xFF;
+        while (SPI2STATbits.SPIBUSY) ;
+        if ((R1 = SPI2BUF) != 0xFF)
+            break;
+    }
+    if (R1 != 0x00)
+        return (R1);
+
+    SPI2BUF = 0xFF;     // wait one byte
+    while (SPI2STATbits.SPIBUSY) ;
+    read8 = SPI2BUF;
+    SPI2BUF = 0b11111110;   // send start token
+    while (SPI2STATbits.SPIBUSY) ;
+    read8 = SPI2BUF;
+    while (i < SD_BLOCK_SIZE)
+    {
+        SPI2BUF = SD_write_buf[i++];
+        while (SPI2STATbits.SPIBUSY) ;
+        read8 = SPI2BUF;
+    }
+    SPI2BUF = 0xFF;
+    while (SPI2STATbits.SPIBUSY) ;
+    data_response = SPI2BUF;
+    SPI2BUF = 0xFF;     // first crc byte
+    while (SPI2STATbits.SPIBUSY) ;
+    read8 = SPI2BUF;
+    SPI2BUF = 0xFF;     // second crc byte
+    while (SPI2STATbits.SPIBUSY) ;
+    read8 = SPI2BUF;
+
 
     SS_MCP_ENCODERS = 0x1;
     SPI2BUF = 0xFF;
