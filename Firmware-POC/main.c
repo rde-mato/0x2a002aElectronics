@@ -36,10 +36,10 @@ u8  led = 0;
 int main(void)
 {
     u8  ret = 0;
-    u32 block = 45000;
+    u32 block = 512;
 
         GPIO_init();    // bien mettre a jour avec la vraie board
-        TIMER_init();
+//        TIMER_init();
 //	I2C2_init();
 	SPI2_init();
         //MCP_LCD_init();

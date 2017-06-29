@@ -38,11 +38,11 @@ int main(void)
 //    u8  ret = 0;
 //    u32 block = 45000;
 
-        GPIO_init();
+        init_main_encoder();
         PPS_init();
         
-//        TIMER_init();
-////	I2C2_init();
+        TIMER_init();
+//	I2C2_init();
 //	SPI2_init();
 //        MCP_LCD_init();
 //        LCD_init();

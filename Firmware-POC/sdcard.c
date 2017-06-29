@@ -100,7 +100,7 @@ u8  SD_command_retry(u8 cmd, u32 arg, u8 crc, u8 restype)
         SPI2BUF = 0xFF;
         while (SPI2STATbits.SPIBUSY) ;
         if ((ret = SPI2BUF) != 0xFF)
-            retries = 0;
+            break;
     }
     if (ret != 0xFF && (restype == SD_R3 || restype == SD_R7))
     {
@@ -152,7 +152,7 @@ u8  SD_card_read_block(u32 block)
     u8  token;
     u8  read8;
     u32 read32;
-    u8  retries = SD_RETRIES;
+    u32  retries = SD_RETRIES;
     u16 i = 0;
 
     SS_MCP_ENCODERS = 0x0;
@@ -193,7 +193,7 @@ u8  SD_card_read_block(u32 block)
             break;
     }
     if (token != 0b11111110)
-        return (SD_WRITE_ERROR_WRONG_TOKEN);
+        return (SD_READ_ERROR_WRONG_TOKEN);
     while (i < SD_BLOCK_SIZE)
     {
         SPI2BUF = 0xFF;

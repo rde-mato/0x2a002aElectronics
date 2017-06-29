@@ -2,16 +2,121 @@
 #include "0x2a002a.h"
 
 
-#define RISING_EDGE    1
-#define FALLING_EDGE    0
 
-extern char pattern[16][4][3];
-extern u8   I2C2_state;
-extern u8  SPI2_state;
+//extern char pattern[16][4][3];
+//extern u8   I2C2_state;
+//extern u8  SPI2_state;
+//
+//extern u32   bpm;
+//
+//extern u16 encoders_new_read;
 
-extern u32   bpm;
+void init_main_encoder(void)
+{
+    COD_A_GPIO = GPIO_INPUT;
+    COD_B_GPIO = GPIO_INPUT;
+}
 
-extern u16 encoders_new_read;
+void PPS_init(void)
+{
+//     #define PPSUnLock() {SYSKEY=0x0;SYSKEY=0xAA996655;SYSKEY=0x556699AA;CFGCONbits.IOLOCK=0;}
+//#define PPSLock() {SYSKEY=0x0;SYSKEY=0xAA996655;SYSKEY=0x556699AA;CFGCONbits.IOLOCK=1;}
+//    CFGCONbits.IOLOCK = 0;
+
+
+    __builtin_disable_interrupts();
+
+    SYSKEY=0x0;
+    SYSKEY=0xAA996655;
+    SYSKEY=0x556699AA;
+    CFGCONbits.IOLOCK=0;
+    SYSKEY=0x33333333;
+
+    INT2R = 0b0100; // main encoder RPB2
+    INT4R = 0b0001; // main encoder RPB3
+
+
+//    CFGCONbits.IOLOCK = 1;
+    SYSKEY=0x0;
+    SYSKEY=0xAA996655;
+    SYSKEY=0x556699AA;
+    CFGCONbits.IOLOCK=1;
+    SYSKEY=0x33333333;
+}
+
+void TIMER_init(void)
+{
+    TIMER3_STOP_AND_RESET;
+    TIMER3_32_BITS_MODE = 1;
+    TIMER3_VALUE = 0;
+    set_bpm(bpm);
+
+    TIMER5_STOP_AND_RESET;
+    TIMER5_32_BITS_MODE = 1;
+    TIMER5_VALUE = 0;
+    TIMER5_PERIOD = FREQUENCY / (1000 / BUTTON_POLL_DELAY_MS) - 1;
+    // y a t il besoin de 2 timers pour la gestion des appuis longs ?
+    // on ne peut pas se debrouiller en divisant la clock ?
+}
+
+void INT_init(void)
+{
+    __builtin_disable_interrupts();
+    INTCONbits.MVEC = 1;
+
+//    // HT16 INTERRUPT 2
+//    INTCONbits.INT2EP = FALLING_EDGE;
+//    IFS0bits.INT2IF = 0; // Reset the flag
+//    IPC2bits.INT2IP = 2; // Set priority
+//    IEC0bits.INT2IE = 1; // Enable interrupt
+
+     // MAIN ENCODER
+     COD_A_INT_POLARITY = RISING_EDGE;
+     COD_A_INT_FLAG_CLR;
+     COD_A_INT_PRIORITY = 2;
+     COD_A_INT_ENABLE = INT_ENABLED;
+     COD_B_INT_POLARITY = RISING_EDGE;
+     COD_B_INT_FLAG_CLR;
+     COD_B_INT_PRIORITY = 2;
+     COD_B_INT_ENABLE = INT_ENABLED;
+
+    // TIMERS
+    TIMER3_INT_FLAG_CLR;
+    TIMER3_INT_PRIORITY = 3;
+    TIMER3_INT_ENABLE = INT_ENABLED;
+    TIMER5_INT_FLAG_CLR;
+    TIMER5_INT_PRIORITY = 3;
+    TIMER5_INT_ENABLE = INT_ENABLED;
+    // l'interruption est activee uniquement en cas de poll
+
+//    //I2C2 INTERRUPT
+//    IFS1bits.I2C2MIF = 0; // reset flag
+//    IPC8bits.I2C2IP = 4; // au pif
+//    IEC1bits.I2C2MIE = 1;
+//
+//    //SPI2 Interrupt
+//    IFS1bits.SPI2RXIF = 0; // reset flag
+//    IFS1bits.SPI2TXIF = 0; // reset flag
+//    IPC7bits.SPI2IP = 4; // au pif
+//    IEC1bits.SPI2RXIE = 1;
+//    IEC1bits.SPI2TXIE = 1;
+//
+//     // MCD encoders interrupts - pour le moment sur INT1 et INT2
+//
+//  //  TRISDbits.TRISD8 = 0x1;
+//  //  TRISDbits.TRISD9 = 0x1;
+//     INTCONbits.INT1EP = FALLING_EDGE;
+//     IFS0bits.INT1IF = 0; // Reset the flag
+//     IPC1bits.INT1IP = 2; // Set priority
+//     IEC0bits.INT1IE = 1; // Enable interrupt
+//
+////     INTCONbits.INT2EP = FALLING_EDGE;
+////     IFS0bits.INT2IF = 0; // Reset the flag
+////     IPC2bits.INT2IP = 2; // Set priority
+////     IEC0bits.INT2IE = 1; // Enable interrupt
+
+    __builtin_enable_interrupts();
+}
 
 //void SPI2_init(void)
 //{
@@ -228,118 +333,6 @@ extern u16 encoders_new_read;
 //        SS_MCP_LCD = 0x1;
 //}
 
-void GPIO_init(void)
-{
-    // CodG GPIO D11
-    TRISBbits.TRISB2 = 0x1; //D10 configured for input
-    TRISBbits.TRISB3 = 0x1; //D10 configured for input
-}
-
-void PPS_init(void)
-{
-//     #define PPSUnLock() {SYSKEY=0x0;SYSKEY=0xAA996655;SYSKEY=0x556699AA;CFGCONbits.IOLOCK=0;}
-//#define PPSLock() {SYSKEY=0x0;SYSKEY=0xAA996655;SYSKEY=0x556699AA;CFGCONbits.IOLOCK=1;}
-//    CFGCONbits.IOLOCK = 0;
-
-
-    __builtin_disable_interrupts();
-    
-    SYSKEY=0x0;
-    SYSKEY=0xAA996655;
-    SYSKEY=0x556699AA;
-    CFGCONbits.IOLOCK=0;
-    SYSKEY=0x33333333;
-
-    INT2R = 0b0100; // main encoder RPB2
-    INT4R = 0b0001; // main encoder RPB3
-
-
-//    CFGCONbits.IOLOCK = 1;
-    SYSKEY=0x0;
-    SYSKEY=0xAA996655;
-    SYSKEY=0x556699AA;
-    CFGCONbits.IOLOCK=1;
-    SYSKEY=0x33333333;
-}
-
-void INT_init(void)
-{
-    __builtin_disable_interrupts();
-    INTCONbits.MVEC = 1;
-
-    
-//    // HT16 INTERRUPT 2
-//    INTCONbits.INT2EP = FALLING_EDGE;
-//    IFS0bits.INT2IF = 0; // Reset the flag
-//    IPC2bits.INT2IP = 2; // Set priority
-//    IEC0bits.INT2IE = 1; // Enable interrupt
-
-     // CodG INTERRUPT 2
-     INTCONbits.INT2EP = 1; // Interrupt on rising edge
-     IFS0bits.INT2IF = 0; // Reset the flag
-     IPC2bits.INT2IP = 2; // Set priority
-     IEC0bits.INT2IE = 1; // Enable interrupt
-
-     // CodG INTERRUPT 4
-     INTCONbits.INT4EP = 1; // Interrupt on rising edge
-     IFS0bits.INT4IF = 0; // Reset the flag
-     IPC4bits.INT4IP = 2; // Set priority
-     IEC0bits.INT4IE = 1; // Enable interrupt
-
-//    // TIMER 2-3 INTERRUPT
-//    IFS0bits.T3IF = 0;
-//    IPC3bits.T3IP = 3;
-//    IEC0bits.T3IE = 1;
-//
-//    // TIMER 4-5 INTERRUPT
-//    IFS0bits.T5IF = 0;
-//    IPC5bits.T5IP = 2;
-//    IEC0bits.T5IE = 1;
-//    // l'interruption est activee uniquement en cas de poll
-//
-//    //I2C2 INTERRUPT
-//    IFS1bits.I2C2MIF = 0; // reset flag
-//    IPC8bits.I2C2IP = 4; // au pif
-//    IEC1bits.I2C2MIE = 1;
-//
-//    //SPI2 Interrupt
-//    IFS1bits.SPI2RXIF = 0; // reset flag
-//    IFS1bits.SPI2TXIF = 0; // reset flag
-//    IPC7bits.SPI2IP = 4; // au pif
-//    IEC1bits.SPI2RXIE = 1;
-//    IEC1bits.SPI2TXIE = 1;
-//
-//     // MCD encoders interrupts - pour le moment sur INT1 et INT2
-//
-//  //  TRISDbits.TRISD8 = 0x1;
-//  //  TRISDbits.TRISD9 = 0x1;
-//     INTCONbits.INT1EP = FALLING_EDGE;
-//     IFS0bits.INT1IF = 0; // Reset the flag
-//     IPC1bits.INT1IP = 2; // Set priority
-//     IEC0bits.INT1IE = 1; // Enable interrupt
-//
-////     INTCONbits.INT2EP = FALLING_EDGE;
-////     IFS0bits.INT2IF = 0; // Reset the flag
-////     IPC2bits.INT2IP = 2; // Set priority
-////     IEC0bits.INT2IE = 1; // Enable interrupt
-
-    __builtin_enable_interrupts();
-}
-
-//void TIMER_init(void)
-//{
-//    // timer 2-3 used for bpm management
-//    T2CON = 0x0; // Stop timer and clear control register
-//    T2CONbits.T32 = 0b1; // Activate 32bits timer with T3
-//    TMR2 = 0; // Clear timer register
-//    set_bpm(bpm);
-//
-//    // timer 4-5 used for key press management
-//    T4CON = 0x0;
-//    T4CONbits.T32 = 0b1;
-//    TMR4 = 0;
-//    PR4 = FREQUENCY / (1000 / BUTTON_POLL_DELAY_MS) - 1;
-//}
 
 //void init_pattern(void)
 //{

@@ -1,28 +1,42 @@
 #ifndef OX2A002A_H
 #define	OX2A002A_H
 
-#include <stdint.h>
+//#include <stdint.h>
 
-#define LED_ON_OFF LATFbits.LATF1
+
 #define FREQUENCY (8000000ul)
 #define BUTTON_POLL_DELAY_MS 50
 #define LONG_PRESS_LIMIT 100
+
+// GPIOs
+#define GPIO_INPUT 1
+#define GPIO_OUTPUT 0
+
+// INTERRUPTS
+#define RISING_EDGE    1
+#define FALLING_EDGE    0
+#define FLAG_UP 1
+#define FLAG_DOWN 0
+#define INT_ENABLED 1
+#define INT_DISABLED 0
+
+//MAIN ENCODER
+#define COD_A_GPIO TRISBbits.TRISB2
+#define COD_A_INT_POLARITY INTCONbits.INT2EP
+#define COD_A_INT_FLAG IFS0bits.INT2IF
+#define COD_A_INT_PRIORITY IPC2bits.INT2IP
+#define COD_A_INT_ENABLE IEC0bits.INT2IE
+#define COD_B_GPIO TRISBbits.TRISB3
+#define COD_B_INT_POLARITY INTCONbits.INT4EP
+#define COD_B_INT_FLAG IFS0bits.INT4IF
+#define COD_B_INT_PRIORITY IPC4bits.INT4IP
+#define COD_B_INT_ENABLE IEC0bits.INT4IE
 
 
 //#define MCP_LCD_RESET         LATEbits.LATE2
 #define SS_MCP_LCD                LATGbits.LATG9
 #define SS_MCP_ENCODERS           LATGbits.LATG9
 #define SS_FLASH                LATGbits.LATG9
-
-
-#define FLASH_READ              0x03
-#define FLASH_4K_ERASE          0x20
-#define FLASH_BYTE_PROGRAM      0x02
-#define FLASH_AAI_WORD          0xAD
-#define FLASH_RDSR              0x05
-#define FLASH_EWSR              0x50
-#define FLASH_WRSR              0x01
-#define FLASH_WREN              0x06
 
 
 
@@ -64,7 +78,7 @@
 #define SD_R1 1
 #define SD_R3 3
 #define SD_R7 7
-#define SD_RETRIES 512
+#define SD_RETRIES 24
 #define SD_BLOCK_SIZE   512
 
 #define SD_SDSC 0
@@ -74,11 +88,11 @@
 #define SD_WRITE_ERROR_WRONG_R1 2
 #define SD_WRITE_ERROR_WRONG_DATA_RESPONSE 3
 #define SD_WRITE_ERROR_WRONG_CRC 5
-#define SD_WRITE_ERROR_WRONG_TOKEN 6
+#define SD_WRITE_ERROR_WRONG_CRC 6
 
 #define SD_READ_NO_ERROR 1
 #define SD_READ_ERROR_WRONG_R1 2
-#define SD_READ_ERROR_WRONG_TOKEN 3
+#define SD_WRITE_ERROR_WRONG_TOKEN 3
 
 typedef signed char s8;
 typedef signed short s16;
@@ -142,5 +156,16 @@ enum E_SPI2_SLAVE {
     E_SPI2_SS_SD,
     E_SPI2_SS_FLASH
 };
+
+
+
+//#define FLASH_READ              0x03
+//#define FLASH_4K_ERASE          0x20
+//#define FLASH_BYTE_PROGRAM      0x02
+//#define FLASH_AAI_WORD          0xAD
+//#define FLASH_RDSR              0x05
+//#define FLASH_EWSR              0x50
+//#define FLASH_WRSR              0x01
+//#define FLASH_WREN              0x06
 
 #endif	/* OX2A002A_H */
