@@ -8,7 +8,7 @@ u8      qtime = 0;
     
 void set_bpm(void)
 {
-	PR2 = FREQUENCY /(bpm / 15); // bpm * 4 / 60
+	PR2 = FREQUENCY / (bpm / 15); // bpm * 4 / 60
 }
 
 void __ISR(_TIMER_3_VECTOR, IPL3AUTO) Timer3Handler(void)

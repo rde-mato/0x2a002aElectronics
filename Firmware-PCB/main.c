@@ -35,36 +35,32 @@ u8  led = 0;
 
 int main(void)
 {
-//    u8  ret = 0;
-//    u32 block = 45000;
-
-        init_main_encoder();
-        PPS_init();
-        
-        TIMER_init();
-//	I2C2_init();
-//	SPI2_init();
-//        MCP_LCD_init();
-//        LCD_init();
-////        MCP_ENCODERS_init();
+	PPS_init();
+	init_main_encoder();
+	TIMER_init();
+	I2C1_init();
+	SPI1_init();
+//	MCP_LCD_init();
+//	LCD_init();
+//	MCP_ENCODERS_init();
 //
-////        SD_card_init();
-////        ret = SD_card_read_block(block);
-////        ret = SD_card_write_block(block);
-////        ret = SD_card_read_block(block);
+//	SD_card_init();
+//	ret = SD_card_read_block(block);
+//	ret = SD_card_write_block(block);
+//	ret = SD_card_read_block(block);
 //
-        INT_init();
-////        HT16_init();
+//	INT_init();
+//	HT16_init();
 //
-         IFS0bits.INT2IF = 1;
+//	IFS0bits.INT2IF = 1;
 //
-//        T2CONbits.ON = 1;
-//        led_toggle(led);
+//	T2CONbits.ON = 1;
+//	led_toggle(led);
 	while (42)
 	{
 //		manage_I2C2();
 //		manage_SPI2();
-		WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
+	  WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 	}
 	return (0);
 }

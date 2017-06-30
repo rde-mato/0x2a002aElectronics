@@ -34,6 +34,8 @@ void PPS_init(void)
 
     INT2R = 0b0100; // main encoder RPB2
     INT4R = 0b0001; // main encoder RPB3
+	// RPA1 pour SDI1
+	// RPB13 pour SDO1
 
 
 //    CFGCONbits.IOLOCK = 1;
@@ -89,11 +91,11 @@ void INT_init(void)
     TIMER5_INT_ENABLE = INT_ENABLED;
     // l'interruption est activee uniquement en cas de poll
 
-//    //I2C2 INTERRUPT
-//    IFS1bits.I2C2MIF = 0; // reset flag
-//    IPC8bits.I2C2IP = 4; // au pif
-//    IEC1bits.I2C2MIE = 1;
-//
+    //I2C1 INTERRUPT
+	I2C1_INT_FLAG_CLR;
+    I2C1_INT_PRIORITY = 4;
+    I2C1_INT_ENABLE = 1;
+
 //    //SPI2 Interrupt
 //    IFS1bits.SPI2RXIF = 0; // reset flag
 //    IFS1bits.SPI2TXIF = 0; // reset flag
@@ -118,52 +120,50 @@ void INT_init(void)
     __builtin_enable_interrupts();
 }
 
-//void SPI2_init(void)
-//{
-//
-//    //GPIO pour le SPI2
-//    TRISGbits.TRISG7 = 0x1;
-//    TRISGbits.TRISG8 = 0x0;
-//
-//    //Slave select en mode test, a adapter avec vrais branchements
-//    TRISGbits.TRISG9 = 0x0; //chip select du MCP LCD
-//    LATGbits.LATG9 = 0x1;
-//
-//    SPI2CON = 0;
-//    SPI2BUF = 0;
-//    SPI2BRG = 0; //set baudrate 1Mhz suivant 8 Mhz du pbclk
-//    SPI2CONbits.CKE = 1;
-//    SPI2CONbits.CKP = 0; // mode 00 tás vue
-//    SPI2CONbits.MODE16 = 0;
-//    SPI2CONbits.MODE32 = 0;
-//    SPI2CONbits.MSTEN = 1; //activer master mode
-//    SPI2CONbits.ON = 1; //ON spi2
-//}
-//
-//
-//void I2C2_init(void) //// A GERER AVEC DES INTERRUPTS
-//{
-//    u8 i;
-//    u16 cpt;
-//    // envoi de 9 coups de clock pour reset les chips
-//    TRISFbits.TRISF5 = 0x0; //F5 configured for output
-//    i = 0;
-//    LATFbits.LATF5 = 0;
-//    while (i < 18)
-//    {
-//        LATFbits.LATF5 = !LATFbits.LATF5;
-//        ++i;
-//        cpt = 0;
-//        while (cpt++ < 2000);
-//    }
-//
-//    I2C2BRG = 38;
-//    I2C2CONbits.DISSLW = 1;
-//    I2C2CONbits.STREN = 1;
-//    I2C2CONbits.RCEN = 1;
-//    I2C2CONbits.ON = 1;
-//}
-//
+void SPI1_init(void)
+{
+	SPI1_CS0_GPIO = GPIO_OUTPUT;
+	SPI1_CS1_GPIO = GPIO_OUTPUT;
+	SPI1_CS2_GPIO = GPIO_OUTPUT;
+	SPI1_CS3_GPIO = GPIO_OUTPUT;
+	CS_MCP_LCD = CS_LINE_UP;
+	CS_MCP_ENCODERS = CS_LINE_UP;
+	CS_EEPROM = CS_LINE_UP;
+	CS_SD = CS_LINE_UP;
+	SPI2CON = 0;
+	SPI2BUF = 0;
+	SPI2BRG = 0; //set baudrate 1Mhz suivant 8 Mhz du pbclk
+	SPI2CONbits.CKE = 1;
+	SPI2CONbits.CKP = 0; // mode 00 tás vue
+	SPI2CONbits.MODE16 = 0;
+	SPI2CONbits.MODE32 = 0;
+	SPI2CONbits.MSTEN = 1; //activer master mode
+	SPI2CONbits.ON = 1; //ON spi2
+}
+
+
+void I2C1_init(void)
+{
+	u8	i = 0;
+	u16	cpt;
+
+	// envoi de 9 coups de clock pour reset les chips
+	I2C1_PIN_GPIO = GPIO_OUTPUT;
+	I2C1_PIN_LATCH = 0;
+	while (i < 18)
+	{
+		I2C1_PIN_LATCH = !I2C1_PIN_LATCH;
+		++i;
+		cpt = 0;
+		while (cpt++ < 2000);
+	}
+	I2C1BRG = 38;
+	I2C1CONbits.DISSLW = 1;
+	I2C1CONbits.STREN = 1;
+	I2C1CONbits.RCEN = 1;
+	I2C1CONbits.ON = 1;
+}
+
 //void HT16_init(void)
 //{
 //    u8  message[8] = {0};
