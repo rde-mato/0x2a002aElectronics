@@ -35,11 +35,11 @@ u8  led = 0;
 
 int main(void)
 {
-	PPS_init();
-	init_main_encoder();
+//	PPS_init();
+//	init_main_encoder();
 	TIMER_init();
 	I2C1_init();
-	SPI1_init();
+//	SPI1_init();
 //	MCP_LCD_init();
 //	LCD_init();
 //	MCP_ENCODERS_init();
@@ -49,16 +49,21 @@ int main(void)
 //	ret = SD_card_write_block(block);
 //	ret = SD_card_read_block(block);
 //
-//	INT_init();
-//	HT16_init();
+	INT_init();
+	HT16_init();
 //
 //	IFS0bits.INT2IF = 1;
 //
-//	T2CONbits.ON = 1;
-//	led_toggle(led);
+	T2CONbits.ON = 1;
+//	led_toggle(0);
+//        led_toggle(2);
+//        led_toggle(4);
+//        led_toggle(6);
+//        led_toggle(7);
+
 	while (42)
 	{
-//		manage_I2C2();
+		manage_I2C1();
 //		manage_SPI2();
 	  WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 	}

@@ -28,7 +28,7 @@ PowerPortNamesTakePriority=0
 PushECOToAnnotationFile=1
 DItemRevisionGUID=
 ReportSuppressedErrorsInMessages=0
-OutputPath=Project Outputs for 0x2a002a
+OutputPath=
 LogFolderPath=
 ManagedProjectGUID=
 
@@ -291,98 +291,6 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=GLLQRMMD
 
-[GeneratedDocument1]
-DocumentPath=..\..\dossierfab\BOM\Bill of Materials-0x2a002a.xlsx
-DItemRevisionGUID=
-
-[GeneratedDocument2]
-DocumentPath=..\..\dossierfab\NC Drill\PCB1-BoardEdgeRout.TXT
-DItemRevisionGUID=
-
-[GeneratedDocument3]
-DocumentPath=..\..\dossierfab\NC Drill\PCB1-RoundHoles.TXT
-DItemRevisionGUID=
-
-[GeneratedDocument4]
-DocumentPath=..\..\dossierfab\NC Drill\PCB1-SlotHoles.TXT
-DItemRevisionGUID=
-
-[GeneratedDocument5]
-DocumentPath=..\..\dossierfab\NC Drill\PCB1.DRR
-DItemRevisionGUID=
-
-[GeneratedDocument6]
-DocumentPath=..\..\dossierfab\Gerber\PCB1.EXTREP
-DItemRevisionGUID=
-
-[GeneratedDocument7]
-DocumentPath=..\..\dossierfab\Gerber\PCB1.GBL
-DItemRevisionGUID=
-
-[GeneratedDocument8]
-DocumentPath=..\..\dossierfab\Gerber\PCB1.GBO
-DItemRevisionGUID=
-
-[GeneratedDocument9]
-DocumentPath=..\..\dossierfab\Gerber\PCB1.GBP
-DItemRevisionGUID=
-
-[GeneratedDocument10]
-DocumentPath=..\..\dossierfab\Gerber\PCB1.GBS
-DItemRevisionGUID=
-
-[GeneratedDocument11]
-DocumentPath=..\..\dossierfab\Gerber\PCB1.GD1
-DItemRevisionGUID=
-
-[GeneratedDocument12]
-DocumentPath=..\..\dossierfab\Gerber\PCB1.GG1
-DItemRevisionGUID=
-
-[GeneratedDocument13]
-DocumentPath=..\..\dossierfab\Gerber\PCB1.GKO
-DItemRevisionGUID=
-
-[GeneratedDocument14]
-DocumentPath=..\..\dossierfab\Gerber\PCB1.GM1
-DItemRevisionGUID=
-
-[GeneratedDocument15]
-DocumentPath=..\..\dossierfab\Gerber\PCB1.GM32
-DItemRevisionGUID=
-
-[GeneratedDocument16]
-DocumentPath=..\..\dossierfab\Gerber\PCB1.GPB
-DItemRevisionGUID=
-
-[GeneratedDocument17]
-DocumentPath=..\..\dossierfab\Gerber\PCB1.GPT
-DItemRevisionGUID=
-
-[GeneratedDocument18]
-DocumentPath=..\..\dossierfab\Gerber\PCB1.GTL
-DItemRevisionGUID=
-
-[GeneratedDocument19]
-DocumentPath=..\..\dossierfab\Gerber\PCB1.GTO
-DItemRevisionGUID=
-
-[GeneratedDocument20]
-DocumentPath=..\..\dossierfab\Gerber\PCB1.GTP
-DItemRevisionGUID=
-
-[GeneratedDocument21]
-DocumentPath=..\..\dossierfab\Gerber\PCB1.GTS
-DItemRevisionGUID=
-
-[GeneratedDocument22]
-DocumentPath=..\..\dossierfab\Gerber\PCB1.RUL
-DItemRevisionGUID=
-
-[GeneratedDocument23]
-DocumentPath=..\..\dossierfab\Pick Place\Pick Place for PCB1.csv
-DItemRevisionGUID=
-
 [Configuration1]
 Name=Default Configuration
 ParameterCount=0
@@ -430,7 +338,7 @@ SCH_HasExpandLogicalToPhysicalSheets=-1
 SaveSettingsToOutJob=-1
 
 [Generic_EDE]
-OutputDir=Project Outputs for 0x2a002a
+OutputDir=
 
 [OutputGroup1]
 Name=Netlist Outputs

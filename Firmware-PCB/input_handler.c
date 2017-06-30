@@ -5,7 +5,6 @@
 //
 //extern u32     current_key_scan;
 
-u8  index = 0;
 u32 cpt = 0;
 //
 //extern u8 led;

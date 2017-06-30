@@ -19,6 +19,10 @@
       <itemPath>input_handler.c</itemPath>
       <itemPath>config.c</itemPath>
       <itemPath>timer.c</itemPath>
+      <itemPath>HT16_keys_driver.c</itemPath>
+      <itemPath>HT16_leds_driver.c</itemPath>
+      <itemPath>I2C_driver.c</itemPath>
+      <itemPath>I2C_handler.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -26,6 +30,9 @@
       <itemPath>Makefile</itemPath>
     </logicalFolder>
   </logicalFolder>
+  <sourceRootList>
+    <Elem>.</Elem>
+  </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
     <conf name="default" type="2">

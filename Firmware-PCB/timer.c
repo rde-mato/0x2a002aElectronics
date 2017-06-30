@@ -2,7 +2,7 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
-u32     bpm = 50;
+u32     bpm = 1000;
 u8      qtime = 0;
 
     
@@ -13,16 +13,16 @@ void set_bpm(void)
 
 void __ISR(_TIMER_3_VECTOR, IPL3AUTO) Timer3Handler(void)
 {
-    TIMER5_INT_FLAG_CLR;
+    TIMER3_INT_FLAG_CLR;
 
 //        char    line[21] = "...................";
 //
 //        line[qtime] = 'a' + qtime;
 //        LCD_putstr(qtime & 7, 0, line);
 //        LCD_print_changed_chars();
-//
-//	led_toggle((qtime - 1) & 0x0F);
-//	led_toggle(qtime);
-//	qtime = (qtime + 1) & 0x0F;
+
+	led_toggle((qtime - 1) & 31);
+	led_toggle(qtime);
+	qtime = (qtime + 1) & 31;
 	TIMER3_VALUE = 0;
 }

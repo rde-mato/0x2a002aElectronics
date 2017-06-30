@@ -4,10 +4,10 @@
 
 
 //extern char pattern[16][4][3];
-//extern u8   I2C2_state;
+extern u8   I2C1_state;
 //extern u8  SPI2_state;
-//
-//extern u32   bpm;
+
+extern u32   bpm;
 //
 //extern u16 encoders_new_read;
 
@@ -66,11 +66,11 @@ void INT_init(void)
     __builtin_disable_interrupts();
     INTCONbits.MVEC = 1;
 
-//    // HT16 INTERRUPT 2
-//    INTCONbits.INT2EP = FALLING_EDGE;
-//    IFS0bits.INT2IF = 0; // Reset the flag
-//    IPC2bits.INT2IP = 2; // Set priority
-//    IEC0bits.INT2IE = 1; // Enable interrupt
+    // HT16 INTERRUPT 2
+    INTCONbits.INT2EP = FALLING_EDGE;
+    IFS0bits.INT2IF = 0; // Reset the flag
+    IPC2bits.INT2IP = 2; // Set priority
+    IEC0bits.INT2IE = 1; // Enable interrupt
 
      // MAIN ENCODER
      COD_A_INT_POLARITY = RISING_EDGE;
@@ -164,36 +164,36 @@ void I2C1_init(void)
 	I2C1CONbits.ON = 1;
 }
 
-//void HT16_init(void)
-//{
-//    u8  message[8] = {0};
-//    int	i;
-//    u8  config[5] = {
-//        0x00,
-//        0x21,
-//        0xA1, // Int on falling edge
-//        0xEF, // No dimming
-//        0x81, // Blinking off display ON
-//    };
-//
-//    i = 0;
-//    while (i < sizeof(config) / sizeof(*config))
-//    {
-//        I2C2_write(0xE0, config[i], NULL, 0);
-//        while (!(I2C2_state == E_I2C2_DONE))
-//            WDTCONbits.WDTCLR = 1;
-//        i++;
-//    }
-//
-//    I2C2_write(0xE0, 0x00, message, 8);
-//    while (!(I2C2_state == E_I2C2_DONE))
-//        WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
-//
-//    I2C2_read_callback(0xE0, 0x40, 6, NULL);
-//    while (!(I2C2_state == E_I2C2_DONE))
-//        WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
-//}
-//
+void HT16_init(void)
+{
+    u8  message[8] = {0};
+    int	i;
+    u8  config[5] = {
+        0x00,
+        0x21,
+        0xA1, // Int on falling edge
+        0xEF, // No dimming
+        0x81, // Blinking off display ON
+    };
+
+    i = 0;
+    while (i < sizeof(config) / sizeof(*config))
+    {
+        I2C1_write(0xE0, config[i], NULL, 0);
+        while (!(I2C1_state == E_I2C1_DONE))
+            WDTCONbits.WDTCLR = 1;
+        i++;
+    }
+
+    I2C1_write(0xE0, 0x08, message, 8);
+    while (!(I2C1_state == E_I2C1_DONE))
+        WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
+
+    I2C1_read_callback(0xE0, 0x40, 6, NULL);
+    while (!(I2C1_state == E_I2C1_DONE))
+        WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
+}
+
 //void MCP_LCD_init(void)
 //{
 //        TRISEbits.TRISE2 = 0; //reset du MCP LCD // a degager quand branchement sur mclr
