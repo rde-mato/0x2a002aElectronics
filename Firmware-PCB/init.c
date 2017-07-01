@@ -11,125 +11,123 @@ extern u32   bpm;
 //
 //extern u16 encoders_new_read;
 
-void init_main_encoder(void)
+void GPIO_and_PPS_init(void)
 {
-    COD_A_GPIO = GPIO_INPUT;
-    COD_B_GPIO = GPIO_INPUT;
-}
-
-void PPS_init(void)
-{
-//     #define PPSUnLock() {SYSKEY=0x0;SYSKEY=0xAA996655;SYSKEY=0x556699AA;CFGCONbits.IOLOCK=0;}
-//#define PPSLock() {SYSKEY=0x0;SYSKEY=0xAA996655;SYSKEY=0x556699AA;CFGCONbits.IOLOCK=1;}
-//    CFGCONbits.IOLOCK = 0;
-
-
     __builtin_disable_interrupts();
 
-    SYSKEY=0x0;
-    SYSKEY=0xAA996655;
-    SYSKEY=0x556699AA;
-    CFGCONbits.IOLOCK=0;
-    SYSKEY=0x33333333;
+    SYSKEY = 0x0;
+    SYSKEY = 0xAA996655;
+    SYSKEY = 0x556699AA;
+    CFGCONbits.IOLOCK = 0;
+    SYSKEY = 0x33333333;
 
-    INT2R = 0b0100; // main encoder RPB2
-    INT4R = 0b0001; // main encoder RPB3
-	// RPA1 pour SDI1
-	// RPB13 pour SDO1
+	// Main encoder A
+	COD_A_ANALOG = DIGITAL_PIN;
+	COD_A_GPIO = GPIO_INPUT;
+	PPS_COD_A;
 
+	// Main encoder B
+	COD_B_ANALOG = DIGITAL_PIN;
+	COD_B_GPIO = GPIO_INPUT;
+	PPS_COD_B;
 
-//    CFGCONbits.IOLOCK = 1;
-    SYSKEY=0x0;
-    SYSKEY=0xAA996655;
-    SYSKEY=0x556699AA;
-    CFGCONbits.IOLOCK=1;
-    SYSKEY=0x33333333;
+	// SPI1
+	SPI1_CS0_GPIO = GPIO_OUTPUT;
+	CS_MCP_LCD = CS_LINE_UP;
+	SPI1_CS1_GPIO = GPIO_OUTPUT;
+	CS_MCP_ENCODERS = CS_LINE_UP;
+	SPI1_CS2_GPIO = GPIO_OUTPUT;
+	CS_EEPROM = CS_LINE_UP;
+	SPI1_CS3_GPIO = GPIO_OUTPUT;
+	CS_SD = CS_LINE_UP;
+	SDI1_ANALOG = DIGITAL_PIN;
+	PPS_SDI1;
+	SDO1_ANALOG = DIGITAL_PIN;
+	PPS_SDO1;
+	// besoin de configurer les pins MISO et MOSI en input / output aussi ??
+
+	SYSKEY = 0x0;
+	SYSKEY = 0xAA996655;
+	SYSKEY = 0x556699AA;
+	CFGCONbits.IOLOCK = 1;
+	SYSKEY = 0x33333333;
 }
 
 void TIMER_init(void)
 {
-    TIMER3_STOP_AND_RESET;
-    TIMER3_32_BITS_MODE = 1;
-    TIMER3_VALUE = 0;
-    set_bpm(bpm);
+	TIMER3_STOP_AND_RESET;
+	TIMER3_32_BITS_MODE = 1;
+	TIMER3_VALUE = 0;
+	set_bpm(bpm);
 
-    TIMER5_STOP_AND_RESET;
-    TIMER5_32_BITS_MODE = 1;
-    TIMER5_VALUE = 0;
-    TIMER5_PERIOD = FREQUENCY / (1000 / BUTTON_POLL_DELAY_MS) - 1;
-    // y a t il besoin de 2 timers pour la gestion des appuis longs ?
-    // on ne peut pas se debrouiller en divisant la clock ?
+	TIMER5_STOP_AND_RESET;
+	TIMER5_32_BITS_MODE = 1;
+	TIMER5_VALUE = 0;
+	TIMER5_PERIOD = FREQUENCY / (1000 / BUTTON_POLL_DELAY_MS) - 1;
+	// y a t il besoin de 2 timers pour la gestion des appuis longs ?
+	// on ne peut pas se debrouiller en divisant la clock ?
 }
 
 void INT_init(void)
 {
-    __builtin_disable_interrupts();
-    INTCONbits.MVEC = 1;
+	__builtin_disable_interrupts();
+	INTCONbits.MVEC = 1;
 
-    // HT16 INTERRUPT 2
-    INTCONbits.INT2EP = FALLING_EDGE;
-    IFS0bits.INT2IF = 0; // Reset the flag
-    IPC2bits.INT2IP = 2; // Set priority
-    IEC0bits.INT2IE = 1; // Enable interrupt
+	// HT16
+	HT16_INT_POLARITY = FALLING_EDGE;
+	HT16_INT_FLAG_CLR;
+	HT16_INT_PRIORITY = 2;
+	HT16_INT_ENABLE = INT_ENABLED;
 
-     // MAIN ENCODER
-     COD_A_INT_POLARITY = RISING_EDGE;
-     COD_A_INT_FLAG_CLR;
-     COD_A_INT_PRIORITY = 2;
-     COD_A_INT_ENABLE = INT_ENABLED;
-     COD_B_INT_POLARITY = RISING_EDGE;
-     COD_B_INT_FLAG_CLR;
-     COD_B_INT_PRIORITY = 2;
-     COD_B_INT_ENABLE = INT_ENABLED;
+	// MAIN ENCODER
+	COD_A_INT_POLARITY = RISING_EDGE;
+	COD_A_INT_FLAG_CLR;
+	COD_A_INT_PRIORITY = 2;
+	COD_A_INT_ENABLE = INT_ENABLED;
+	COD_B_INT_POLARITY = RISING_EDGE;
+	COD_B_INT_FLAG_CLR;
+	COD_B_INT_PRIORITY = 2;
+	COD_B_INT_ENABLE = INT_ENABLED;
 
-    // TIMERS
-    TIMER3_INT_FLAG_CLR;
-    TIMER3_INT_PRIORITY = 3;
-    TIMER3_INT_ENABLE = INT_ENABLED;
-    TIMER5_INT_FLAG_CLR;
-    TIMER5_INT_PRIORITY = 3;
-    TIMER5_INT_ENABLE = INT_ENABLED;
-    // l'interruption est activee uniquement en cas de poll
+	// TIMERS
+	TIMER3_INT_FLAG_CLR;
+	TIMER3_INT_PRIORITY = 3;
+	TIMER3_INT_ENABLE = INT_ENABLED;
+	TIMER5_INT_FLAG_CLR;
+	TIMER5_INT_PRIORITY = 3;
+	TIMER5_INT_ENABLE = INT_ENABLED;
+	// l'interruption est activee uniquement en cas de poll
 
-    //I2C1 INTERRUPT
+	//I2C1
 	I2C1_INT_FLAG_CLR;
-    I2C1_INT_PRIORITY = 4;
-    I2C1_INT_ENABLE = 1;
+	I2C1_INT_PRIORITY = 4;
+	I2C1_INT_ENABLE = 1;
 
-//    //SPI2 Interrupt
-//    IFS1bits.SPI2RXIF = 0; // reset flag
-//    IFS1bits.SPI2TXIF = 0; // reset flag
-//    IPC7bits.SPI2IP = 4; // au pif
-//    IEC1bits.SPI2RXIE = 1;
-//    IEC1bits.SPI2TXIE = 1;
-//
-//     // MCD encoders interrupts - pour le moment sur INT1 et INT2
-//
-//  //  TRISDbits.TRISD8 = 0x1;
-//  //  TRISDbits.TRISD9 = 0x1;
-//     INTCONbits.INT1EP = FALLING_EDGE;
-//     IFS0bits.INT1IF = 0; // Reset the flag
-//     IPC1bits.INT1IP = 2; // Set priority
-//     IEC0bits.INT1IE = 1; // Enable interrupt
-//
-////     INTCONbits.INT2EP = FALLING_EDGE;
-////     IFS0bits.INT2IF = 0; // Reset the flag
-////     IPC2bits.INT2IP = 2; // Set priority
-////     IEC0bits.INT2IE = 1; // Enable interrupt
+	//SPI1
+	SPI1_INT_FLAGS_CLR;
+	SPI1_INT_PRIORITIES = 4;
+	SPI1_RECEIVE_ENABLE = INT_ENABLED;
+	SPI1_TRANSFER_ENABLE = INT_ENABLED;
 
-    __builtin_enable_interrupts();
+	//     // MCD encoders interrupts - pour le moment sur INT1 et INT2
+	//
+	//  //  TRISDbits.TRISD8 = 0x1;
+	//  //  TRISDbits.TRISD9 = 0x1;
+	//     INTCONbits.INT1EP = FALLING_EDGE;
+	//     IFS0bits.INT1IF = 0; // Reset the flag
+	//     IPC1bits.INT1IP = 2; // Set priority
+	//     IEC0bits.INT1IE = 1; // Enable interrupt
+	//
+	////     INTCONbits.INT2EP = FALLING_EDGE;
+	////     IFS0bits.INT2IF = 0; // Reset the flag
+	////     IPC2bits.INT2IP = 2; // Set priority
+	////     IEC0bits.INT2IE = 1; // Enable interrupt
+
+	__builtin_enable_interrupts();
 }
 
 void SPI1_init(void)
 {
-	SPI1_CS0_GPIO = GPIO_OUTPUT;
-	SPI1_CS1_GPIO = GPIO_OUTPUT;
-	SPI1_CS2_GPIO = GPIO_OUTPUT;
-	SPI1_CS3_GPIO = GPIO_OUTPUT;
-	CS_MCP_LCD = CS_LINE_UP;
-	CS_MCP_ENCODERS = CS_LINE_UP;
-	CS_EEPROM = CS_LINE_UP;
-	CS_SD = CS_LINE_UP;
 	SPI2CON = 0;
 	SPI2BUF = 0;
 	SPI2BRG = 0; //set baudrate 1Mhz suivant 8 Mhz du pbclk
@@ -166,32 +164,32 @@ void I2C1_init(void)
 
 void HT16_init(void)
 {
-    u8  message[8] = {0};
-    int	i;
-    u8  config[5] = {
-        0x00,
-        0x21,
-        0xA1, // Int on falling edge
-        0xEF, // No dimming
-        0x81, // Blinking off display ON
-    };
+	u8  message[8] = {0};
+	int	i;
+	u8  config[5] = {
+		0x00,
+		0x21,
+		0xA1, // Int on falling edge
+		0xEF, // No dimming
+		0x81, // Blinking off display ON
+	};
 
-    i = 0;
-    while (i < sizeof(config) / sizeof(*config))
-    {
-        I2C1_write(0xE0, config[i], NULL, 0);
-        while (!(I2C1_state == E_I2C1_DONE))
-            WDTCONbits.WDTCLR = 1;
-        i++;
-    }
+	i = 0;
+	while (i < sizeof(config) / sizeof(*config))
+	{
+		I2C1_write(0xE0, config[i], NULL, 0);
+		while (!(I2C1_state == E_I2C1_DONE))
+			WDTCONbits.WDTCLR = 1;
+		i++;
+	}
 
-    I2C1_write(0xE0, 0x08, message, 8);
-    while (!(I2C1_state == E_I2C1_DONE))
-        WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
+	I2C1_write(0xE0, 0x08, message, 8);
+	while (!(I2C1_state == E_I2C1_DONE))
+		WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 
-    I2C1_read_callback(0xE0, 0x40, 6, NULL);
-    while (!(I2C1_state == E_I2C1_DONE))
-        WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
+	I2C1_read_callback(0xE0, 0x40, 6, NULL);
+	while (!(I2C1_state == E_I2C1_DONE))
+		WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 }
 
 //void MCP_LCD_init(void)

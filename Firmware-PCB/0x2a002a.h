@@ -19,6 +19,8 @@
 #define INT_DISABLED	0
 #define CS_LINE_UP		1
 #define CS_LINE_DOWN	0
+#define DIGITAL_PIN		0
+#define ANALOG_PIN		1
 
 //MAIN ENCODER
 #define COD_A_GPIO			TRISBbits.TRISB2
@@ -33,6 +35,16 @@
 #define COD_B_INT_FLAG		IFS0bits.INT4IF
 #define COD_B_INT_PRIORITY	IPC4bits.INT4IP
 #define COD_B_INT_ENABLE	IEC0bits.INT4IE
+
+//PERIPHERAL PIN SELECT
+#define PPS_COD_A		INT2R = 0b0100
+#define COD_A_ANALOG	ANSELBbits.ANSB2
+#define PPS_COD_B		INT4R = 0b0001
+#define COD_B_ANALOG	ANSELBbits.ANSB3
+#define PPS_SDI1		SDI1R = 0b0000
+#define SDI1_ANALOG		ANSELAbits.ANSA1
+#define PPS_SDO1		SDO1R = 0b0011
+#define SDO1_ANALOG		ANSELBbits.ANSB13
 
 //TIMERS
 // timer 2-3 used for bpm management
@@ -57,6 +69,18 @@
 #define I2C1_INT_FLAG_CLR		IFS1CLR = (1 << 12)
 #define I2C1_INT_PRIORITY		IPC8bits.I2C1IP
 #define I2C1_INT_ENABLE			IEC1bits.I2C1MIE
+#define I2C1_READ				0
+#define I2C1_WRITE				1
+#define I2C1_ACK				0
+#define I2C1_NACK				1
+#define I2C1_READY (I2C1_state == E_I2C1_DONE)
+
+//HT16
+#define HT16_INT_POLARITY	INTCONbits.INT0EP
+#define HT16_INT_FLAG		IFS0bits.INT0IF
+#define HT16_INT_FLAG_CLR	IFS0CLR = (1 << 3)
+#define HT16_INT_PRIORITY	IPC0bits.INT0IP
+#define HT16_INT_ENABLE		IEC0bits.INT0IE
 
 //SPI1
 #define SPI1_CS0_GPIO			TRISBbits.TRISB10
@@ -67,6 +91,12 @@
 #define CS_MCP_ENCODERS			LATBbits.LATB11
 #define CS_EEPROM				LATBbits.LATB12
 #define CS_SD					LATBbits.LATB15
+#define SPI1_RECEIVE_FLAG		IFS1bits.SPI1RX
+#define SPI1_TRANSFER_FLAG		IFS1bits.SPI1TX
+#define SPI1_INT_FLAGS_CLR		IFS1CLR = (3 << 4)
+#define SPI1_INT_PRIORITIES		IPC7bits.SPI1IP
+#define SPI1_RECEIVE_ENABLE		IEC1bits.SPI1RX
+#define SPI1_TRANSFER_ENABLE	IEC1bits.SPI1TX
 
 // GPIO MCP =
 // GPA                                  GPB
@@ -91,13 +121,6 @@
 #define notevalue   1
 #define notevelo    2
 
-#define I2C1_READ   0
-#define I2C1_WRITE  1
-
-#define I2C1_ACK    0
-#define I2C1_NACK   1
-
-#define I2C1_READY (I2C1_state == E_I2C1_DONE)
 #define SPI2_READY (SPI2_state == E_SPI2_DONE)
 
 #define MAX_WRITE_BUF 10

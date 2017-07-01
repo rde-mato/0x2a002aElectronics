@@ -35,8 +35,7 @@ u8  led = 0;
 
 int main(void)
 {
-//	PPS_init();
-//	init_main_encoder();
+	GPIO_and_PPS_init();
 	TIMER_init();
 	I2C1_init();
 //	SPI1_init();
