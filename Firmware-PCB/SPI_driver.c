@@ -32,12 +32,16 @@ void    SPI1_LCD_state_machine(void)
             CS_MCP_LCD = 0x0;
             SPI1_state = E_SPI1_LCD_WRITE_ENABLE_HIGH;
             SPI1BUF = LCD_PORTS_ADDRESS;
+            SPI1_RECEIVE_ENABLE = INT_ENABLED;
+            SPI1_TRANSFER_ENABLE = INT_ENABLED;
             break;
         case E_SPI1_LCD_WRITE_ENABLE_LOW:
             if (SPI1STATbits.SPIBUSY)
                 break ;
             SPI1_state = E_SPI1_LCD_WRITE_ENABLE_HIGH;
             SPI1BUF = SPI_buf_LCD[SPI_LCD_index++];
+            SPI1_RECEIVE_ENABLE = INT_ENABLED;
+            SPI1_TRANSFER_ENABLE = INT_ENABLED;
             break ;
         case E_SPI1_LCD_WRITE_ENABLE_HIGH:
             if (SPI1STATbits.SPIBUSY)
@@ -46,6 +50,8 @@ void    SPI1_LCD_state_machine(void)
             {
                 SPI1_state = E_SPI1_LCD_WRITE_ENABLE_LOW;
                 SPI1BUF = SPI_buf_LCD[SPI_LCD_index] | (LCD_ENABLE_BIT << 8);
+            SPI1_RECEIVE_ENABLE = INT_ENABLED;
+            SPI1_TRANSFER_ENABLE = INT_ENABLED;
                 break ;
             }
             else
@@ -164,6 +170,7 @@ void    manage_SPI1(void)
         SPI1_slave = E_SPI1_CS_MCP_LCD;
         SPI1_state = E_SPI1_LCD_CONFIG;
         IFS1bits.SPI1RXIF = 1;
+        SPI1_RECEIVE_ENABLE = INT_ENABLED;
         return ;
     }
     else if (SPI_encoders_dirty)

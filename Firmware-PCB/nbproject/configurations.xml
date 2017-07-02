@@ -5,6 +5,7 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>0x2a002a.h</itemPath>
+      <itemPath>charset.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -25,6 +26,7 @@
       <itemPath>I2C_handler.c</itemPath>
       <itemPath>UART_driver.c</itemPath>
       <itemPath>SPI_driver.c</itemPath>
+      <itemPath>LCD_driver.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

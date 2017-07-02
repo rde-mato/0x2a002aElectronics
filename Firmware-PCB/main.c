@@ -39,9 +39,9 @@ int main(void)
 	TIMER_init();
 	I2C1_init();
 	SPI1_init();
-//	MCP_LCD_init();
-//	LCD_init();
-	MCP_ENCODERS_init();
+	MCP_LCD_init();
+	LCD_init();
+	MCP_ENCODERS_init_blocking();
 //        UART1_init();
 //
 //	SD_card_init();
@@ -55,7 +55,7 @@ int main(void)
         led_set(0);
 
 	T2CONbits.ON = 1;
-//        IFS0bits.INT1IF = 1;
+        IFS0bits.INT1IF = 1; // a garder pour reset les encoders
 	while (42)
 	{
            // UART1_send(42);
