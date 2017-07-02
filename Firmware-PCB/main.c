@@ -38,10 +38,11 @@ int main(void)
 	GPIO_and_PPS_init();
 	TIMER_init();
 	I2C1_init();
-//	SPI1_init();
+	SPI1_init();
 //	MCP_LCD_init();
 //	LCD_init();
-//	MCP_ENCODERS_init();
+	MCP_ENCODERS_init();
+//        UART1_init();
 //
 //	SD_card_init();
 //	ret = SD_card_read_block(block);
@@ -50,20 +51,16 @@ int main(void)
 //
 	INT_init();
 	HT16_init();
-//
-//	IFS0bits.INT2IF = 1;
-//
-	T2CONbits.ON = 1;
-//	led_toggle(0);
-//        led_toggle(2);
-//        led_toggle(4);
-//        led_toggle(6);
-//        led_toggle(7);
 
+        led_set(0);
+
+	T2CONbits.ON = 1;
+//        IFS0bits.INT1IF = 1;
 	while (42)
 	{
+           // UART1_send(42);
 		manage_I2C1();
-//		manage_SPI2();
+		manage_SPI1();
 	  WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 	}
 	return (0);

@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=main.c init.c encoders_driver.c input_handler.c config.c timer.c HT16_keys_driver.c HT16_leds_driver.c I2C_driver.c I2C_handler.c
+SOURCEFILES_QUOTED_IF_SPACED=main.c init.c encoders_driver.c input_handler.c config.c timer.c HT16_keys_driver.c HT16_leds_driver.c I2C_driver.c I2C_handler.c UART_driver.c SPI_driver.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/main.o ${OBJECTDIR}/init.o ${OBJECTDIR}/encoders_driver.o ${OBJECTDIR}/input_handler.o ${OBJECTDIR}/config.o ${OBJECTDIR}/timer.o ${OBJECTDIR}/HT16_keys_driver.o ${OBJECTDIR}/HT16_leds_driver.o ${OBJECTDIR}/I2C_driver.o ${OBJECTDIR}/I2C_handler.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/main.o.d ${OBJECTDIR}/init.o.d ${OBJECTDIR}/encoders_driver.o.d ${OBJECTDIR}/input_handler.o.d ${OBJECTDIR}/config.o.d ${OBJECTDIR}/timer.o.d ${OBJECTDIR}/HT16_keys_driver.o.d ${OBJECTDIR}/HT16_leds_driver.o.d ${OBJECTDIR}/I2C_driver.o.d ${OBJECTDIR}/I2C_handler.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/main.o ${OBJECTDIR}/init.o ${OBJECTDIR}/encoders_driver.o ${OBJECTDIR}/input_handler.o ${OBJECTDIR}/config.o ${OBJECTDIR}/timer.o ${OBJECTDIR}/HT16_keys_driver.o ${OBJECTDIR}/HT16_leds_driver.o ${OBJECTDIR}/I2C_driver.o ${OBJECTDIR}/I2C_handler.o ${OBJECTDIR}/UART_driver.o ${OBJECTDIR}/SPI_driver.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/main.o.d ${OBJECTDIR}/init.o.d ${OBJECTDIR}/encoders_driver.o.d ${OBJECTDIR}/input_handler.o.d ${OBJECTDIR}/config.o.d ${OBJECTDIR}/timer.o.d ${OBJECTDIR}/HT16_keys_driver.o.d ${OBJECTDIR}/HT16_leds_driver.o.d ${OBJECTDIR}/I2C_driver.o.d ${OBJECTDIR}/I2C_handler.o.d ${OBJECTDIR}/UART_driver.o.d ${OBJECTDIR}/SPI_driver.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/main.o ${OBJECTDIR}/init.o ${OBJECTDIR}/encoders_driver.o ${OBJECTDIR}/input_handler.o ${OBJECTDIR}/config.o ${OBJECTDIR}/timer.o ${OBJECTDIR}/HT16_keys_driver.o ${OBJECTDIR}/HT16_leds_driver.o ${OBJECTDIR}/I2C_driver.o ${OBJECTDIR}/I2C_handler.o
+OBJECTFILES=${OBJECTDIR}/main.o ${OBJECTDIR}/init.o ${OBJECTDIR}/encoders_driver.o ${OBJECTDIR}/input_handler.o ${OBJECTDIR}/config.o ${OBJECTDIR}/timer.o ${OBJECTDIR}/HT16_keys_driver.o ${OBJECTDIR}/HT16_leds_driver.o ${OBJECTDIR}/I2C_driver.o ${OBJECTDIR}/I2C_handler.o ${OBJECTDIR}/UART_driver.o ${OBJECTDIR}/SPI_driver.o
 
 # Source Files
-SOURCEFILES=main.c init.c encoders_driver.c input_handler.c config.c timer.c HT16_keys_driver.c HT16_leds_driver.c I2C_driver.c I2C_handler.c
+SOURCEFILES=main.c init.c encoders_driver.c input_handler.c config.c timer.c HT16_keys_driver.c HT16_leds_driver.c I2C_driver.c I2C_handler.c UART_driver.c SPI_driver.c
 
 
 CFLAGS=
@@ -154,6 +154,18 @@ ${OBJECTDIR}/I2C_handler.o: I2C_handler.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/I2C_handler.o 
 	@${FIXDEPS} "${OBJECTDIR}/I2C_handler.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/I2C_handler.o.d" -o ${OBJECTDIR}/I2C_handler.o I2C_handler.c   
 	
+${OBJECTDIR}/UART_driver.o: UART_driver.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/UART_driver.o.d 
+	@${RM} ${OBJECTDIR}/UART_driver.o 
+	@${FIXDEPS} "${OBJECTDIR}/UART_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/UART_driver.o.d" -o ${OBJECTDIR}/UART_driver.o UART_driver.c   
+	
+${OBJECTDIR}/SPI_driver.o: SPI_driver.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/SPI_driver.o.d 
+	@${RM} ${OBJECTDIR}/SPI_driver.o 
+	@${FIXDEPS} "${OBJECTDIR}/SPI_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/SPI_driver.o.d" -o ${OBJECTDIR}/SPI_driver.o SPI_driver.c   
+	
 else
 ${OBJECTDIR}/main.o: main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
@@ -214,6 +226,18 @@ ${OBJECTDIR}/I2C_handler.o: I2C_handler.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/I2C_handler.o.d 
 	@${RM} ${OBJECTDIR}/I2C_handler.o 
 	@${FIXDEPS} "${OBJECTDIR}/I2C_handler.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/I2C_handler.o.d" -o ${OBJECTDIR}/I2C_handler.o I2C_handler.c   
+	
+${OBJECTDIR}/UART_driver.o: UART_driver.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/UART_driver.o.d 
+	@${RM} ${OBJECTDIR}/UART_driver.o 
+	@${FIXDEPS} "${OBJECTDIR}/UART_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/UART_driver.o.d" -o ${OBJECTDIR}/UART_driver.o UART_driver.c   
+	
+${OBJECTDIR}/SPI_driver.o: SPI_driver.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/SPI_driver.o.d 
+	@${RM} ${OBJECTDIR}/SPI_driver.o 
+	@${FIXDEPS} "${OBJECTDIR}/SPI_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/SPI_driver.o.d" -o ${OBJECTDIR}/SPI_driver.o SPI_driver.c   
 	
 endif
 

@@ -2,7 +2,7 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
-//extern u8 SPI_encoders_dirty;
+extern u8 SPI_encoders_dirty;
 
 ////// Encodeur General OK !
 void __ISR(_EXTERNAL_2_VECTOR, IPL2AUTO) Main_encoder_R_Handler(void) {
@@ -20,10 +20,14 @@ void __ISR(_EXTERNAL_4_VECTOR, IPL2AUTO) Main_encoder_L_Handler(void) {
         event_handler(E_ENCODER_TURNED_LEFT, E_SOURCE_ENCODER_MAIN);
 
 }
-//
-//
-////////Encodeurs via le MCP
-//void __ISR(_EXTERNAL_1_VECTOR, IPL2AUTO) MCP_encoders_port_A_Handler(void) {
-//     IFS0CLR = 0x80; // Clear INT1IF
-//     SPI_encoders_dirty = 1;
-//}
+
+
+//////Encodeurs via le MCP
+void __ISR(_EXTERNAL_1_VECTOR, IPL2AUTO) MCP_encoders_port_A_Handler(void) {
+     IFS0CLR = (1 << 8);
+     SPI_encoders_dirty = 1;
+}
+
+void __ISR(_EXTERNAL_3_VECTOR, IPL2AUTO) MCP_encoders_port_B_Handler(void) {
+     IFS0CLR = (1 << 18);
+}

@@ -5,7 +5,7 @@
 
 //extern char pattern[16][4][3];
 extern u8   I2C1_state;
-//extern u8  SPI2_state;
+//extern u8  SPI1_state;
 
 extern u32   bpm;
 //
@@ -40,10 +40,18 @@ void GPIO_and_PPS_init(void)
 	CS_EEPROM = CS_LINE_UP;
 	SPI1_CS3_GPIO = GPIO_OUTPUT;
 	CS_SD = CS_LINE_UP;
+        SPI1_CS2_ANALOG = DIGITAL_PIN;
+        SPI1_CS3_ANALOG = DIGITAL_PIN;
 	SDI1_ANALOG = DIGITAL_PIN;
 	PPS_SDI1;
 	SDO1_ANALOG = DIGITAL_PIN;
 	PPS_SDO1;
+        MIDI_ANALOG = DIGITAL_PIN;
+        PPS_MIDI;
+        MCP_ENC_A_ANALOG = DIGITAL_PIN;
+        PPS_MCP_ENC_A;
+        MCP_ENC_B_ANALOG = DIGITAL_PIN;
+        PPS_MCP_ENC_B;
 	// besoin de configurer les pins MISO et MOSI en input / output aussi ??
 
 	SYSKEY = 0x0;
@@ -104,20 +112,19 @@ void INT_init(void)
 	I2C1_INT_ENABLE = 1;
 
 	//SPI1
-	SPI1_INT_FLAGS_CLR;
+	SPI1_INT_FLAGS_CLR_RX;
+	SPI1_INT_FLAGS_CLR_TX;
 	SPI1_INT_PRIORITIES = 4;
-	SPI1_RECEIVE_ENABLE = INT_ENABLED;
-	SPI1_TRANSFER_ENABLE = INT_ENABLED;
+        //PERSISTANT !!!!!!!!!!!!!!!!!!!!!!!!!!!
+	SPI1_RECEIVE_ENABLE = INT_DISABLED;
+	SPI1_TRANSFER_ENABLE = INT_DISABLED;
 
-	//     // MCD encoders interrupts - pour le moment sur INT1 et INT2
-	//
-	//  //  TRISDbits.TRISD8 = 0x1;
-	//  //  TRISDbits.TRISD9 = 0x1;
-	//     INTCONbits.INT1EP = FALLING_EDGE;
-	//     IFS0bits.INT1IF = 0; // Reset the flag
-	//     IPC1bits.INT1IP = 2; // Set priority
-	//     IEC0bits.INT1IE = 1; // Enable interrupt
-	//
+         // MCP encoders interrupts
+         INTCONbits.INT1EP = FALLING_EDGE;
+         IFS0bits.INT1IF = 0; // Reset the flag
+         IPC1bits.INT1IP = 2; // Set priority
+         IEC0bits.INT1IE = 1; // Enable interrupt
+	
 	////     INTCONbits.INT2EP = FALLING_EDGE;
 	////     IFS0bits.INT2IF = 0; // Reset the flag
 	////     IPC2bits.INT2IP = 2; // Set priority
@@ -128,15 +135,15 @@ void INT_init(void)
 
 void SPI1_init(void)
 {
-	SPI2CON = 0;
-	SPI2BUF = 0;
-	SPI2BRG = 0; //set baudrate 1Mhz suivant 8 Mhz du pbclk
-	SPI2CONbits.CKE = 1;
-	SPI2CONbits.CKP = 0; // mode 00 tás vue
-	SPI2CONbits.MODE16 = 0;
-	SPI2CONbits.MODE32 = 0;
-	SPI2CONbits.MSTEN = 1; //activer master mode
-	SPI2CONbits.ON = 1; //ON spi2
+	SPI1CON = 0;
+	SPI1BUF = 0;
+	SPI1BRG = 0; //set baudrate 1Mhz suivant 8 Mhz du pbclk
+	SPI1CONbits.CKE = 1;
+	SPI1CONbits.CKP = 0; // mode 00 tás vue
+	SPI1CONbits.MODE16 = 0;
+	SPI1CONbits.MODE32 = 0;
+	SPI1CONbits.MSTEN = 1; //activer master mode
+	SPI1CONbits.ON = 1; //ON SPI1
 }
 
 
@@ -192,119 +199,125 @@ void HT16_init(void)
 		WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 }
 
-//void MCP_LCD_init(void)
-//{
-//        TRISEbits.TRISE2 = 0; //reset du MCP LCD // a degager quand branchement sur mclr
-//
-//        SPI2CONbits.MODE16 = 1;
-//
-//        //pins en output
-//        SS_MCP_LCD = 0x0;
-//        SPI2BUF = 0x4000;
-//        while (SPI2STATbits.SPIBUSY) ;
-//        SPI2BUF = 0x0000;
-//        while (SPI2STATbits.SPIBUSY) ;
-//        SS_MCP_LCD = 0x1;
-//
-//
+void MCP_LCD_init(void)
+{
+    SPI1CONbits.MODE16 = 1;
+
+        //pins en output
+        CS_MCP_LCD = 0x0;
+        SPI1BUF = 0x4000;
+        while (SPI1STATbits.SPIBUSY) ;
+        SPI1BUF = 0x0000;
+        while (SPI1STATbits.SPIBUSY) ;
+        CS_MCP_LCD = 0x1;
+
+
+        //mode sequentiel off
+        CS_MCP_LCD = 0x0;
+        SPI1BUF = 0x400A;
+        while (SPI1STATbits.SPIBUSY) ;
+        SPI1BUF = 0x2020;
+        while (SPI1STATbits.SPIBUSY) ;
+        CS_MCP_LCD = 0x1;
+
+        SPI1CONbits.MODE16 = 0;
+}
+
+void MCP_ENCODERS_init(void)
+{
+
+    u16 read;
+
+//        TRISEbits.TRISE2 = 0; //reset du MCP Encoders // a degager quand branchement sur mclr
+//        TRISEbits.TRISE2 = 1; //reset du MCP Encoders // a degager quand branchement sur mclr
+        SPI1CONbits.MODE16 = 1;
+
+
+//        //uniquement GPA0 et GPB 0 en input, reste en output
+//        CS_MCP_ENCODERS = 0x0;
+//        SPI1BUF = 0x4000;
+//        while (SPI1STATbits.SPIBUSY) ;
+//        SPI1BUF = 0x0101;
+//        while (SPI1STATbits.SPIBUSY) ;
+//        CS_MCP_ENCODERS = 0x1;
+
 //        //mode sequentiel off
-//        SS_MCP_LCD = 0x0;
-//        SPI2BUF = 0x400A;
-//        while (SPI2STATbits.SPIBUSY) ;
-//        SPI2BUF = 0x2020;
-//        while (SPI2STATbits.SPIBUSY) ;
-//        SS_MCP_LCD = 0x1;
+//        CS_MCP_ENCODERS = 0x0;
+//        SPI1BUF = 0x400A;
+//        while (SPI1STATbits.SPIBUSY) ;
+//        SPI1BUF = 0x2020;
+//        while (SPI1STATbits.SPIBUSY) ;
+//        CS_MCP_ENCODERS = 0x1;
+
+
+//        //pol inverse
+//        CS_MCP_ENCODERS = 0x0;
+//        SPI1BUF = 0x4002;
+//        while (SPI1STATbits.SPIBUSY) ;
+//        SPI1BUF = 0xFFFF;
+//        while (SPI1STATbits.SPIBUSY) ;
+//        CS_MCP_ENCODERS = 0x1;
+
+//        //DEFVAL
+//        CS_MCP_ENCODERS = 0x0;
+//        SPI1BUF = 0x4006;
+//        while (SPI1STATbits.SPIBUSY) ;
+//        SPI1BUF = 0xFFFF;
+//        while (SPI1STATbits.SPIBUSY) ;
+//        CS_MCP_ENCODERS = 0x1;
 //
-//        SPI2CONbits.MODE16 = 0;
-//}
-//
-//void MCP_ENCODERS_init(void)
-//{
-//
-//    u16 read;
-//
-////        TRISEbits.TRISE2 = 0; //reset du MCP Encoders // a degager quand branchement sur mclr
-////        TRISEbits.TRISE2 = 1; //reset du MCP Encoders // a degager quand branchement sur mclr
-//        SPI2CONbits.MODE16 = 1;
-//
-//
-////        //uniquement GPA0 et GPB 0 en input, reste en output
-////        SS_MCP_ENCODERS = 0x0;
-////        SPI2BUF = 0x4000;
-////        while (SPI2STATbits.SPIBUSY) ;
-////        SPI2BUF = 0x0101;
-////        while (SPI2STATbits.SPIBUSY) ;
-////        SS_MCP_ENCODERS = 0x1;
-//
-////        //mode sequentiel off
-////        SS_MCP_ENCODERS = 0x0;
-////        SPI2BUF = 0x400A;
-////        while (SPI2STATbits.SPIBUSY) ;
-////        SPI2BUF = 0x2020;
-////        while (SPI2STATbits.SPIBUSY) ;
-////        SS_MCP_ENCODERS = 0x1;
-//
-//
-////        //pol inverse
-////        SS_MCP_ENCODERS = 0x0;
-////        SPI2BUF = 0x4002;
-////        while (SPI2STATbits.SPIBUSY) ;
-////        SPI2BUF = 0xFFFF;
-////        while (SPI2STATbits.SPIBUSY) ;
-////        SS_MCP_ENCODERS = 0x1;
-//
-////        //DEFVAL
-////        SS_MCP_ENCODERS = 0x0;
-////        SPI2BUF = 0x4006;
-////        while (SPI2STATbits.SPIBUSY) ;
-////        SPI2BUF = 0xFFFF;
-////        while (SPI2STATbits.SPIBUSY) ;
-////        SS_MCP_ENCODERS = 0x1;
-////
-////        //INTCON => 1 pour comparaison a DEFVAL, 0 pour comparaison a previous
-////        SS_MCP_ENCODERS = 0x0;
-////        SPI2BUF = 0x4008;
-////        while (SPI2STATbits.SPIBUSY) ;
-////        SPI2BUF = 0xFFFF;
-////        while (SPI2STATbits.SPIBUSY) ;
-////        SS_MCP_ENCODERS = 0x1;
-//
-////        //IOCON => le bit (1 << 1) est a 0 pour interrupt active low et 1 pour active high
-////        //         le bit (1 << 6) active le mode mirroir
-////        SS_MCP_ENCODERS = 0x0;
-////        SPI2BUF = 0x400A;
-////        while (SPI2STATbits.SPIBUSY) ;
-////        SPI2BUF = 0x0000;
-//////        SPI2BUF = 0x4040;
-//////        SPI2BUF = 0x0202;
-////        while (SPI2STATbits.SPIBUSY) ;
-////        SS_MCP_ENCODERS = 0x1;
-//
-//        //read GPIO pour clear flags
-//        SS_MCP_ENCODERS = 0x0;
-//        SPI2BUF = 0x4110;
-//        while (SPI2STATbits.SPIBUSY) ;
-//        read = SPI2BUF;
-//        SPI2BUF = 0x0000;
-//        while (SPI2STATbits.SPIBUSY) ;
-//        read = SPI2BUF;
-//        //while (SPI2STATbits.SPIBUSY) ;
-//        SS_MCP_ENCODERS = 0x1;
-//
-//
-//        //activation des interrupts sur le port A
-//        SS_MCP_ENCODERS = 0x0;
-//        SPI2BUF = 0x4004;
-////        while (SPI2STATbits.SPIBUSY) ;
-//        while (SPI2STATbits.SPIBUSY) ;
-//        read = SPI2BUF;
-//        SPI2BUF = 0xFFFF;
-//        while (SPI2STATbits.SPIBUSY) ;
-//        read = SPI2BUF;
-//        SS_MCP_ENCODERS = 0x1;
-//
-//        SPI2CONbits.MODE16 = 0;
-//}
+//        //INTCON => 1 pour comparaison a DEFVAL, 0 pour comparaison a previous
+//        CS_MCP_ENCODERS = 0x0;
+//        SPI1BUF = 0x4008;
+//        while (SPI1STATbits.SPIBUSY) ;
+//        SPI1BUF = 0xFFFF;
+//        while (SPI1STATbits.SPIBUSY) ;
+//        CS_MCP_ENCODERS = 0x1;
+
+//        //IOCON => le bit (1 << 1) est a 0 pour interrupt active low et 1 pour active high
+//        //         le bit (1 << 6) active le mode mirroir
+//        CS_MCP_ENCODERS = 0x0;
+//        SPI1BUF = 0x400A;
+//        while (SPI1STATbits.SPIBUSY) ;
+//        SPI1BUF = 0x0000;
+////        SPI1BUF = 0x4040;
+////        SPI1BUF = 0x0202;
+//        while (SPI1STATbits.SPIBUSY) ;
+//        CS_MCP_ENCODERS = 0x1;
+
+        //read GPIO pour clear flags
+        CS_MCP_ENCODERS = 0x0;
+        SPI1BUF = 0x4112;
+        while (SPI1STATbits.SPIBUSY) ;
+        read = SPI1BUF;
+        SPI1BUF = 0x0000;
+        while (SPI1STATbits.SPIBUSY) ;
+        read = SPI1BUF;
+        CS_MCP_ENCODERS = 0x1;
+
+        //read GPIO pour clear flags
+        CS_MCP_ENCODERS = 0x0;
+        SPI1BUF = 0x4110;
+        while (SPI1STATbits.SPIBUSY) ;
+        read = SPI1BUF;
+        SPI1BUF = 0x0000;
+        while (SPI1STATbits.SPIBUSY) ;
+        read = SPI1BUF;
+        CS_MCP_ENCODERS = 0x1;
+
+
+        //activation des interrupts sur le port A
+        CS_MCP_ENCODERS = 0x0;
+        SPI1BUF = 0x4004;
+        while (SPI1STATbits.SPIBUSY) ;
+        read = SPI1BUF;
+        SPI1BUF = 0xFFFF;
+        while (SPI1STATbits.SPIBUSY) ;
+        read = SPI1BUF;
+        CS_MCP_ENCODERS = 0x1;
+
+        SPI1CONbits.MODE16 = 0;
+}
 
 //void    LCD_init(void)
 //{
@@ -312,9 +325,9 @@ void HT16_init(void)
 //        u8  col;
 //
 //        // clear du LCD
-//        SS_MCP_LCD = 0x0;
-//        SPI2BUF = 0x4012;
-//        while (SPI2STATbits.SPIBUSY)
+//        CS_MCP_LCD = 0x0;
+//        SPI1BUF = 0x4012;
+//        while (SPI1STATbits.SPIBUSY)
 //            ;
 //        LCD_blocking_control_instruction(1, 1, 0, 0, 0b00111111); //    LCD_display_on_off(1);
 //        LCD_blocking_control_instruction(1, 1, 0, 0, 0b11000000); //    LCD_display_start_origin(0);
@@ -328,7 +341,7 @@ void HT16_init(void)
 //        }
 //        LCD_blocking_control_instruction(1, 1, 0, 0, 0b01000000); //    LCD_display_set_y_address(0);
 //        LCD_blocking_control_instruction(1, 1, 0, 0, 0b10111000); //    LCD_display_set_x_page(0);
-//        SS_MCP_LCD = 0x1;
+//        CS_MCP_LCD = 0x1;
 //}
 
 

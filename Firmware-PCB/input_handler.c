@@ -7,7 +7,7 @@
 
 u32 cpt = 0;
 //
-//extern u8 led;
+extern u8 led;
 
 void event_handler(u8 event_type, u32 event_source)
 {
@@ -23,48 +23,14 @@ void event_handler(u8 event_type, u32 event_source)
 			led_toggle(event_source);
 			break;
 		case E_ENCODER_TURNED_RIGHT:
-			if (event_source == E_SOURCE_ENCODER_MAIN)
-			{
-				//led_toggle(index);
-				//--index;
-				//index &= 0x0F;
-				//led_toggle(index);
-                            cpt--;
-			}
-//                        else if (event_source == 0)
-//                        {
-//                            led_toggle(led);
-//                            led = (led + 1) & 0xF;
-//                            led_toggle(led);
-//                        }
-//                        else if (event_source == 4)
-//                        {
-//                            led_toggle(led);
-//                            led = (led + 4) & 0xF;
-//                            led_toggle(led);
-//                        }
+			led_toggle(led);
+                        led = (led + 1) & 0xF;
+                        led_toggle(led);
 			break;
 		case E_ENCODER_TURNED_LEFT:
-			if (event_source == E_SOURCE_ENCODER_MAIN)
-			{
-//				led_toggle(index);
-//				++index;
-//				index &= 0x0F;
-//				led_toggle(index);
-                            cpt++;
-			}
-//                        else if (event_source == 0)
-//                        {
-//                            led_toggle(led);
-//                            led = (led - 1) & 0xF;
-//                            led_toggle(led);
-//                        }
-//                        else if (event_source == 4)
-//                        {
-//                            led_toggle(led);
-//                            led = (led - 4) & 0xF;
-//                            led_toggle(led);
-//                        }
+			led_toggle(led);
+                        led = (led - 1) & 0xF;
+                        led_toggle(led);
 			break;
 
 

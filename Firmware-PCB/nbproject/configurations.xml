@@ -23,6 +23,8 @@
       <itemPath>HT16_leds_driver.c</itemPath>
       <itemPath>I2C_driver.c</itemPath>
       <itemPath>I2C_handler.c</itemPath>
+      <itemPath>UART_driver.c</itemPath>
+      <itemPath>SPI_driver.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
