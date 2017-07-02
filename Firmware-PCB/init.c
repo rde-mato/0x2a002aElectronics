@@ -63,7 +63,7 @@ void TIMER_init(void)
 	TIMER5_STOP_AND_RESET;
 	TIMER5_32_BITS_MODE = 1;
 	TIMER5_VALUE = 0;
-	TIMER5_PERIOD = FREQUENCY / (1000 / BUTTON_POLL_DELAY_MS) - 1;
+	TIMER5_PERIOD = FREQUENCY / (1000 / LONG_PRESS_LIMIT) - 1;
 	// y a t il besoin de 2 timers pour la gestion des appuis longs ?
 	// on ne peut pas se debrouiller en divisant la clock ?
 }
@@ -155,7 +155,7 @@ void I2C1_init(void)
 		cpt = 0;
 		while (cpt++ < 2000);
 	}
-	I2C1BRG = 38;
+	I2C1BRG = (FREQUENCY / ( 2 * 400000)) - 2 ;
 	I2C1CONbits.DISSLW = 1;
 	I2C1CONbits.STREN = 1;
 	I2C1CONbits.RCEN = 1;

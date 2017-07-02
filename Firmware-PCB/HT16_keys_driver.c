@@ -10,6 +10,8 @@ u32     previous_key_scan = 0;
 u32     poll_count = 0;
 u32     buttons_timers[32] = {0};
 
+extern u8	I2C1_read_buf[];
+
 const u32 buttonmatrix[16] = {
     0x80000000, 0x10000000, 0x04000000, 0x00000400,
     0x20000000, 0x40000000, 0x01000000, 0x02000000,
@@ -18,15 +20,15 @@ const u32 buttonmatrix[16] = {
 };
 
 
-//void __ISR(_EXTERNAL_2_VECTOR, IPL2AUTO) HT16IntHandler(void) {
-//    HT16_read_keys_request = 1;
-//    TMR4 = 0;
-//    ++poll_count;
-//    T4CONbits.ON = 1;
-//    IFS0bits.INT2IF = 0;
-//}
+void __ISR(_EXTERNAL_0_VECTOR, IPL2AUTO) HT16IntHandler(void) {
+    HT16_read_keys_request = 1;
+    TMR4 = 0;
+    ++poll_count;
+    T4CONbits.ON = 1;
+    HT16_INT_FLAG_CLR;
+}
 
-void __ISR(_TIMER_5_VECTOR, IPL2AUTO) Timer5Handler(void)
+void __ISR(_TIMER_5_VECTOR, IPL3AUTO) Timer5Handler(void)
 {
     IFS0bits.T5IF = 0;
     T4CONbits.ON = 0;
@@ -57,9 +59,17 @@ void process_key_scan(u8 *buffer)
     u32 current_poll_count;
     u32 newly_pressed_buttons;
     u32 newly_released_buttons;
+    u8  main_encoder;
     u8  i;
 
-    format_key_scan(buffer);
+//    format_key_scan(buffer);
+    current_key_scan = (I2C1_read_buf[0] << 0 )
+                        | ((I2C1_read_buf[1] & 0b1111) << 8)
+                        | (I2C1_read_buf[2] << 12)
+                        | ((I2C1_read_buf[3] & 0b1111) << 20)
+                        | (I2C1_read_buf[4] << 24);
+    main_encoder = I2C1_read_buf[5] & 0b1;
+//    current_key_scan = *I2C1_read_buf;
     current_poll_count = poll_count;
     poll_count = 0;
     changed_buttons = current_key_scan ^ previous_key_scan;

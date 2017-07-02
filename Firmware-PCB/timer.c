@@ -2,7 +2,7 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
-u32     bpm = 1000;
+u32     bpm = 142;
 u8      qtime = 0;
 
     
