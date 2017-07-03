@@ -203,26 +203,32 @@ void HT16_init(void)
 
 void MCP_LCD_init(void)
 {
+    u16 read;
+
     SPI1CONbits.MODE16 = 1;
 
-        //pins en output
-        CS_MCP_LCD = 0x0;
-        SPI1BUF = 0x4000;
-        while (SPI1STATbits.SPIBUSY) ;
-        SPI1BUF = 0x0000;
-        while (SPI1STATbits.SPIBUSY) ;
-        CS_MCP_LCD = 0x1;
+    //pins en output
+    CS_MCP_LCD = 0x0;
+    SPI1BUF = 0x4000;
+    while (SPI1STATbits.SPIBUSY) ;
+    read = SPI1BUF;
+    SPI1BUF = 0x0000;
+    while (SPI1STATbits.SPIBUSY) ;
+    read = SPI1BUF;
+    CS_MCP_LCD = 0x1;
 
 
-        //mode sequentiel off
-        CS_MCP_LCD = 0x0;
-        SPI1BUF = 0x400A;
-        while (SPI1STATbits.SPIBUSY) ;
-        SPI1BUF = 0x2020;
-        while (SPI1STATbits.SPIBUSY) ;
-        CS_MCP_LCD = 0x1;
+    //mode sequentiel off
+    CS_MCP_LCD = 0x0;
+    SPI1BUF = 0x400A;
+    while (SPI1STATbits.SPIBUSY) ;
+    read = SPI1BUF;
+    SPI1BUF = 0x2020;
+    while (SPI1STATbits.SPIBUSY) ;
+    read = SPI1BUF;
+    CS_MCP_LCD = 0x1;
 
-        SPI1CONbits.MODE16 = 0;
+    SPI1CONbits.MODE16 = 0;
 }
 
 void MCP_ENCODERS_init_blocking(void)
@@ -231,8 +237,6 @@ void MCP_ENCODERS_init_blocking(void)
     u16 read;
 
     SPI1CONbits.MODE16 = 1;
-
-        CS_MCP_ENCODERS = 0x1;
 
         //read GPIO pour clear flags
         CS_MCP_ENCODERS = 0x0;
@@ -262,12 +266,13 @@ void    LCD_init(void)
 {
         u8  line = 0;
         u8  col;
+        u16 clear;
 
         // clear du LCD
         CS_MCP_LCD = 0x0;
         SPI1BUF = 0x4012;
-        while (SPI1STATbits.SPIBUSY)
-            ;
+        while (SPI1STATbits.SPIBUSY) ;
+        clear = SPI1BUF;
         LCD_blocking_control_instruction(1, 1, 0, 0, 0b00111111); //    LCD_display_on_off(1);
         LCD_blocking_control_instruction(1, 1, 0, 0, 0b11000000); //    LCD_display_start_origin(0);
         while (line < 8)

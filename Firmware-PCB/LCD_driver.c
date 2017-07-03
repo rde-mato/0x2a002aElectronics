@@ -22,12 +22,15 @@ u8      lcd_current_side = LCD_LEFT;
 void LCD_blocking_control_instruction(u8 cs1, u8 cs2, u8 di, u8 rw, u8 data)
 {
 	u16 send;
+        u16 clear;
 
         send = (LCD_ENABLE_BIT | (rw != 0) * LCD_RW_BIT | (cs1 != 0) * LCD_CS1_bit | (cs2 != 0) * LCD_CS2_bit | (di != 0) * LCD_DI_BIT) << 8 | data;
         SPI1BUF = send;
         while (!SPI1STATbits.SPIRBF) ;
+        clear = SPI1BUF;
         SPI1BUF = send & ~(LCD_ENABLE_BIT << 8);
         while (!SPI1STATbits.SPIRBF) ;
+        clear = SPI1BUF;
 }
 
 u16 LCD_instruction_to_enable_low(u8 cs1, u8 cs2, u8 di, u8 rw, u8 data)

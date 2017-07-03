@@ -35,6 +35,7 @@ u8  led = 0;
 
 int main(void)
 {
+    u32 rb;
 	GPIO_and_PPS_init();
 	TIMER_init();
 	I2C1_init();
@@ -42,7 +43,7 @@ int main(void)
 	MCP_LCD_init();
 	LCD_init();
 	MCP_ENCODERS_init_blocking();
-//        UART1_init();
+        UART1_init();
 //
 //	SD_card_init();
 //	ret = SD_card_read_block(block);
@@ -58,10 +59,10 @@ int main(void)
         IFS0bits.INT1IF = 1; // a garder pour reset les encoders
 	while (42)
 	{
-           // UART1_send(42);
-		manage_I2C1();
-		manage_SPI1();
-	  WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
+//            UART1_send(42);
+            manage_I2C1();
+            manage_SPI1();
+            WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 	}
 	return (0);
 }

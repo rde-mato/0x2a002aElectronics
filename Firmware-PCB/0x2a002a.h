@@ -115,15 +115,15 @@
 
 // GPIO MCP =
 // GPA                                  GPB
-// 7 6 5 4      3   2   1   0           7   to 0
-// x x x CS2    CS1 E   RW  DIouRS      DB7 to DB0
+// 7  6  5  4    3    2  1   0           7   to 0
+// x  x  x  CS2  CS1  E  RW  DIouRS      DB7 to DB0
 
-#define LCD_DI_BIT      0x01
-#define LCD_RW_BIT      0x02
-#define LCD_ENABLE_BIT 0x04
-#define LCD_CS1_bit 0x08
-#define LCD_CS2_bit 0x10
-#define LCD_PORTS_ADDRESS 0x4012
+#define LCD_DI_BIT          0x01
+#define LCD_RW_BIT          0x02
+#define LCD_ENABLE_BIT      0x04
+#define LCD_CS1_bit         0x08
+#define LCD_CS2_bit         0x10
+#define LCD_PORTS_ADDRESS   0x4012
 
 #define MCP_ENC_READ_INT_FLAG 0x410E0000
 #define MCP_ENC_READ_INT_CAP  0x41100000

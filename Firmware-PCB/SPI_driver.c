@@ -19,12 +19,10 @@ u32     SPI_flash_index = 0;
 u32     SPI_flash_count = 0;
 
 u8      SPI_encoders_dirty = 0;
-u8      flags_A;
-u8      intcap_A;
-u8      intcap_B;
 
 void    SPI1_LCD_state_machine(void)
 {
+    u32 clear;
     switch (SPI1_state)
     {
         case E_SPI1_LCD_CONFIG:
@@ -38,6 +36,7 @@ void    SPI1_LCD_state_machine(void)
         case E_SPI1_LCD_WRITE_ENABLE_LOW:
             if (SPI1STATbits.SPIBUSY)
                 break ;
+            clear = SPI1BUF;
             SPI1_state = E_SPI1_LCD_WRITE_ENABLE_HIGH;
             SPI1BUF = SPI_buf_LCD[SPI_LCD_index++];
             SPI1_RECEIVE_ENABLE = INT_ENABLED;
@@ -48,15 +47,17 @@ void    SPI1_LCD_state_machine(void)
                 break ;
             if (SPI_LCD_index < SPI_LCD_count)
             {
+                clear = SPI1BUF;
                 SPI1_state = E_SPI1_LCD_WRITE_ENABLE_LOW;
                 SPI1BUF = SPI_buf_LCD[SPI_LCD_index] | (LCD_ENABLE_BIT << 8);
-            SPI1_RECEIVE_ENABLE = INT_ENABLED;
-            SPI1_TRANSFER_ENABLE = INT_ENABLED;
+                SPI1_RECEIVE_ENABLE = INT_ENABLED;
+                SPI1_TRANSFER_ENABLE = INT_ENABLED;
                 break ;
             }
             else
                 SPI1_state = E_SPI1_LCD_RELEASE;
         case E_SPI1_LCD_RELEASE:
+            clear = SPI1BUF;
             SPI1_state = E_SPI1_DONE;
             SPI1CONbits.MODE16 = 0;
             CS_MCP_LCD = 0x1;
@@ -69,7 +70,10 @@ void    SPI1_LCD_state_machine(void)
 void    SPI1_ENC_state_machine(void)
 {
     u32 read32;
+    static u8 flags_A;
     u8 i = 0;
+    u8      intcap_A;
+    u8      intcap_B;
 
     switch (SPI1_state)
     {
