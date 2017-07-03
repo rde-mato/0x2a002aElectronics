@@ -113,8 +113,6 @@ void    LCD_print_u8(u8 line, u8 col, u8 data)
 
 void    LCD_print_char(u8 line, u8 pos, u8 c)
 {
-    // l'ecran fait 128 de large, soit 21 chars de 6 de large + 2 de marge sur
-    // le cote droit (tous les caracteres ont deja une marge a gauche)
     u8  i = 0;
 
     if (line > 8 || pos > 21)
