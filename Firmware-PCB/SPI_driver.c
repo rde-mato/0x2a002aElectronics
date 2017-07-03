@@ -3,7 +3,7 @@
 #include "0x2a002a.h"
 
 #define SLAVE_COUNT 4
-#define LCD_BUF_MAX 30 //128 * ( 8 + 2 )
+#define LCD_BUF_MAX 2048  //128 * ( 8 + 2 )
 #define FLASH_BUF_MAX 30                        // calculs a faire
 
 
@@ -104,7 +104,7 @@ void    SPI1_ENC_state_machine(void)
             while (i < 8)
             {
                 if (flags_A & (1 << i))
-                    event_handler((intcap_A & (1 << i)) != (intcap_B & (1 << i)) ? E_ENCODER_TURNED_RIGHT : E_ENCODER_TURNED_LEFT, i);
+                    event_handler((intcap_A & (1 << i)) != (intcap_B & (1 << i)) ? E_ENCODER_TURNED_RIGHT : E_ENCODER_TURNED_LEFT, i + E_SOURCE_ENCODER_0);
                 ++i;
             }
             SPI_encoders_dirty = 0;

@@ -6,7 +6,7 @@ extern u8	led;		// a degager
 u8			edit_pressed = 0;
 u8			current_mode = E_MODE_DEFAULT;
 
-void	keys_handler(u8 event_type)
+void	keys_handler(u8 event_type, u8 event_source)
 {
 	switch (event_type)
 	{
@@ -46,14 +46,21 @@ void	main_encoder_handler(u8 event_type)
 		{
 		case E_KEY_PRESSED:
 			current_mode == E_MODE_MENU;
+                        template_main_menu(1);
 			break;
 		case E_KEY_RELEASED:
 			break;
 		case E_KEY_LONG_PRESSED:
 			break;
 		case E_ENCODER_TURNED_RIGHT:
+			led_toggle(led);
+			led = (led + 1) & 0xF;
+			led_toggle(led);
 			break;
 		case E_ENCODER_TURNED_LEFT:
+			led_toggle(led);
+			led = (led - 1) & 0xF;
+			led_toggle(led);
 			break;
 		}
 	}
@@ -172,7 +179,7 @@ void	button_edit_handler(u8 event_type)
 void	event_handler(u8 event_type, u32 event_source)
 {
 	if (event_source >= E_SOURCE_KEY_0 && event_source <= E_SOURCE_KEY_15)
-		keys_handler(event_type);
+		keys_handler(event_type, event_source);
 	else if (event_source >= E_SOURCE_ENCODER_0 && event_source <= E_SOURCE_ENCODER_7)
 		encoders_handler(event_type);
 	else if (event_source == E_SOURCE_ENCODER_MAIN)

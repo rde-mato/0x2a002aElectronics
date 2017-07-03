@@ -56,6 +56,15 @@ int main(void)
 
 	T2CONbits.ON = 1;
         IFS0bits.INT1IF = 1; // a garder pour reset les encoders
+
+
+        char    line[22] = "12345678901";
+
+        LCD_putstr(0, 0, line);
+        LCD_print_changed_chars();
+
+
+
 	while (42)
 	{
             UART1_send(42);

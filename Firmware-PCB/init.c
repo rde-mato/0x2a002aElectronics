@@ -71,13 +71,14 @@ void TIMER_init(void)
 
 	TIMER4_STOP_AND_RESET;
 	TIMER4_VALUE = 0;
-	TIMER4_PRESCALE = TIMER_PRESCALE_64;
-	TIMER4_PERIOD = FREQUENCY / (64 * 1000 / SCREEN_DURATION_MS) - 1;
+	TIMER4_PRESCALE = TIMER_PRESCALE_256;
+	TIMER4_PERIOD = 60000;
+//	TIMER4_PERIOD = ONE_MILLISECOND / 64 * SCREEN_DURATION_MS - 1;
 
 	TIMER5_STOP_AND_RESET;
 	TIMER5_VALUE = 0;
-	TIMER5_PRESCALE = TIMER_PRESCALE_64;
-	TIMER5_PERIOD = FREQUENCY / (64 * 1000 / BUTTON_POLL_DELAY_MS) - 1;
+	TIMER5_PRESCALE = TIMER_PRESCALE_4;
+	TIMER5_PERIOD = 64 * FREQUENCY / (8000 / BUTTON_POLL_DELAY_MS) - 1;
 }
 
 void INT_init(void)
@@ -281,6 +282,7 @@ void    LCD_init(void)
 
 	// clear du LCD
 	CS_MCP_LCD = 0x0;
+        SPI1CONbits.MODE16 = 1;
 	SPI1BUF = 0x4012;
 	while (SPI1STATbits.SPIBUSY) ;
 	clear = SPI1BUF;
@@ -292,10 +294,11 @@ void    LCD_init(void)
 		col = 0;
 		LCD_blocking_control_instruction(1, 1, 0, 0, 0b01000000 | col);      //    LCD_display_set_y_address(0);
 		while (col++ < 64)
-			LCD_blocking_control_instruction(1, 1, 1, 0, 0x00);
+			LCD_blocking_control_instruction(1, 1, 1, 0, 0);
 	}
-	LCD_blocking_control_instruction(1, 1, 0, 0, 0b01000000); //    LCD_display_set_y_address(0);
+	LCD_blocking_control_instruction(1, 1, 0, 0, 0b01000001); //    LCD_display_set_y_address(1);
 	LCD_blocking_control_instruction(1, 1, 0, 0, 0b10111000); //    LCD_display_set_x_page(0);
+        SPI1CONbits.MODE16 = 0;
 	CS_MCP_LCD = 0x1;
 }
 

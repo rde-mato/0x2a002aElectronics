@@ -10,12 +10,12 @@
 #define LCD_RIGHT 0
 #define LCD_LEFT 1
 
-u8	lcd_chars[8][21] = { 0 };
+u8	lcd_chars[8][21] = { ' ' };
 u8      lcd_changed_chars[8][21] = { 0 };
 u16     lcd_changed_chars_count = 0;
 
 u8      lcd_line_ptr = 0;
-u8      lcd_col_ptr = 0;
+u8      lcd_col_ptr = 1;
 u8      lcd_pos_ptr = 0;
 u8      lcd_current_side = LCD_LEFT;
 
@@ -87,7 +87,7 @@ void    LCD_print_u8(u8 line, u8 col, u8 data)
         buffer[index++] = LCD_display_set_y_address(lcd_current_side, col & 63);
         buffer[index++] = LCD_display_write_data(lcd_current_side, data);
         lcd_line_ptr = line;
-        lcd_col_ptr = ++col;
+        lcd_col_ptr = ++col & 63;
     }
     else if (line != lcd_line_ptr)
     {
@@ -95,18 +95,18 @@ void    LCD_print_u8(u8 line, u8 col, u8 data)
         buffer[index++] = LCD_display_set_y_address(lcd_current_side, col & 63);
         buffer[index++] = LCD_display_write_data(lcd_current_side, data);
         lcd_line_ptr = line;
-        lcd_col_ptr = ++col;
+        lcd_col_ptr = ++col  & 63;
     }
     else if (col != lcd_col_ptr)
     {
         buffer[index++] = LCD_display_set_y_address(lcd_current_side, col & 63);
         buffer[index++] = LCD_display_write_data(lcd_current_side, data);
-        lcd_col_ptr = ++col;
+        lcd_col_ptr = ++col & 63;
     }
     else
     {
         buffer[index++] = LCD_display_write_data(lcd_current_side, data);
-        lcd_col_ptr = ++col;
+        lcd_col_ptr = ++col & 63;
     }
     SPI1_push_LCD_buffer(buffer, index);
 }
@@ -156,25 +156,32 @@ void    LCD_putchar(u8 line, u8 pos, u8 c)
     }
 }
 
-//void    LCD_putline(u8 line, u8 pos, u8 *str)
-//{
-//    while ((pos < 21) && (*str != '\0') && (*str != '\n') && (*str != '\n' + 128))
-//        LCD_putchar(line, pos++, *(str++));
-//    while (pos < 21)
-//        LCD_putchar(line, pos++, *str);
-//}
+void    LCD_clear(void)
+{
+    u8  line = 0;
+    u8  pos = 0;
+
+    while (line < 8)
+    {
+        while (pos < 21)
+            LCD_putchar(line, pos++, ' ');
+        line++;
+    }
+}
 
 void    LCD_putstr(u8 line, u8 pos, u8 *str)
 {
-    while ((*str != '\0') && (line < 8))
-    {
-        while ((pos < 21) && (*str != '\0') && (*str != '\n') && (*str != '\n' + 128))
-            LCD_putchar(line, pos++, *(str++));
-        while (pos < 21)
-            LCD_putchar(line, pos++, *str);
-        if ((*str != '\n') || (*str != '\n' + 128))
-            str++;
-        line++;
-        pos = 0;
-    }
+    while (*str)
+        LCD_putchar(line, pos++, *(str++));
+//    while ((*str != '\0') && (line < 8))
+//    {
+//        while ((pos <= 21) && (*str != '\0') && (*str != '\n') && (*str != '\n' + 128))
+//            LCD_putchar(line, pos++, *(str++));
+//        while (pos <= 21)
+//            LCD_putchar(line, pos++, *str);
+//        if ((*str != '\n') || (*str != '\n' + 128))
+//            str++;
+//        line++;
+//        pos = 0;
+//    }
 }

@@ -27,6 +27,7 @@
       <itemPath>UART_driver.c</itemPath>
       <itemPath>SPI_driver.c</itemPath>
       <itemPath>LCD_driver.c</itemPath>
+      <itemPath>LCD_templates.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
