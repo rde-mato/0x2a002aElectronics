@@ -174,9 +174,9 @@ void    manage_SPI1(void)
         SPI1_slave = E_SPI1_CS_MCP_LCD;
         SPI1_state = E_SPI1_LCD_CONFIG;
         IFS1bits.SPI1RXIF = 1;
-        IFS1bits.SPI1TXIF = 1;
+//        IFS1bits.SPI1TXIF = 1;
         SPI1_RECEIVE_ENABLE = INT_ENABLED;
-        SPI1_TRANSFER_ENABLE = INT_ENABLED;
+//        SPI1_TRANSFER_ENABLE = INT_ENABLED;
         return ;
     }
     else if (SPI_encoders_dirty)

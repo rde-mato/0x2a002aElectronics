@@ -1,5 +1,17 @@
 #include <xc.h>
+#include <sys/attribs.h>
 #include "0x2a002a.h"
+
+u8  UART1_buf[0x100];
+u8  UART1_buf_index = 0;
+u8  UART1_buf_len = 0;
+
+void __ISR(_UART_1_VECTOR, IPL5AUTO) UART1_TX_handler(void) {
+    UART1_TX_INT_FLAG_CLR;
+    U1TXREG = UART1_buf[UART1_buf_index++];
+    if (--UART1_buf_len == 0)
+        UART1_TX_INT_ENABLE = INT_DISABLED;
+}
 
 void UART1_init(void)
 {
@@ -16,6 +28,7 @@ void UART1_init(void)
 
 void UART1_send(char byte)
 {
-    while (U1STAbits.UTXBF);
-    U1TXREG = byte;
+    UART1_TX_INT_ENABLE = INT_DISABLED;
+    UART1_buf[UART1_buf_index + UART1_buf_len++] = byte;
+    UART1_TX_INT_ENABLE = INT_ENABLED;
 }

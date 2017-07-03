@@ -113,6 +113,13 @@
 #define SPI1_RECEIVE_ENABLE		IEC1bits.SPI1RXIE
 #define SPI1_TRANSFER_ENABLE	IEC1bits.SPI1TXIE
 
+//UART
+
+#define UART1_TX_INT_ENABLE     IEC1bits.U1TXIE
+#define UART1_TX_INT_PRIORITY   IPC8bits.U1IP
+#define UART1_TX_INT_FLAG       IFS1bits.U1TXIF
+#define UART1_TX_INT_FLAG_CLR   IFS1CLR = (1 << 8)
+
 // GPIO MCP =
 // GPA                                  GPB
 // 7  6  5  4    3    2  1   0           7   to 0

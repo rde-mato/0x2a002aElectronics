@@ -107,6 +107,11 @@ void INT_init(void)
 	TIMER5_INT_ENABLE = INT_ENABLED;
 	// l'interruption est activee uniquement en cas de poll
 
+        // UART
+        UART1_TX_INT_FLAG_CLR;
+        UART1_TX_INT_PRIORITY = 5;
+        // ~UART1_TX_INT_ENABLE = INT_ENABLED;~ UART interrupt is enabled on sent messages
+
 	//I2C1
 	I2C1_INT_FLAG_CLR;
 	I2C1_INT_PRIORITY = 4;
