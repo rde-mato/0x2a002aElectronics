@@ -1,0 +1,1 @@
+reexpliquer comment marchent les interrupts pour qu'il n'y ait jamais de perte d'info
