@@ -29,7 +29,6 @@ u16	notes_play[16][16][4];
 u16	active_instruments;
 
 //	pour chaque instrument actif on ne garde que le pattern actif
-
 u8  led = 0;
 
 int main(void)
@@ -48,13 +47,12 @@ int main(void)
 	MCP_LCD_init();
 	LCD_init();
 	MCP_ENCODERS_init_blocking();
-	        UART1_init();
-	//
-		SD_card_init();
-		ret1 = SD_card_read_block(block);
-		ret2 = SD_card_write_block(block);
-		ret3 = SD_card_read_block(block);
-	//
+	UART1_init();
+//		SD_card_init();
+//		ret1 = SD_card_read_block(block);
+//		ret2 = SD_card_write_block(block);
+//		ret3 = SD_card_read_block(block);
+	
 	INT_init();
 	HT16_init();
 
@@ -74,7 +72,6 @@ int main(void)
 
 	while (42)
 	{
-		            UART1_send(42);
 		manage_I2C1();
 		manage_SPI1();
 		WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG

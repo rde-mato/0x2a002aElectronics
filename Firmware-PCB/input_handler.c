@@ -13,13 +13,13 @@ void	keys_handler(u8 event_type, u8 event_source)
 	switch (event_type)
 	{
 		case E_KEY_PRESSED:
-			led_set(event_source);
+			led_toggle(event_source);
 			break;
 		case E_KEY_RELEASED:
-			led_toggle(event_source);
+//			led_toggle(event_source);
 			break;
 		case E_KEY_LONG_PRESSED:
-			led_toggle(event_source);
+//			led_toggle(event_source);
 			break;
 	}
 }

@@ -214,7 +214,7 @@ u8  SD_card_write_block(u32 block)
     u8  R1;
     u8  read8;
     u32 read32;
-    u8  retries = SD_RETRIES;
+    u32  retries = SD_RETRIES;
     u8 data_response;
     u8 response_status;
     u16 i = 0;
