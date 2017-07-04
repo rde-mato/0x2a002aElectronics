@@ -138,6 +138,7 @@ void	button_keyboard_handler(u8 event_type)
 	switch (event_type)
 	{
 		case E_KEY_PRESSED:
+                    T3CONbits.ON = 1;
 			break;
 		case E_KEY_RELEASED:
 			break;

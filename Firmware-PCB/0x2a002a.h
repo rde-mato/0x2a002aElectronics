@@ -63,13 +63,32 @@
 #define MCP_ENC_B_ANALOG	ANSELBbits.ANSB1
 
 //TIMERS
-// timer 2-3 used for bpm management
-#define TIMER3_STOP_AND_RESET	T2CON = 0
-#define TIMER3_32_BITS_MODE		T2CONbits.T32
-#define TIMER3_VALUE			TMR2
-#define TIMER3_INT_FLAG_CLR		IFS0CLR = (1 << 14)
-#define TIMER3_INT_PRIORITY		IPC3bits.T3IP
-#define TIMER3_INT_ENABLE		IEC0bits.T3IE
+#define TIMER_PRESCALE_1        0b000
+#define TIMER_PRESCALE_2        0b001
+#define TIMER_PRESCALE_4        0b010
+#define TIMER_PRESCALE_8        0b011
+#define TIMER_PRESCALE_16       0b100
+#define TIMER_PRESCALE_32       0b101
+#define TIMER_PRESCALE_64       0b110
+#define TIMER_PRESCALE_256	0b111
+
+// timer 2 used for pattern management
+#define TIMER2_STOP_AND_RESET	T2CON = 0
+#define TIMER2_VALUE		TMR2
+#define TIMER2_PERIOD           PR2
+#define TIMER2_PRESCALE         T2CONbits.TCKPS
+#define TIMER2_INT_FLAG_CLR     IFS0CLR = (1 << 9)
+#define TIMER2_INT_PRIORITY     IPC2bits.T2IP
+#define TIMER2_INT_ENABLE	IEC0bits.T2IE
+
+// timer 3 used for bpm button
+#define TIMER3_STOP_AND_RESET   T3CON = 0
+#define TIMER3_VALUE            TMR3
+#define TIMER3_PERIOD           PR3
+#define TIMER3_PRESCALE         T3CONbits.TCKPS
+#define TIMER3_INT_FLAG_CLR     IFS0CLR = (1 << 14)
+#define TIMER3_INT_PRIORITY     IPC3bits.T3IP
+#define TIMER3_INT_ENABLE       IEC0bits.T3IE
 
 // timer 4 used for duration of templates
 #define TIMER4_STOP_AND_RESET	T4CON = 0
@@ -85,9 +104,6 @@
 #define TIMER5_VALUE			TMR5
 #define TIMER5_PERIOD			PR5
 #define TIMER5_PRESCALE			T5CONbits.TCKPS
-#define TIMER_PRESCALE_4		0b010
-#define TIMER_PRESCALE_64		0b110
-#define TIMER_PRESCALE_256		0b111
 #define TIMER5_INT_FLAG_CLR		IFS0CLR = (1 << 24)
 #define TIMER5_INT_PRIORITY		IPC5bits.T5IP
 #define TIMER5_INT_ENABLE		IEC0bits.T5IE
