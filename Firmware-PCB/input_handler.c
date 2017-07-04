@@ -86,6 +86,9 @@ void	button_play_handler(u8 event_type)
 	switch (event_type)
 	{
 		case E_KEY_PRESSED:
+			eeprom_buf_size = 8;
+			lcd_strncpy(eeprom_buf, "abcd 345", 8);
+			SPI_eeprom_write_request = 1;
 			break;
 		case E_KEY_RELEASED:
 			break;
@@ -99,6 +102,10 @@ void	button_stop_handler(u8 event_type)
 	switch (event_type)
 	{
 		case E_KEY_PRESSED:
+			eeprom_buf_size = 8;
+			lcd_bzero(eeprom_buf, 8);
+			eeprom_address = 0;
+			SPI_eeprom_read_request = 1;
 			break;
 		case E_KEY_RELEASED:
 			break;
@@ -166,6 +173,8 @@ void	button_rec_handler(u8 event_type)
 	switch (event_type)
 	{
 		case E_KEY_PRESSED:
+			LCD_putnstr(0, 0, eeprom_buf, 8);
+			LCD_print_changed_chars();
 			break;
 		case E_KEY_RELEASED:
 			break;

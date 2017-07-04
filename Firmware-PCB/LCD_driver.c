@@ -169,6 +169,12 @@ void    LCD_clear(void)
     }
 }
 
+void    LCD_putnstr(u8 line, u8 pos, u8 *str, u8 size)
+{
+    while (*str && size--)
+        LCD_putchar(line, pos++, *(str++));
+}
+
 void    LCD_putstr(u8 line, u8 pos, u8 *str)
 {
     while (*str)

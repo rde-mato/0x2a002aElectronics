@@ -6,8 +6,8 @@
 #define LCD_BUF_MAX 2048  //128 * ( 8 + 2 )
 #define FLASH_BUF_MAX 30                        // calculs a faire
 
+u8 SPI1_state = (u8)E_SPI1_DONE;
 
-u8  SPI1_state = E_SPI1_DONE;
 u8  SPI1_slave = E_SPI1_CS_MCP_ENC;
 
 u16	SPI_buf_LCD[LCD_BUF_MAX] = { 0 };
@@ -19,9 +19,6 @@ u32     SPI_flash_index = 0;
 u32     SPI_flash_count = 0;
 
 u8      SPI_encoders_dirty = 0;
-
-u8     SPI_eeprom_write_request = 0;
-u8     SPI_eeprom_read_request = 0;
 
 void    SPI1_LCD_state_machine(void)
 {
