@@ -6,6 +6,8 @@ extern u8	led;		// a degager
 u8			edit_pressed = 0;
 u8			current_mode = E_MODE_DEFAULT;
 
+u8 cpt = 0;
+
 void	keys_handler(u8 event_type, u8 event_source)
 {
 	switch (event_type)
@@ -22,19 +24,29 @@ void	keys_handler(u8 event_type, u8 event_source)
 	}
 }
 
-void	encoders_handler(u8 event_type)
+void	encoders_handler(u8 event_type, u8 event_source)
 {
+    u8 nbstr[5] = { 0 };
+
 	switch (event_type)
 	{
 		case E_ENCODER_TURNED_RIGHT:
-			led_toggle(led);
-			led = (led + 1) & 0xF;
-			led_toggle(led);
+                        cpt++;
+                        lcditoa(cpt, nbstr, 4);
+                        LCD_putstr(7, 0, nbstr);
+                        LCD_print_changed_chars();
+//			led_toggle(led);
+//			led = (led + 1) & 0xF;
+//			led_toggle(led);
 			break;
 		case E_ENCODER_TURNED_LEFT:
-			led_toggle(led);
-			led = (led - 1) & 0xF;
-			led_toggle(led);
+                        cpt--;
+                        lcditoa(cpt, nbstr, 4);
+                        LCD_putstr(7, 0, nbstr);
+                        LCD_print_changed_chars();
+//			led_toggle(led);
+//			led = (led - 1) & 0xF;
+//			led_toggle(led);
 			break;
 	}
 }
@@ -181,7 +193,7 @@ void	event_handler(u8 event_type, u32 event_source)
 	if (event_source >= E_SOURCE_KEY_0 && event_source <= E_SOURCE_KEY_15)
 		keys_handler(event_type, event_source);
 	else if (event_source >= E_SOURCE_ENCODER_0 && event_source <= E_SOURCE_ENCODER_7)
-		encoders_handler(event_type);
+		encoders_handler(event_type, event_source);
 	else if (event_source == E_SOURCE_ENCODER_MAIN)
 		main_encoder_handler(event_type);
 	else if (event_source == E_SOURCE_BUTTON_PLAY_PAUSE)

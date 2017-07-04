@@ -2,6 +2,23 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
+void lcditoa(u32 value, u8 *res, u8 nbsize)
+{
+    u8 i = 0;
+
+    while (i < nbsize)
+    {
+        if (!(value % 10))
+            res[i] = ' ';
+        else
+            res[i] = value % 10 + '0';
+        value /= 10;
+        i++;
+    }
+    res[nbsize] = '\0';
+}
+
+
 void	template_default(void)
 {
     LCD_clear();
