@@ -53,7 +53,7 @@ int main(void)
 	HT16_init();
 
         led_set(0);
-
+        set_bpm(DEFAULT_BPM);
 	T2CONbits.ON = 1;
         IFS0bits.INT1IF = 1; // a garder pour reset les encoders
 
