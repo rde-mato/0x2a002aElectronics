@@ -20,6 +20,9 @@ u32     SPI_flash_count = 0;
 
 u8      SPI_encoders_dirty = 0;
 
+u8     SPI_eeprom_write_request = 0;
+u8     SPI_eeprom_read_request = 0;
+
 void    SPI1_LCD_state_machine(void)
 {
     u32 clear;
@@ -129,6 +132,9 @@ void __ISR(_SPI_1_VECTOR, IPL4AUTO) SPI1Handler(void)           // a voir apres 
         case E_SPI1_CS_MCP_ENC:
             SPI1_ENC_state_machine();
             break;
+        case E_SPI1_CS_EEPROM:
+            SPI1_eeprom_state_machine();
+            break;
     
 
 
@@ -183,6 +189,22 @@ void    manage_SPI1(void)
     {
         SPI1_slave = E_SPI1_CS_MCP_ENC;
         SPI1_state = E_SPI1_ENC_READ_INT_FLAG;
+        IFS1bits.SPI1RXIF = 1;
+        SPI1_RECEIVE_ENABLE = INT_ENABLED;
+        return ;
+    }
+    else if (SPI_eeprom_write_request)
+    {
+        SPI1_slave = E_SPI1_CS_EEPROM;
+        SPI1_state = E_SPI1_EEPROM_WRITE_ENABLE;
+        IFS1bits.SPI1RXIF = 1;
+        SPI1_RECEIVE_ENABLE = INT_ENABLED;
+        return ;
+    }
+    else if (SPI_eeprom_read_request)
+    {
+        SPI1_slave = E_SPI1_CS_EEPROM;
+        SPI1_state = E_SPI1_EEPROM_READ_ENABLE;
         IFS1bits.SPI1RXIF = 1;
         SPI1_RECEIVE_ENABLE = INT_ENABLED;
         return ;
