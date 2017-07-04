@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=main.c init.c encoders_driver.c input_handler.c config.c timer.c HT16_keys_driver.c HT16_leds_driver.c I2C_driver.c I2C_handler.c UART_driver.c SPI_driver.c LCD_driver.c LCD_templates.c
+SOURCEFILES_QUOTED_IF_SPACED=main.c init.c encoders_driver.c input_handler.c config.c timer.c HT16_keys_driver.c HT16_leds_driver.c I2C_driver.c I2C_handler.c UART_driver.c SPI_driver.c LCD_driver.c LCD_templates.c EEPROM.c bpm.c sdcard.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/main.o ${OBJECTDIR}/init.o ${OBJECTDIR}/encoders_driver.o ${OBJECTDIR}/input_handler.o ${OBJECTDIR}/config.o ${OBJECTDIR}/timer.o ${OBJECTDIR}/HT16_keys_driver.o ${OBJECTDIR}/HT16_leds_driver.o ${OBJECTDIR}/I2C_driver.o ${OBJECTDIR}/I2C_handler.o ${OBJECTDIR}/UART_driver.o ${OBJECTDIR}/SPI_driver.o ${OBJECTDIR}/LCD_driver.o ${OBJECTDIR}/LCD_templates.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/main.o.d ${OBJECTDIR}/init.o.d ${OBJECTDIR}/encoders_driver.o.d ${OBJECTDIR}/input_handler.o.d ${OBJECTDIR}/config.o.d ${OBJECTDIR}/timer.o.d ${OBJECTDIR}/HT16_keys_driver.o.d ${OBJECTDIR}/HT16_leds_driver.o.d ${OBJECTDIR}/I2C_driver.o.d ${OBJECTDIR}/I2C_handler.o.d ${OBJECTDIR}/UART_driver.o.d ${OBJECTDIR}/SPI_driver.o.d ${OBJECTDIR}/LCD_driver.o.d ${OBJECTDIR}/LCD_templates.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/main.o ${OBJECTDIR}/init.o ${OBJECTDIR}/encoders_driver.o ${OBJECTDIR}/input_handler.o ${OBJECTDIR}/config.o ${OBJECTDIR}/timer.o ${OBJECTDIR}/HT16_keys_driver.o ${OBJECTDIR}/HT16_leds_driver.o ${OBJECTDIR}/I2C_driver.o ${OBJECTDIR}/I2C_handler.o ${OBJECTDIR}/UART_driver.o ${OBJECTDIR}/SPI_driver.o ${OBJECTDIR}/LCD_driver.o ${OBJECTDIR}/LCD_templates.o ${OBJECTDIR}/EEPROM.o ${OBJECTDIR}/bpm.o ${OBJECTDIR}/sdcard.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/main.o.d ${OBJECTDIR}/init.o.d ${OBJECTDIR}/encoders_driver.o.d ${OBJECTDIR}/input_handler.o.d ${OBJECTDIR}/config.o.d ${OBJECTDIR}/timer.o.d ${OBJECTDIR}/HT16_keys_driver.o.d ${OBJECTDIR}/HT16_leds_driver.o.d ${OBJECTDIR}/I2C_driver.o.d ${OBJECTDIR}/I2C_handler.o.d ${OBJECTDIR}/UART_driver.o.d ${OBJECTDIR}/SPI_driver.o.d ${OBJECTDIR}/LCD_driver.o.d ${OBJECTDIR}/LCD_templates.o.d ${OBJECTDIR}/EEPROM.o.d ${OBJECTDIR}/bpm.o.d ${OBJECTDIR}/sdcard.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/main.o ${OBJECTDIR}/init.o ${OBJECTDIR}/encoders_driver.o ${OBJECTDIR}/input_handler.o ${OBJECTDIR}/config.o ${OBJECTDIR}/timer.o ${OBJECTDIR}/HT16_keys_driver.o ${OBJECTDIR}/HT16_leds_driver.o ${OBJECTDIR}/I2C_driver.o ${OBJECTDIR}/I2C_handler.o ${OBJECTDIR}/UART_driver.o ${OBJECTDIR}/SPI_driver.o ${OBJECTDIR}/LCD_driver.o ${OBJECTDIR}/LCD_templates.o
+OBJECTFILES=${OBJECTDIR}/main.o ${OBJECTDIR}/init.o ${OBJECTDIR}/encoders_driver.o ${OBJECTDIR}/input_handler.o ${OBJECTDIR}/config.o ${OBJECTDIR}/timer.o ${OBJECTDIR}/HT16_keys_driver.o ${OBJECTDIR}/HT16_leds_driver.o ${OBJECTDIR}/I2C_driver.o ${OBJECTDIR}/I2C_handler.o ${OBJECTDIR}/UART_driver.o ${OBJECTDIR}/SPI_driver.o ${OBJECTDIR}/LCD_driver.o ${OBJECTDIR}/LCD_templates.o ${OBJECTDIR}/EEPROM.o ${OBJECTDIR}/bpm.o ${OBJECTDIR}/sdcard.o
 
 # Source Files
-SOURCEFILES=main.c init.c encoders_driver.c input_handler.c config.c timer.c HT16_keys_driver.c HT16_leds_driver.c I2C_driver.c I2C_handler.c UART_driver.c SPI_driver.c LCD_driver.c LCD_templates.c
+SOURCEFILES=main.c init.c encoders_driver.c input_handler.c config.c timer.c HT16_keys_driver.c HT16_leds_driver.c I2C_driver.c I2C_handler.c UART_driver.c SPI_driver.c LCD_driver.c LCD_templates.c EEPROM.c bpm.c sdcard.c
 
 
 CFLAGS=
@@ -178,6 +178,24 @@ ${OBJECTDIR}/LCD_templates.o: LCD_templates.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/LCD_templates.o 
 	@${FIXDEPS} "${OBJECTDIR}/LCD_templates.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/LCD_templates.o.d" -o ${OBJECTDIR}/LCD_templates.o LCD_templates.c   
 	
+${OBJECTDIR}/EEPROM.o: EEPROM.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/EEPROM.o.d 
+	@${RM} ${OBJECTDIR}/EEPROM.o 
+	@${FIXDEPS} "${OBJECTDIR}/EEPROM.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/EEPROM.o.d" -o ${OBJECTDIR}/EEPROM.o EEPROM.c   
+	
+${OBJECTDIR}/bpm.o: bpm.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/bpm.o.d 
+	@${RM} ${OBJECTDIR}/bpm.o 
+	@${FIXDEPS} "${OBJECTDIR}/bpm.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/bpm.o.d" -o ${OBJECTDIR}/bpm.o bpm.c   
+	
+${OBJECTDIR}/sdcard.o: sdcard.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/sdcard.o.d 
+	@${RM} ${OBJECTDIR}/sdcard.o 
+	@${FIXDEPS} "${OBJECTDIR}/sdcard.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/sdcard.o.d" -o ${OBJECTDIR}/sdcard.o sdcard.c   
+	
 else
 ${OBJECTDIR}/main.o: main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
@@ -262,6 +280,24 @@ ${OBJECTDIR}/LCD_templates.o: LCD_templates.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/LCD_templates.o.d 
 	@${RM} ${OBJECTDIR}/LCD_templates.o 
 	@${FIXDEPS} "${OBJECTDIR}/LCD_templates.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/LCD_templates.o.d" -o ${OBJECTDIR}/LCD_templates.o LCD_templates.c   
+	
+${OBJECTDIR}/EEPROM.o: EEPROM.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/EEPROM.o.d 
+	@${RM} ${OBJECTDIR}/EEPROM.o 
+	@${FIXDEPS} "${OBJECTDIR}/EEPROM.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/EEPROM.o.d" -o ${OBJECTDIR}/EEPROM.o EEPROM.c   
+	
+${OBJECTDIR}/bpm.o: bpm.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/bpm.o.d 
+	@${RM} ${OBJECTDIR}/bpm.o 
+	@${FIXDEPS} "${OBJECTDIR}/bpm.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/bpm.o.d" -o ${OBJECTDIR}/bpm.o bpm.c   
+	
+${OBJECTDIR}/sdcard.o: sdcard.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/sdcard.o.d 
+	@${RM} ${OBJECTDIR}/sdcard.o 
+	@${FIXDEPS} "${OBJECTDIR}/sdcard.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/sdcard.o.d" -o ${OBJECTDIR}/sdcard.o sdcard.c   
 	
 endif
 

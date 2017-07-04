@@ -34,6 +34,12 @@ u8  led = 0;
 
 int main(void)
 {
+
+    u8 ret1;
+    u8 ret2;
+    u8 ret3;
+    u32 block = 2200;
+
 	GPIO_and_PPS_init();
 	TIMER_init();
 	I2C1_init();
@@ -42,12 +48,12 @@ int main(void)
 	MCP_LCD_init();
 	LCD_init();
 	MCP_ENCODERS_init_blocking();
-	//        UART1_init();
+	        UART1_init();
 	//
-	//	SD_card_init();
-	//	ret = SD_card_read_block(block);
-	//	ret = SD_card_write_block(block);
-	//	ret = SD_card_read_block(block);
+		SD_card_init();
+		ret1 = SD_card_read_block(block);
+		ret2 = SD_card_write_block(block);
+		ret3 = SD_card_read_block(block);
 	//
 	INT_init();
 	HT16_init();
@@ -66,10 +72,9 @@ int main(void)
 
 
 
-
 	while (42)
 	{
-		//            UART1_send(42);
+		            UART1_send(42);
 		manage_I2C1();
 		manage_SPI1();
 		WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG

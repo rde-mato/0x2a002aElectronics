@@ -180,7 +180,7 @@
 #define MAX_WRITE_BUF 10
 #define READ_BUF_SIZE 10
 
-#define SD_RETRIES 24
+#define SD_RETRIES 1000
 #define SD_BLOCK_SIZE   512
 
 

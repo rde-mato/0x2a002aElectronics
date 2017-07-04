@@ -9,9 +9,9 @@ void		lcditoa(u32 value, u8 *res, u8 nbsize)
 	while (i < nbsize)
 	{
 		if (!(value % 10))
-			res[i] = ' ';
+			res[nbsize - i - 1] = '0';
 		else
-			res[i] = value % 10 + '0';
+			res[nbsize - i - 1] = value % 10 + '0';
 		value /= 10;
 		i++;
 	}

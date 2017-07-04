@@ -28,6 +28,9 @@
       <itemPath>SPI_driver.c</itemPath>
       <itemPath>LCD_driver.c</itemPath>
       <itemPath>LCD_templates.c</itemPath>
+      <itemPath>EEPROM.c</itemPath>
+      <itemPath>bpm.c</itemPath>
+      <itemPath>sdcard.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

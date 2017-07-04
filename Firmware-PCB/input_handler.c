@@ -87,6 +87,7 @@ void	button_play_handler(u8 event_type)
 	{
 		case E_KEY_PRESSED:
 			eeprom_buf_size = 8;
+			eeprom_address = 0;
 			lcd_strncpy(eeprom_buf, "abcd 345", 8);
 			SPI_eeprom_write_request = 1;
 			break;

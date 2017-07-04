@@ -183,8 +183,8 @@ void I2C1_init(void)
 		while (cpt++ < 2000);
 	}
 	I2C1BRG = (FREQUENCY / ( 2 * 400000)) - 2 ;
-	I2C1CONbits.DISSLW = 0;
-	I2C1CONbits.SMEN = 1;
+	I2C1CONbits.DISSLW = 1;
+	I2C1CONbits.SMEN = 0;
 	I2C1CONbits.STREN = 1;
 	I2C1CONbits.RCEN = 1;
 	I2C1CONbits.ON = 1;

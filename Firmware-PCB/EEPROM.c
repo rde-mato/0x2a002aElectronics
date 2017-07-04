@@ -237,13 +237,17 @@ void eeprom_read(u16 add)
 
 void SPI1_eeprom_state_machine(void)
 {
-	switch (SPI1_state)
-	{
-		case E_SPI1_EEPROM_WRITE_ENABLE:
-			eeprom_state_machine_write();
-			break;
-		case E_SPI1_EEPROM_READ_ENABLE:
-			eeprom_state_machine_read();
-			break;
-	}
+    if (SPI_eeprom_read_request)
+	eeprom_state_machine_read();
+    else if (SPI_eeprom_write_request)
+	eeprom_state_machine_write();
+//	switch (SPI1_state)
+//	{
+//		case E_SPI1_EEPROM_WRITE_ENABLE:
+//			eeprom_state_machine_write();
+//			break;
+//		case E_SPI1_EEPROM_READ_ENABLE:
+//			eeprom_state_machine_read();
+//			break;
+//	}
 }

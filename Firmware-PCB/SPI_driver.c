@@ -104,7 +104,7 @@ void    SPI1_ENC_state_machine(void)
             while (i < 8)
             {
                 if (flags_A & (1 << i))
-                    event_handler((intcap_A & (1 << i)) != (intcap_B & (1 << i)) ? E_ENCODER_TURNED_RIGHT : E_ENCODER_TURNED_LEFT, i + E_SOURCE_ENCODER_0);
+                    event_handler((intcap_A & (1 << i)) != (intcap_B & (1 << i)) ? E_ENCODER_TURNED_LEFT : E_ENCODER_TURNED_RIGHT, i + E_SOURCE_ENCODER_0);
                 ++i;
             }
             SPI_encoders_dirty = 0;
