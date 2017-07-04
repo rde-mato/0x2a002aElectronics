@@ -11,6 +11,7 @@
 #define SCREEN_DURATION_MS		1000
 
 // CONSTANTS
+#define DEFAULT_BPM             142
 #define GPIO_INPUT		1
 #define GPIO_OUTPUT		0
 #define RISING_EDGE		1

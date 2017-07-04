@@ -67,7 +67,7 @@ void TIMER_init(void)
         TIMER2_STOP_AND_RESET;
         TIMER2_VALUE = 0;
         TIMER2_PRESCALE = TIMER_PRESCALE_256;
-        set_bpm(bpm);
+        set_bpm(DEFAULT_BPM);
 
 	TIMER3_STOP_AND_RESET;
 	TIMER3_VALUE = 0;

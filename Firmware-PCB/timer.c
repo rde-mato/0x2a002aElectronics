@@ -2,14 +2,7 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
-u32     bpm = 142;
 u8      qtime = 0;
-
-    
-void set_bpm(void)
-{
-	PR2 = (FREQUENCY / 256) / (bpm / 15); // bpm * 4 / 60
-}
 
 void __ISR(_TIMER_2_VECTOR, IPL3AUTO) Timer2Handler(void)
 {
@@ -26,10 +19,4 @@ void __ISR(_TIMER_2_VECTOR, IPL3AUTO) Timer2Handler(void)
 	led_toggle(qtime);
 	qtime = (qtime + 1) & 15;
 //	TIMER2_VALUE = 0;
-}
-
-void __ISR(_TIMER_3_VECTOR, IPL1AUTO) Timer3Handler(void)
-{
-    TIMER3_INT_FLAG_CLR;
-
 }
