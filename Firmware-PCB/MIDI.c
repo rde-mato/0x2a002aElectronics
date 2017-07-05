@@ -117,7 +117,7 @@ void midi_channel_pressure(u8 channel, u8 value)
 ** channel: 0-15 MIDI Channel Number
 ** value: 0-127 Pitch Bend Change Value
 */
-void midi_pitch_bend_change(u8 channel, u8)
+void midi_pitch_bend_change(u8 channel)
 {
 }
 

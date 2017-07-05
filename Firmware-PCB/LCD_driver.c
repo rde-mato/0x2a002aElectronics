@@ -12,7 +12,6 @@
 
 u8	lcd_chars[8][21] = { ' ' };
 u8      lcd_changed_chars[8][21] = { 0 };
-u16     lcd_changed_chars_count = 0;
 
 u8      lcd_line_ptr = 0;
 u8      lcd_col_ptr = 1;
@@ -143,7 +142,6 @@ void    LCD_print_changed_chars(void)
         }
         ++line;
     }
-    lcd_changed_chars_count = 0;
 }
 
 void    LCD_putchar(u8 line, u8 pos, u8 c)
@@ -152,7 +150,6 @@ void    LCD_putchar(u8 line, u8 pos, u8 c)
     {
         lcd_chars[line][pos] = c;
         lcd_changed_chars[line][pos] = 1;
-        lcd_changed_chars_count++;
     }
 }
 
@@ -163,6 +160,7 @@ void    LCD_clear(void)
 
     while (line < 8)
     {
+        pos = 0;
         while (pos < 21)
             LCD_putchar(line, pos++, ' ');
         line++;
@@ -190,4 +188,10 @@ void    LCD_putstr(u8 line, u8 pos, u8 *str)
 //        line++;
 //        pos = 0;
 //    }
+}
+
+void    LCD_putstr_negative(u8 line, u8 pos, u8 *str)
+{
+    while (*str)
+        LCD_putchar(line, pos++, *(str++) + 0x80);
 }

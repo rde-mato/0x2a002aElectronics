@@ -2,30 +2,17 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
-#define INSTRUMENTS_COUNT       16
-#define PATTERNS_PER_INSTRUMENT 16
-#define QTIME_PER_INSTRUMENT    16
-#define NOTES_PER_QTIME         4
-#define ATTRIBUTES_PER_NOTE     3
 
 //  1 pattern = 192 u8
 //  1 instrument = 3072 u8
 
-u8	active_patterns[INSTRUMENTS_COUNT][QTIME_PER_INSTRUMENT][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
-u8	active_instrument[PATTERNS_PER_INSTRUMENT][QTIME_PER_INSTRUMENT][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
-u8	pattern_pointers[INSTRUMENTS_COUNT][PATTERNS_PER_INSTRUMENT];
 
-u8	cur_instrument;
-u8	cur_pattern;
-u8	cur_note;
-u8	cur_octave;
-u8	cur_velocity;
 
-u8	encoders_memory[16][8];
-u8	encoders_play[16][8];
-//u16	notes_memory[16][16][16][4]; //trop grand pour etre dans la memoire mais a aller taper direct dans la flash
-u16	notes_play[16][16][4];
-u16	active_instruments;
+//u8	encoders_memory[16][8];
+//u8	encoders_play[16][8];
+////u16	notes_memory[16][16][16][4]; //trop grand pour etre dans la memoire mais a aller taper direct dans la flash
+//u16	notes_play[16][16][4];
+//u16	active_instruments;
 
 //	pour chaque instrument actif on ne garde que le pattern actif
 u8  led = 0;
@@ -55,9 +42,11 @@ int main(void)
 	INT_init();
 	HT16_init();
 
-
 	set_bpm(DEFAULT_BPM);
-        led_set(E_SOURCE_BUTTON_PATTERN);
+        set_mode_default();
+//        led_set(E_SOURCE_BUTTON_PATTERN);
+//        led_set(E_SOURCE_KEY_15);
+        
 
 
 	IFS0bits.INT1IF = 1; // a garder pour reset les encoders

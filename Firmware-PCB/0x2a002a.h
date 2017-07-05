@@ -10,6 +10,12 @@
 #define LONG_PRESS_LIMIT		100
 #define SCREEN_DURATION_MS		1000
 
+#define INSTRUMENTS_COUNT       16
+#define PATTERNS_PER_INSTRUMENT 16
+#define QTIME_PER_INSTRUMENT    16
+#define NOTES_PER_QTIME         4
+#define ATTRIBUTES_PER_NOTE     3
+
 // CONSTANTS
 #define DEFAULT_BPM             142
 #define GPIO_INPUT		1
@@ -163,6 +169,7 @@
 #define LCD_CS1_bit         0x08
 #define LCD_CS2_bit         0x10
 #define LCD_PORTS_ADDRESS   0x4012
+#define LINE_MAX_LEN        22
 
 #define MCP_ENC_READ_INT_FLAG 0x410E0000
 #define MCP_ENC_READ_INT_CAP  0x41100000
@@ -237,8 +244,11 @@ enum E_EVENT_SOURCE // dans l'ordre de mapping des boutons, ne pas changer
 
 enum E_MODES
 {
-	E_MODE_DEFAULT = 0,
-	E_MODE_MENU
+	E_MODE_DEFAULT,
+        E_MODE_PATTERN,
+	E_MODE_MENU,
+        E_MODE_INSTRU,
+        E_MODE_KEYBOARD
 };
 
 enum E_EVENT_TYPE
