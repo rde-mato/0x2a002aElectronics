@@ -34,7 +34,7 @@ void		template_default(void)
 
     LCD_clear();
     LCD_putstr_negative(0, 0, line0);
-    snprintf(buf, LINE_MAX_LEN, "%d          %d", cur_instrument, cur_pattern);
+    snprintf(buf, LINE_MAX_LEN, "%d          %d", cur_instrument + 1, cur_pattern + 1);
     LCD_putstr(1, 4, buf);
     LCD_putstr_negative(3, 3, line3);
     snprintf(buf, LINE_MAX_LEN, "%d         %d", cur_note, cur_velocity);

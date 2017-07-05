@@ -43,20 +43,17 @@ void    send_MIDI_for_qtime(u8 qt)
         ++instrument;
     }
 
-    UART1_send(0x90);
     i = 0;
     while (i < notes_count)
     {
+        UART1_send(0x80);
+        UART1_send(notes[i]);
+        UART1_send(velocities[i]);
+        UART1_send(0x90);
         UART1_send(notes[i]);
         UART1_send(velocities[i++]);
     }
-    UART1_send(0x90);
-    i = 0;
-    while (i < notes_count)
-    {
-        UART1_send(notes[i]);
-        UART1_send(velocities[i++]);
-    }
+    return ;
 }
 
 void    display_LEDs_for_qtime(u8 qt)

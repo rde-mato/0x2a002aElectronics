@@ -3,27 +3,15 @@
 #include "0x2a002a.h"
 
 
-//  1 pattern = 192 u8
-//  1 instrument = 3072 u8
-
-
-
-//u8	encoders_memory[16][8];
-//u8	encoders_play[16][8];
-////u16	notes_memory[16][16][16][4]; //trop grand pour etre dans la memoire mais a aller taper direct dans la flash
-//u16	notes_play[16][16][4];
-//u16	active_instruments;
-
-//	pour chaque instrument actif on ne garde que le pattern actif
 u8  led = 0;
 
 int main(void)
 {
 
-    u8 ret1;
-    u8 ret2;
-    u8 ret3;
-    u32 block = 2200;
+//    u8 ret1;
+//    u8 ret2;
+//    u8 ret3;
+//    u32 block = 2200;
 
 	GPIO_and_PPS_init();
 	TIMER_init();
@@ -43,21 +31,9 @@ int main(void)
 	HT16_init();
 
 	set_bpm(DEFAULT_BPM);
-        set_mode_default();
-//        led_set(E_SOURCE_BUTTON_PATTERN);
-//        led_set(E_SOURCE_KEY_15);
-        
-
+        set_mode_default();      
 
 	IFS0bits.INT1IF = 1; // a garder pour reset les encoders
-
-
-	//        char    line[22] = "12345678901";
-	//
-	//        LCD_putstr(0, 0, line);
-	//        LCD_print_changed_chars();
-
-
 
 	while (42)
 	{

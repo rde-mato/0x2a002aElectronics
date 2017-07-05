@@ -23,7 +23,7 @@ u8	cur_instrument = 0;
 u8	cur_pattern = 0;
 u8	cur_note = 36;
 u8	cur_octave = 3;
-u8	cur_velocity = 0x80;
+u8	cur_velocity = 0x40;
 
 void    push_note(u8 instrument, u8 qtime, u8 note, u8 velocity)
 {

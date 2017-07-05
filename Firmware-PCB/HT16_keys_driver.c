@@ -28,7 +28,7 @@ void __ISR(_TIMER_5_VECTOR, IPL3AUTO) Timer5Handler(void)
     HT16_read_keys_request = 1;
 }
 
-void process_key_scan(u8 *buffer)
+void process_key_scan(void)
 {
     u32 		changed_buttons;
     u32 		unchanged_pressed_buttons;
