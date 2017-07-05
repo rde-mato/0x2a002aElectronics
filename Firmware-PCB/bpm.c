@@ -22,7 +22,7 @@ void set_bpm_pr(u16 pr)
     u8 buf[10] = {0};
 
     TIMER2_PERIOD = pr;
-    TIMER2_VALUE = 0;
+    TIMER2_VALUE = 0; //XXX
     g_bpm = (float)(FREQUENCY * 15) / (float)(pr * 256);
     snprintf(buf, sizeof(buf), "%.2f", g_bpm);
     LCD_putstr(3, 3, buf);

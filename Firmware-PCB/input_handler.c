@@ -2,11 +2,17 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
-extern u8	led;		// a degager
+//extern u8	led;		// a degager
+
+extern float g_bpm;
 u8			edit_pressed = 0;
 u8			current_mode = E_MODE_DEFAULT;
 
 u8 cpt = 0;
+
+u8 tap_pressed = 0;
+
+extern u8 qtime;
 
 void	keys_handler(u8 event_type, u8 event_source)
 {
@@ -67,21 +73,19 @@ void	main_encoder_handler(u8 event_type)
 		case E_KEY_PRESSED:
 			current_mode == E_MODE_MENU;
                         template_main_menu(1);
-			break;
+                    break;
 		case E_KEY_RELEASED:
-			break;
+                    break;
 		case E_KEY_LONG_PRESSED:
-			break;
+                    break;
 		case E_ENCODER_TURNED_RIGHT:
-			led_toggle(led);
-			led = (led + 1) & 0xF;
-			led_toggle(led);
-			break;
+                    if(tap_pressed)
+                        set_bpm((u8)g_bpm + 1);              //TODO: routine
+                    break;
 		case E_ENCODER_TURNED_LEFT:
-			led_toggle(led);
-			led = (led - 1) & 0xF;
-			led_toggle(led);
-			break;
+                    if(tap_pressed)
+                        set_bpm((u8)g_bpm - 1);
+                    break;
 		}
 	}
 	else if (current_mode == E_MODE_MENU)
@@ -94,10 +98,12 @@ void	button_play_handler(u8 event_type)
 	switch (event_type)
 	{
 		case E_KEY_PRESSED:
-			eeprom_buf_size = 8;
-			eeprom_address = 0;
-			lcd_strncpy(eeprom_buf, "abcd 345", 8);
-			SPI_eeprom_write_request = 1;
+                    T2CONbits.ON = !T2CONbits.ON;
+                    led_toggle(E_SOURCE_BUTTON_PLAY_PAUSE);
+//			eeprom_buf_size = 8;
+//			eeprom_address = 0;
+//			lcd_strncpy(eeprom_buf, "abcd 345", 8);
+//			SPI_eeprom_write_request = 1;
 			break;
 		case E_KEY_RELEASED:
 			break;
@@ -106,17 +112,23 @@ void	button_play_handler(u8 event_type)
 	}
 }
 
-void	button_stop_handler(u8 event_type)
+void	button_cue_handler(u8 event_type)
 {
 	switch (event_type)
 	{
 		case E_KEY_PRESSED:
-			eeprom_buf_size = 8;
-			lcd_bzero(eeprom_buf, 8);
-			eeprom_address = 0;
-			SPI_eeprom_read_request = 1;
+                    led_set(E_SOURCE_BUTTON_CUE);
+//			eeprom_buf_size = 8;
+//			lcd_bzero(eeprom_buf, 8);
+//			eeprom_address = 0;
+//			SPI_eeprom_read_request = 1;
 			break;
 		case E_KEY_RELEASED:
+//                    led_toggle(qtime - 1);
+                    led_clr(E_SOURCE_BUTTON_CUE);
+                    led_toggle((qtime - 1) & 15);
+                    TIMER2_VALUE = 0;
+                    qtime = 0;
 			break;
 		case E_KEY_LONG_PRESSED:
 			break;
@@ -128,6 +140,7 @@ void	button_instrument_handler(u8 event_type)
 	switch (event_type)
 	{
 		case E_KEY_PRESSED:
+                    display_instrument();
 			break;
 		case E_KEY_RELEASED:
 			break;
@@ -141,6 +154,7 @@ void	button_pattern_handler(u8 event_type)
 	switch (event_type)
 	{
 		case E_KEY_PRESSED:
+                    display_pattern();
 			break;
 		case E_KEY_RELEASED:
 			break;
@@ -154,12 +168,12 @@ void	button_keyboard_handler(u8 event_type)
 	switch (event_type)
 	{
 		case E_KEY_PRESSED:
-                    T3CONbits.ON = 1;
-			break;
+                    display_keyboard();
+                    break;
 		case E_KEY_RELEASED:
-			break;
+                    break;
 		case E_KEY_LONG_PRESSED:
-			break;
+                    break;
 	}
 }
 
@@ -168,9 +182,11 @@ void	button_tap_handler(u8 event_type)
 	switch (event_type)
 	{
 		case E_KEY_PRESSED:
+                    tap_pressed = 1;
                         bpm_new_tap();
 			break;
 		case E_KEY_RELEASED:
+                    tap_pressed = 0;
 			break;
 		case E_KEY_LONG_PRESSED:
 			break;
@@ -198,9 +214,11 @@ void	button_edit_handler(u8 event_type)
 	{
 		case E_KEY_PRESSED:
 			edit_pressed = 1;
+                        led_set(E_SOURCE_BUTTON_EDIT);
 			break;
 		case E_KEY_RELEASED:
 			edit_pressed = 0;
+                        led_clr(E_SOURCE_BUTTON_EDIT);
 			break;
 		case E_KEY_LONG_PRESSED:
 			break;
@@ -218,8 +236,8 @@ void	event_handler(u8 event_type, u32 event_source)
 		main_encoder_handler(event_type);
 	else if (event_source == E_SOURCE_BUTTON_PLAY_PAUSE)
 		button_play_handler(event_type);
-	else if (event_source == E_SOURCE_BUTTON_STOP)
-		button_stop_handler(event_type);
+	else if (event_source == E_SOURCE_BUTTON_CUE)
+		button_cue_handler(event_type);
 	else if (event_source == E_SOURCE_BUTTON_INSTRUMENT)
 		button_instrument_handler(event_type);
 	else if (event_source == E_SOURCE_BUTTON_PATTERN)
