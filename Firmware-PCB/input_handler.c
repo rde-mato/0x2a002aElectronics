@@ -28,27 +28,35 @@ void	encoders_handler(u8 event_type, u8 event_source)
 {
     u8 nbstr[5] = { 0 };
 
-	switch (event_type)
-	{
-		case E_ENCODER_TURNED_RIGHT:
-                        cpt++;
-                        lcditoa(cpt, nbstr, 4);
-                        LCD_putstr(7, 0, nbstr);
-                        LCD_print_changed_chars();
-//			led_toggle(led);
-//			led = (led + 1) & 0xF;
-//			led_toggle(led);
-			break;
-		case E_ENCODER_TURNED_LEFT:
-                        cpt--;
-                        lcditoa(cpt, nbstr, 4);
-                        LCD_putstr(7, 0, nbstr);
-                        LCD_print_changed_chars();
-//			led_toggle(led);
-//			led = (led - 1) & 0xF;
-//			led_toggle(led);
-			break;
-	}
+    switch (event_type)
+    {
+        case E_ENCODER_TURNED_RIGHT:
+            if (event_source == E_SOURCE_ENCODER_0)
+            {
+                cpt++;
+                lcditoa(cpt, nbstr, 4);
+                LCD_putstr(7, 0, nbstr);
+                LCD_print_changed_chars();
+                break;
+            }
+            else
+            {
+                midi_send_control_change(0x00, 0x10, 0xFF);
+            }
+        case E_ENCODER_TURNED_LEFT:
+            if (event_source == E_SOURCE_ENCODER_0)
+            {
+                cpt--;
+                lcditoa(cpt, nbstr, 4);
+                LCD_putstr(7, 0, nbstr);
+                LCD_print_changed_chars();
+            }
+            else
+            {
+                midi_send_control_change(0x00, 0x10, 0x00);
+            }
+            break;
+    }
 }
 void	main_encoder_handler(u8 event_type)
 {

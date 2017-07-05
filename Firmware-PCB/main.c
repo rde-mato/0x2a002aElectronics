@@ -20,7 +20,6 @@ u8	cur_pattern;
 u8	cur_note;
 u8	cur_octave;
 u8	cur_velocity;
-u8	bpm;
 
 u8	encoders_memory[16][8];
 u8	encoders_play[16][8];

@@ -20,10 +20,10 @@ void __ISR(_TIMER_2_VECTOR, IPL3AUTO) Timer2Handler(void)
 	led_toggle((qtime - 1) & 15);
         if (leds_status & (1 << qtime))
         {
-            UART1_send(0x80);
+            UART1_send(0x90);
             UART1_send(cpt);
             UART1_send(0x0F);
-            UART1_send(0x90);
+            UART1_send(0x80);
             UART1_send(cpt);
             UART1_send(0x0F);
         }
