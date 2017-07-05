@@ -2,16 +2,125 @@
 
 enum E_MIDI_STATUS
 {
-    /* OR'd with */
+    /* OR'd with channel number 0 indexed */
     /* Channel Voice Messages */    /* data bytes */
-    E_MS_NOTE_OFF = 0x80,           //      2
-    E_MS_NOTE_ON = 0x90,            //      2       (velocity 0 == note off)
-    E_MS_POLY_KEY_PRESSURE = 0xA0,  //      2
-    E_MS_CONTROL_CHANGE = 0xB0,     //      2
-    E_MS_PROGRAM_CHANGE = 0xC0,     //      1
-    E_MS_CHANNEL_PRESSURE = 0xD0,   //      1
-    E_MS_PITCH_BEND_CHANGE = 0xE0,  //      2
+    E_MS_NOTE_OFF = 0x80,           //      x2
+    E_MS_NOTE_ON = 0x90,            //      x2      (velocity 0 == note off)
+    E_MS_POLY_KEY_PRESSURE = 0xA0,  //      x2
+    E_MS_CONTROL_CHANGE = 0xB0,     //      x2
+    E_MS_PROGRAM_CHANGE = 0xC0,     //      x1
+    E_MS_CHANNEL_PRESSURE = 0xD0,   //      x1
+    E_MS_PITCH_BEND_CHANGE = 0xE0,  //      x2
+
+    /* OR'd with channel number 0 indexed */
+    /* Channel Mode Messages */     /* data bytes */
+    E_MS_CHANNEL_MODE = 0xB0,       // 0x78 | X  + 1    //XXX: point noir a clarifier.
+
+
+    /* System Messages */   /* OR'd with */ /* data bytes */   /* description */
+    E_MS_SYSTEM = 0xF0,     //  0b0000      ID(0 - 127) + ...  System Exclusive
+    //////////////////,     //  0b0sss      ?(1 - 7) + x(0 - 2)  System Common
+    //////////////////,     //  0b1ttt         ?(0 - 7)        System Real Time
 };
+
+u8  running_status;
+static u8  last_note;
+
+/*
+** Sets MIDI Note Off.
+** channel: 0-15 MIDI Channel Number
+** note: 0-127 MIDI Note
+** velocity: 0-127 MIDI Velocity
+*/
+void midi_note_off(u8 channel, u8 note, u8 velocity)
+{
+    u8  status;
+    
+    status = E_MS_NOTE_OFF | channel;
+    if (note == last_note && velocity == 0 &&
+            running_status == E_MS_NOTE_ON | channel)
+        ;
+    else if (status != running_status)
+    {
+        UART1_send(E_MS_NOTE_OFF | channel);
+        running_status = status;
+    }
+    UART1_send(note);
+    UART1_send(velocity);
+}
+
+/*
+** Sets MIDI Note On.
+** channel: 0-15 MIDI Channel Number
+** note: 0-127 MIDI Note
+** velocity: 0-127 MIDI Velocity. If 0 => Note Off.
+*/
+void midi_note_on(u8 channel, u8 note, u8 velocity)
+{
+    u8 status;
+
+    status = E_MS_NOTE_ON | channel;
+    if (status != running_status)
+    {
+        UART1_send(E_MS_NOTE_ON | channel);
+        running_status = status;
+    }
+    UART1_send(note);
+    last_note = note;
+    UART1_send(velocity);
+}
+
+/*
+** ???
+** channel: 0-15 MIDI Channel Number
+** note: 0-127 MIDI Note
+** value: 0-127 Pressure Value
+*/
+void midi_polyphonic_key_pressure(u8 channel, u8 note, u8 value)
+{
+
+}
+
+/*
+** Changes MIDI Channel Controller Value
+** channel: 0-15 MIDI Channel Number
+** control: 0-119 MIDI Control
+** velocity: 0-127 Control Value
+*/
+void midi_control_change(u8 channel, u8 control, u8 value)
+{
+
+}
+
+/*
+** Changes MIDI Channel Program
+** channel: 0-15 MIDI Channel Number
+** program: 0-127 MIDI Program Number
+*/
+void midi_program_change(u8 channel, u8 program)
+{
+
+}
+
+/*
+** Changes Channel Pressure (Aftertouch)
+** channel: 0-15 MIDI Channel Number
+** value: 0-127 MIDI Pressure Value
+*/
+void midi_channel_pressure(u8 channel, u8 value)
+{
+
+}
+
+/*
+** Changes Pitch Bend
+** channel: 0-15 MIDI Channel Number
+** value: 0-127 Pitch Bend Change Value
+*/
+void midi_pitch_bend_change(u8 channel, u8)
+{
+}
+
 
 // General MIDI 1 instruments only.
 // All channels except 10 ( reserved for drums )
