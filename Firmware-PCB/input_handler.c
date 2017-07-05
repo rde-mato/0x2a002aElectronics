@@ -23,7 +23,7 @@ u8	cur_instrument = 0;
 u8	cur_pattern = 0;
 u8	cur_note = 36;
 u8	cur_octave = 3;
-u8	cur_velocity = 0xF0;
+u8	cur_velocity = 0x80;
 
 void    push_note(u8 instrument, u8 qtime, u8 note, u8 velocity)
 {
@@ -100,6 +100,8 @@ void	keys_handler(u8 event_type, u8 event_source)
 	{
 		case E_KEY_PRESSED:
                     add_note(event_source);
+//                    led_toggle(event_source);
+
 			break;
 		case E_KEY_RELEASED:
 //			led_toggle(event_source);
@@ -164,6 +166,11 @@ void	main_encoder_handler(u8 event_type)
                         set_bpm((u16)g_bpm + 1);              //TODO: routine
                         template_bpm();
                     }
+                    else if (edit_pressed)
+                    {
+                        cur_velocity++;
+                        template_velocity();
+                    }
                     else
                     {
                         cur_note++;
@@ -175,6 +182,11 @@ void	main_encoder_handler(u8 event_type)
                     {
                         set_bpm((u16)g_bpm - 1);              //TODO: routine
                         template_bpm();
+                    }
+                    else if (edit_pressed)
+                    {
+                        cur_velocity--;
+                        template_velocity();
                     }
                     else
                     {
@@ -266,7 +278,7 @@ void	button_keyboard_handler(u8 event_type)
 		case E_KEY_PRESSED:
                     break;
 		case E_KEY_RELEASED:
-                    display_keyboard();
+//                    display_keyboard();
                     break;
 		case E_KEY_LONG_PRESSED:
                     break;

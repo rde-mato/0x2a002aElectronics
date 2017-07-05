@@ -14,7 +14,7 @@
 #define PATTERNS_PER_INSTRUMENT 16
 #define QTIME_PER_INSTRUMENT    16
 #define NOTES_PER_QTIME         4
-#define ATTRIBUTES_PER_NOTE     3
+#define ATTRIBUTES_PER_NOTE     2
 
 // CONSTANTS
 #define DEFAULT_BPM             142

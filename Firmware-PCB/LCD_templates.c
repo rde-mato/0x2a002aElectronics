@@ -103,6 +103,20 @@ void		template_note(void)
     T4CONbits.ON = 1;
 }
 
+void		template_velocity(void)
+{
+    u8 line2[LINE_MAX_LEN] = "      VELOCITY       ";
+    u8 line4[LINE_MAX_LEN] = { 0 };
+
+    LCD_clear();
+    LCD_putstr_negative(3, 0, line2);
+    snprintf(line4, LINE_MAX_LEN, "%d", cur_velocity);
+    LCD_putstr(4, 8, line4);
+    LCD_print_changed_chars();
+    TMR4 = 0;
+    T4CONbits.ON = 1;
+}
+
 //void		lcditoa(u32 value, u8 *res, u8 nbsize)
 //{
 //	u8		i = 0;

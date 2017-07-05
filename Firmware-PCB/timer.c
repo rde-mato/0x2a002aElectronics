@@ -5,42 +5,89 @@
 u8              qtime = 0;
 extern u32      leds_status;
 extern u8	cur_note;
-extern u8          current_mode;
-extern u32         leds_active;
+extern u8       current_mode;
+extern u32      leds_active;
+extern u8       pattern_mode;
+extern u8	active_patterns[INSTRUMENTS_COUNT][QTIME_PER_INSTRUMENT][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 
-extern u8 pattern_mode;
-
-void __ISR(_TIMER_2_VECTOR, IPL3AUTO) Timer2Handler(void)
+void    send_MIDI_for_qtime(u8 qt)
 {
-    static u32 last_display = 0;
+    u8  notes[32] = { 0 };
+    u8  velocities[32] = { 0 };
+    u8  notes_count = 0;
+    u8  instrument;
+    u8  note;
+    u8  n;
+    u8  i;
+
+    instrument = 0;
+    while (instrument < INSTRUMENTS_COUNT && notes_count < 32)
+    {
+        note = 0;
+        while (note < NOTES_PER_QTIME && notes_count < 32)
+        {
+            if ((n = active_patterns[instrument][qt][note][0]) != 0)
+            {
+                notes[notes_count] = n;
+                velocities[notes_count] = active_patterns[instrument][qt][note][1];
+                if (++notes_count >= 32)
+                    break;
+                else
+                    note++;
+            }
+            else
+                note = NOTES_PER_QTIME;
+        }
+        if (notes_count >= 32)
+            break;
+        ++instrument;
+    }
+
+    UART1_send(0x90);
+    i = 0;
+    while (i < notes_count)
+    {
+        UART1_send(notes[i]);
+        UART1_send(velocities[i++]);
+    }
+    UART1_send(0x90);
+    i = 0;
+    while (i < notes_count)
+    {
+        UART1_send(notes[i]);
+        UART1_send(velocities[i++]);
+    }
+}
+
+void    display_LEDs_for_qtime(u8 qt)
+{
+//    static u32 last_display = 0;
     u8 i;
     u32 new_display;
     u32 to_toggle;
 
+    new_display = leds_active ^ (1 << qt);
+    to_toggle = leds_status ^ new_display;
+    i = 0;
+    while (i < 16)
+    {
+        if (to_toggle & (1 << i))
+            led_toggle(i);
+        ++i;
+    }
+    leds_status = new_display;
+
+}
+
+void __ISR(_TIMER_2_VECTOR, IPL3AUTO) Timer2Handler(void)
+{
     TIMER2_INT_FLAG_CLR;
 
-
-    if (leds_status & (1 << qtime))
-    {
-        UART1_send(0x90);
-        UART1_send(cur_note);
-        UART1_send(0x0F);
-        UART1_send(0x80);
-        UART1_send(cur_note);
-        UART1_send(0x0F);
-    }
     if (current_mode == E_MODE_DEFAULT)
     {
-        new_display = leds_active ^ (1 << qtime);
-        to_toggle = last_display ^ new_display;
-        i = 0;
-        while (i < 16)
-        {
-            if (to_toggle & (1 << i))
-                led_toggle(i);
-            ++i;
-        }
-        last_display = new_display;
+        if (leds_active & (1 << qtime))
+          send_MIDI_for_qtime(qtime);
+        display_LEDs_for_qtime(qtime);
     }
     qtime = (qtime + 1) & 15;
 }
