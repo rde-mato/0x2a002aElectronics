@@ -163,7 +163,7 @@ void	main_encoder_handler(u8 event_type)
 		case E_ENCODER_TURNED_RIGHT:
                     if(tap_pressed)
                     {
-                        set_bpm((u16)g_bpm + 1);              //TODO: routine
+                        change_bpm(+1.);
                         template_bpm();
                     }
                     else if (edit_pressed)
@@ -180,7 +180,7 @@ void	main_encoder_handler(u8 event_type)
 		case E_ENCODER_TURNED_LEFT:
                     if(tap_pressed)
                     {
-                        set_bpm((u16)g_bpm - 1);              //TODO: routine
+                        change_bpm(-1.);
                         template_bpm();
                     }
                     else if (edit_pressed)
@@ -287,19 +287,19 @@ void	button_keyboard_handler(u8 event_type)
 
 void	button_tap_handler(u8 event_type)
 {
-	switch (event_type)
-	{
-		case E_KEY_PRESSED:
-                    tap_pressed = 1;
-                        bpm_new_tap();
-                        template_bpm();
-			break;
-		case E_KEY_RELEASED:
-                    tap_pressed = 0;
-			break;
-		case E_KEY_LONG_PRESSED:
-			break;
-	}
+    switch (event_type)
+    {
+        case E_KEY_PRESSED:
+            tap_pressed = 1;
+            bpm_new_tap();
+            template_bpm();
+            break;
+        case E_KEY_RELEASED:
+            tap_pressed = 0;
+            break;
+        case E_KEY_LONG_PRESSED:
+            break;
+    }
 }
 
 void	button_rec_handler(u8 event_type)

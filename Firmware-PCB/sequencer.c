@@ -2,13 +2,13 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
-u8      qtime = 0;
-u32     leds_status;
-u8      cur_note;
-u8      current_mode;
-u32     leds_active;
-u8      pattern_mode;
-
+u8              qtime = 0;
+extern u32      leds_status;
+extern u8	cur_note;
+extern u8       current_mode;
+extern u32      leds_active;
+extern u8       pattern_mode;
+extern u8	active_patterns[INSTRUMENTS_COUNT][QTIME_PER_INSTRUMENT][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 
 void    send_MIDI_for_qtime(u8 qt)
 {
@@ -46,12 +46,8 @@ void    send_MIDI_for_qtime(u8 qt)
     i = 0;
     while (i < notes_count)
     {
-        UART1_send(0x80);
-        UART1_send(notes[i]);
-        UART1_send(velocities[i]);
-        UART1_send(0x90);
-        UART1_send(notes[i]);
-        UART1_send(velocities[i++]);
+        midi_note_on(00, notes[i], velocities[i]);
+        midi_note_off(00, notes[i], velocities[i++]);
     }
     return ;
 }

@@ -18,6 +18,11 @@ typedef unsigned char           u8;
 typedef unsigned short          u16;
 typedef unsigned long           u32;
 
+extern u16                      __g_qbeat_pr;
+
+#define GET_BPM() ((((float)FREQUENCY / 256) * 15) / __g_qbeat_pr)
+//#define GET_BPM() ((((float)FREQUENCY / (float)__g_qbeat_pr) * 15) / 256)
+
 #define FREQUENCY		(8000000ul)
 #define ONE_MILLISECOND         (8000ul)
 #define BUTTON_POLL_DELAY_MS	50

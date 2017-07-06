@@ -35,14 +35,16 @@
         <itemPath>SDCARD_driver.c</itemPath>
         <itemPath>encoders_driver.c</itemPath>
       </logicalFolder>
+      <logicalFolder name="f2" displayName="logic" projectFiles="true">
+        <itemPath>bpm.c</itemPath>
+        <itemPath>input_handler.c</itemPath>
+        <itemPath>LCD_templates.c</itemPath>
+        <itemPath>MIDI.c</itemPath>
+        <itemPath>mode.c</itemPath>
+        <itemPath>sequencer.c</itemPath>
+      </logicalFolder>
       <itemPath>main.c</itemPath>
       <itemPath>init.c</itemPath>
-      <itemPath>input_handler.c</itemPath>
-      <itemPath>timer.c</itemPath>
-      <itemPath>LCD_templates.c</itemPath>
-      <itemPath>bpm.c</itemPath>
-      <itemPath>MIDI.c</itemPath>
-      <itemPath>mode.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

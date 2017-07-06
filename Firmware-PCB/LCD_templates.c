@@ -9,7 +9,6 @@ extern u8	cur_pattern;
 extern u8	cur_note;
 extern u8	cur_octave;
 extern u8	cur_velocity;
-extern float    g_bpm;
 
 void    negate_spaces(u8 *str)
 {
@@ -40,7 +39,7 @@ void		template_default(void)
     snprintf(buf, LINE_MAX_LEN, "%d         %d", cur_note, cur_velocity);
     LCD_putstr(4, 4, buf);
     LCD_putstr_negative(6, 3, line6);
-    snprintf(buf, LINE_MAX_LEN, "%.2f        %d", g_bpm, cur_octave);
+    snprintf(buf, LINE_MAX_LEN, "%.2f        %d", GET_BPM(), cur_octave);
     LCD_putstr(7, 2, buf);
     LCD_print_changed_chars();
 }
@@ -82,7 +81,7 @@ void		template_bpm(void)
 
     LCD_clear();
     LCD_putstr_negative(3, 0, line2);
-    snprintf(line4, LINE_MAX_LEN, "%.2f", g_bpm);
+    snprintf(line4, LINE_MAX_LEN, "%.2f", GET_BPM());
     LCD_putstr(4, 8, line4);
     LCD_print_changed_chars();
     TMR4 = 0;
