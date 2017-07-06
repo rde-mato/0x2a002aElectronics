@@ -12,6 +12,14 @@ u32     buttons_timers[32] = {0};
 
 extern u8	I2C1_read_buf[];
 
+void    int_init_HT16_press(void)
+{
+    HT16_INT_POLARITY = FALLING_EDGE;
+    HT16_INT_FLAG_CLR;
+    HT16_INT_PRIORITY = 2;
+    HT16_INT_ENABLE = INT_ENABLED;
+}
+
 void __ISR(_EXTERNAL_0_VECTOR, IPL2AUTO) HT16IntHandler(void) {
     HT16_read_keys_request = 1;
     TMR5 = 0;

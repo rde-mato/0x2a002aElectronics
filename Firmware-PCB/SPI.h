@@ -4,7 +4,6 @@
 #define SPI1_READY (SPI1_state == E_SPI1_DONE)
 
 #define SLAVE_COUNT             4
-#define LCD_BUF_MAX             2048  //128 * ( 8 + 2 ) // A bouger dans LCD.h
 
 #define SPI1_CS0_GPIO           TRISBbits.TRISB10
 #define SPI1_CS1_GPIO		TRISBbits.TRISB11

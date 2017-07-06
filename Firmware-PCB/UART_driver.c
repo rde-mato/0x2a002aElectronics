@@ -19,6 +19,21 @@ void UART1_init(void)
     U1MODEbits.ON = 1;
 }
 
+void    pps_init_UART(void)
+{
+    MIDI_ANALOG = DIGITAL_PIN;
+    PPS_MIDI;
+    MCP_ENC_A_ANALOG = DIGITAL_PIN;
+    COD_MCP_A_GPIO = GPIO_INPUT;
+}
+
+void    int_init_UART(void)
+{
+    UART1_TX_INT_FLAG_CLR;
+    UART1_TX_INT_PRIORITY = 5;
+    // ~UART1_TX_INT_ENABLE = INT_ENABLED;~ UART interrupt is enabled on sent messages
+}
+
 void __ISR(_UART_1_VECTOR, IPL5AUTO) UART1_TX_handler(void)
 {
     U1TXREG = UART1_buf[UART1_buf_index++];

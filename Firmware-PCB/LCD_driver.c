@@ -386,6 +386,8 @@ void    SPI1_LCD_state_machine(void)
 {
     u32 clear;
 
+    if (SPI_LCD_index > LCD_BUF_MAX - 2 )
+        SPI_LCD_index = 0;                  // juste pour le test
     switch (SPI1_state)
     {
         case E_SPI1_LCD_CONFIG:

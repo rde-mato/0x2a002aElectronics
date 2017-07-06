@@ -17,6 +17,13 @@ static u8               I2C1_read_buf_index = 0;
 static read_callback    I2C1_read_cb = NULL;
 static write_callback   I2C1_write_cb = NULL;
 
+void    int_init_I2C1(void)
+{
+    I2C1_INT_FLAG_CLR;
+    I2C1_INT_PRIORITY = 4;
+    I2C1_INT_ENABLE = 1;
+}
+
 void I2C1_init(void)
 {
     u8	i = 0;

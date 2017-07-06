@@ -6,6 +6,49 @@ extern u8   SPI1_state;
 
 u8          SPI_encoders_dirty = 0;
 
+void    pps_init_encoders(void)
+{
+    // Main encoder A
+    COD_A_ANALOG = DIGITAL_PIN;
+    COD_A_GPIO = GPIO_INPUT;
+    PPS_COD_A;
+
+    // Main encoder B
+    COD_B_ANALOG = DIGITAL_PIN;
+    COD_B_GPIO = GPIO_INPUT;
+    PPS_COD_B;
+
+    //MCP encoders
+    PPS_MCP_ENC_A;
+    MCP_ENC_B_ANALOG = DIGITAL_PIN;
+    COD_MCP_B_GPIO = GPIO_INPUT;
+    PPS_MCP_ENC_B;
+}
+
+void    int_init_main_encoder(void)
+{
+    COD_A_INT_POLARITY = RISING_EDGE;
+    COD_A_INT_FLAG_CLR;
+    COD_A_INT_PRIORITY = 5;
+    COD_A_INT_ENABLE = INT_ENABLED;
+//    COD_B_INT_POLARITY = RISING_EDGE;
+//    COD_B_INT_FLAG_CLR;
+//    COD_B_INT_PRIORITY = 2;
+//    COD_B_INT_ENABLE = INT_ENABLED;
+}
+
+void    int_init_MCP_encoders(void)
+{    //         COD_MCP_INT_POLARITY = FALLING_EDGE;
+    //         COD_MCP_INT_FLAG = 0; // Reset the flag
+    //         IPC1bits.INT1IP = 3; // Set priority
+    //         IEC0bits.INT1IE = 1; // Enable interrupt
+
+    INTCONbits.INT3EP = FALLING_EDGE;
+    IFS0bits.INT3IF = 0; // Reset the flag
+    IPC3bits.INT3IP = 2; // Set priority
+    IEC0bits.INT3IE = 1; // Enable interrupt
+}
+
 void MCP_ENCODERS_init_blocking(void)
 {
     u16 read;
@@ -36,19 +79,20 @@ void MCP_ENCODERS_init_blocking(void)
     SPI1CONbits.MODE16 = 0;
 }
 
-void __ISR(_EXTERNAL_2_VECTOR, IPL2AUTO) Main_encoder_A_Handler(void) {
-    COD_A_INT_FLAG_CLR;
-    if (PORTBbits.RB2 && !PORTBbits.RB3)
-        event_handler(E_ENCODER_TURNED_RIGHT, E_SOURCE_ENCODER_MAIN);
-
-}
-
-void __ISR(_EXTERNAL_4_VECTOR, IPL2AUTO) Main_encoder_B_Handler(void) {
-    COD_B_INT_FLAG_CLR;
-    if (!PORTBbits.RB2 && PORTBbits.RB3)
+void __ISR(_EXTERNAL_2_VECTOR, IPL5AUTO) Main_encoder_A_Handler(void) {
+    if (PORTBbits.RB3)
         event_handler(E_ENCODER_TURNED_LEFT, E_SOURCE_ENCODER_MAIN);
-
+    else
+        event_handler(E_ENCODER_TURNED_RIGHT, E_SOURCE_ENCODER_MAIN);
+    COD_A_INT_FLAG_CLR;
 }
+
+//void __ISR(_EXTERNAL_4_VECTOR, IPL2AUTO) Main_encoder_B_Handler(void) {
+//    COD_B_INT_FLAG_CLR;
+//    if (!PORTBbits.RB2 && PORTBbits.RB3)
+//        event_handler(E_ENCODER_TURNED_LEFT, E_SOURCE_ENCODER_MAIN);
+//
+//}
 
 void __ISR(_EXTERNAL_3_VECTOR, IPL2AUTO) MCP_encoders_port_B_Handler(void) {
      IFS0CLR = (1 << 18);

@@ -6,6 +6,9 @@
 #define LCD_RIGHT           0
 #define LCD_LEFT            1
 
+#define LCD_BUF_MAX         2048  //128 * ( 8 + 2 )
+
+
 // GPIO MCP =
 // GPA                                  GPB
 // 7  6  5  4    3    2  1   0           7   to 0

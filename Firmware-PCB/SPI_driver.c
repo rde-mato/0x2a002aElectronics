@@ -23,6 +23,33 @@ void SPI1_init(void)
     SPI1CONbits.ON = 1; //ON SPI1
 }
 
+void    pps_init_SPI1(void)
+{
+    SPI1_CS0_GPIO = GPIO_OUTPUT;
+    CS_MCP_LCD = CS_LINE_UP;
+    SPI1_CS1_GPIO = GPIO_OUTPUT;
+    CS_MCP_ENCODERS = CS_LINE_UP;
+    SPI1_CS2_GPIO = GPIO_OUTPUT;
+    CS_EEPROM = CS_LINE_UP;
+    SPI1_CS3_GPIO = GPIO_OUTPUT;
+    CS_SD = CS_LINE_UP;
+    SPI1_CS2_ANALOG = DIGITAL_PIN;
+    SPI1_CS3_ANALOG = DIGITAL_PIN;
+    SDI1_ANALOG = DIGITAL_PIN;
+    PPS_SDI1;
+    SDO1_ANALOG = DIGITAL_PIN;
+    PPS_SDO1;
+}
+
+void    int_init_SPI1(void)
+{
+    SPI1_INT_FLAGS_CLR_RX;
+    SPI1_INT_FLAGS_CLR_TX;
+    SPI1_INT_PRIORITIES = 4;
+    //PERSISTANT !!!!!!!!!!!!!!!!!!!!!!!!!!!
+    SPI1_RECEIVE_ENABLE = INT_DISABLED;
+    SPI1_TRANSFER_ENABLE = INT_DISABLED;
+}
 
 void __ISR(_SPI_1_VECTOR, IPL4AUTO) SPI1Handler(void)           // a voir apres comment faire plusieurs state machines en fonction du slave
 {
@@ -43,21 +70,6 @@ void __ISR(_SPI_1_VECTOR, IPL4AUTO) SPI1Handler(void)           // a voir apres 
         case E_SPI1_CS_EEPROM:
             SPI1_eeprom_state_machine();
             break;
-//        case E_SPI1_FLASH_ERASE_CONFIG:
-//            CS_FLASH = 0x0;
-//            SPI1_state = xxx;
-//            break;
-//
-//        case E_SPI1_FLASH_WRITE_CONFIG:
-//
-//
-//        case E_SPI1_FLASH_READ_CONFIG:
-//
-//
-//        case E_SPI1_FLASH_WRITE:
-//        case E_SPI1_FLASH_READ:
-//        case E_SPI1_FLASH_ERASE:
-//        case E_SPI1_FLASH_BUSY:
     }
 }
 
