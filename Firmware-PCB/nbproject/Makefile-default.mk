@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=config.c SPI_driver.c UART_driver.c LCD_driver.c I2C_driver.c HT16_leds_driver.c HT16_keys_driver.c EEPROM_driver.c SDCARD_driver.c encoders_driver.c bpm.c input_handler.c LCD_templates.c MIDI.c mode.c sequencer.c main.c init.c output_handler.c
+SOURCEFILES_QUOTED_IF_SPACED=config.c SPI_driver.c UART_driver.c LCD_driver.c I2C_driver.c HT16_leds_driver.c HT16_keys_driver.c EEPROM_driver.c SDCARD_driver.c encoders_driver.c bpm.c input_handler.c LCD_templates.c MIDI.c sequencer.c main.c init.c output_handler.c notes.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/config.o ${OBJECTDIR}/SPI_driver.o ${OBJECTDIR}/UART_driver.o ${OBJECTDIR}/LCD_driver.o ${OBJECTDIR}/I2C_driver.o ${OBJECTDIR}/HT16_leds_driver.o ${OBJECTDIR}/HT16_keys_driver.o ${OBJECTDIR}/EEPROM_driver.o ${OBJECTDIR}/SDCARD_driver.o ${OBJECTDIR}/encoders_driver.o ${OBJECTDIR}/bpm.o ${OBJECTDIR}/input_handler.o ${OBJECTDIR}/LCD_templates.o ${OBJECTDIR}/MIDI.o ${OBJECTDIR}/mode.o ${OBJECTDIR}/sequencer.o ${OBJECTDIR}/main.o ${OBJECTDIR}/init.o ${OBJECTDIR}/output_handler.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/config.o.d ${OBJECTDIR}/SPI_driver.o.d ${OBJECTDIR}/UART_driver.o.d ${OBJECTDIR}/LCD_driver.o.d ${OBJECTDIR}/I2C_driver.o.d ${OBJECTDIR}/HT16_leds_driver.o.d ${OBJECTDIR}/HT16_keys_driver.o.d ${OBJECTDIR}/EEPROM_driver.o.d ${OBJECTDIR}/SDCARD_driver.o.d ${OBJECTDIR}/encoders_driver.o.d ${OBJECTDIR}/bpm.o.d ${OBJECTDIR}/input_handler.o.d ${OBJECTDIR}/LCD_templates.o.d ${OBJECTDIR}/MIDI.o.d ${OBJECTDIR}/mode.o.d ${OBJECTDIR}/sequencer.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/init.o.d ${OBJECTDIR}/output_handler.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/config.o ${OBJECTDIR}/SPI_driver.o ${OBJECTDIR}/UART_driver.o ${OBJECTDIR}/LCD_driver.o ${OBJECTDIR}/I2C_driver.o ${OBJECTDIR}/HT16_leds_driver.o ${OBJECTDIR}/HT16_keys_driver.o ${OBJECTDIR}/EEPROM_driver.o ${OBJECTDIR}/SDCARD_driver.o ${OBJECTDIR}/encoders_driver.o ${OBJECTDIR}/bpm.o ${OBJECTDIR}/input_handler.o ${OBJECTDIR}/LCD_templates.o ${OBJECTDIR}/MIDI.o ${OBJECTDIR}/sequencer.o ${OBJECTDIR}/main.o ${OBJECTDIR}/init.o ${OBJECTDIR}/output_handler.o ${OBJECTDIR}/notes.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/config.o.d ${OBJECTDIR}/SPI_driver.o.d ${OBJECTDIR}/UART_driver.o.d ${OBJECTDIR}/LCD_driver.o.d ${OBJECTDIR}/I2C_driver.o.d ${OBJECTDIR}/HT16_leds_driver.o.d ${OBJECTDIR}/HT16_keys_driver.o.d ${OBJECTDIR}/EEPROM_driver.o.d ${OBJECTDIR}/SDCARD_driver.o.d ${OBJECTDIR}/encoders_driver.o.d ${OBJECTDIR}/bpm.o.d ${OBJECTDIR}/input_handler.o.d ${OBJECTDIR}/LCD_templates.o.d ${OBJECTDIR}/MIDI.o.d ${OBJECTDIR}/sequencer.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/init.o.d ${OBJECTDIR}/output_handler.o.d ${OBJECTDIR}/notes.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/config.o ${OBJECTDIR}/SPI_driver.o ${OBJECTDIR}/UART_driver.o ${OBJECTDIR}/LCD_driver.o ${OBJECTDIR}/I2C_driver.o ${OBJECTDIR}/HT16_leds_driver.o ${OBJECTDIR}/HT16_keys_driver.o ${OBJECTDIR}/EEPROM_driver.o ${OBJECTDIR}/SDCARD_driver.o ${OBJECTDIR}/encoders_driver.o ${OBJECTDIR}/bpm.o ${OBJECTDIR}/input_handler.o ${OBJECTDIR}/LCD_templates.o ${OBJECTDIR}/MIDI.o ${OBJECTDIR}/mode.o ${OBJECTDIR}/sequencer.o ${OBJECTDIR}/main.o ${OBJECTDIR}/init.o ${OBJECTDIR}/output_handler.o
+OBJECTFILES=${OBJECTDIR}/config.o ${OBJECTDIR}/SPI_driver.o ${OBJECTDIR}/UART_driver.o ${OBJECTDIR}/LCD_driver.o ${OBJECTDIR}/I2C_driver.o ${OBJECTDIR}/HT16_leds_driver.o ${OBJECTDIR}/HT16_keys_driver.o ${OBJECTDIR}/EEPROM_driver.o ${OBJECTDIR}/SDCARD_driver.o ${OBJECTDIR}/encoders_driver.o ${OBJECTDIR}/bpm.o ${OBJECTDIR}/input_handler.o ${OBJECTDIR}/LCD_templates.o ${OBJECTDIR}/MIDI.o ${OBJECTDIR}/sequencer.o ${OBJECTDIR}/main.o ${OBJECTDIR}/init.o ${OBJECTDIR}/output_handler.o ${OBJECTDIR}/notes.o
 
 # Source Files
-SOURCEFILES=config.c SPI_driver.c UART_driver.c LCD_driver.c I2C_driver.c HT16_leds_driver.c HT16_keys_driver.c EEPROM_driver.c SDCARD_driver.c encoders_driver.c bpm.c input_handler.c LCD_templates.c MIDI.c mode.c sequencer.c main.c init.c output_handler.c
+SOURCEFILES=config.c SPI_driver.c UART_driver.c LCD_driver.c I2C_driver.c HT16_leds_driver.c HT16_keys_driver.c EEPROM_driver.c SDCARD_driver.c encoders_driver.c bpm.c input_handler.c LCD_templates.c MIDI.c sequencer.c main.c init.c output_handler.c notes.c
 
 
 CFLAGS=
@@ -178,12 +178,6 @@ ${OBJECTDIR}/MIDI.o: MIDI.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/MIDI.o 
 	@${FIXDEPS} "${OBJECTDIR}/MIDI.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/MIDI.o.d" -o ${OBJECTDIR}/MIDI.o MIDI.c   
 	
-${OBJECTDIR}/mode.o: mode.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/mode.o.d 
-	@${RM} ${OBJECTDIR}/mode.o 
-	@${FIXDEPS} "${OBJECTDIR}/mode.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/mode.o.d" -o ${OBJECTDIR}/mode.o mode.c   
-	
 ${OBJECTDIR}/sequencer.o: sequencer.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/sequencer.o.d 
@@ -207,6 +201,12 @@ ${OBJECTDIR}/output_handler.o: output_handler.c  nbproject/Makefile-${CND_CONF}.
 	@${RM} ${OBJECTDIR}/output_handler.o.d 
 	@${RM} ${OBJECTDIR}/output_handler.o 
 	@${FIXDEPS} "${OBJECTDIR}/output_handler.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/output_handler.o.d" -o ${OBJECTDIR}/output_handler.o output_handler.c   
+	
+${OBJECTDIR}/notes.o: notes.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/notes.o.d 
+	@${RM} ${OBJECTDIR}/notes.o 
+	@${FIXDEPS} "${OBJECTDIR}/notes.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/notes.o.d" -o ${OBJECTDIR}/notes.o notes.c   
 	
 else
 ${OBJECTDIR}/config.o: config.c  nbproject/Makefile-${CND_CONF}.mk
@@ -293,12 +293,6 @@ ${OBJECTDIR}/MIDI.o: MIDI.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/MIDI.o 
 	@${FIXDEPS} "${OBJECTDIR}/MIDI.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/MIDI.o.d" -o ${OBJECTDIR}/MIDI.o MIDI.c   
 	
-${OBJECTDIR}/mode.o: mode.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/mode.o.d 
-	@${RM} ${OBJECTDIR}/mode.o 
-	@${FIXDEPS} "${OBJECTDIR}/mode.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/mode.o.d" -o ${OBJECTDIR}/mode.o mode.c   
-	
 ${OBJECTDIR}/sequencer.o: sequencer.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/sequencer.o.d 
@@ -322,6 +316,12 @@ ${OBJECTDIR}/output_handler.o: output_handler.c  nbproject/Makefile-${CND_CONF}.
 	@${RM} ${OBJECTDIR}/output_handler.o.d 
 	@${RM} ${OBJECTDIR}/output_handler.o 
 	@${FIXDEPS} "${OBJECTDIR}/output_handler.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/output_handler.o.d" -o ${OBJECTDIR}/output_handler.o output_handler.c   
+	
+${OBJECTDIR}/notes.o: notes.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/notes.o.d 
+	@${RM} ${OBJECTDIR}/notes.o 
+	@${FIXDEPS} "${OBJECTDIR}/notes.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/notes.o.d" -o ${OBJECTDIR}/notes.o notes.c   
 	
 endif
 

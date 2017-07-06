@@ -64,11 +64,11 @@ void    timer_2_init(void)
 void    int_init_timer2(void)
 {
     TIMER2_INT_FLAG_CLR;
-    TIMER2_INT_PRIORITY = 3;
+    TIMER2_INT_PRIORITY = 7;
     TIMER2_INT_ENABLE = INT_ENABLED;
 }
 
-void __ISR(_TIMER_2_VECTOR, IPL3AUTO) Timer2QTime(void)
+void __ISR(_TIMER_2_VECTOR, IPL7AUTO) Timer2QTime(void)
 {
     TIMER2_INT_FLAG_CLR;
 

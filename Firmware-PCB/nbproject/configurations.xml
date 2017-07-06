@@ -40,9 +40,9 @@
         <itemPath>input_handler.c</itemPath>
         <itemPath>LCD_templates.c</itemPath>
         <itemPath>MIDI.c</itemPath>
-        <itemPath>mode.c</itemPath>
         <itemPath>sequencer.c</itemPath>
         <itemPath>output_handler.c</itemPath>
+        <itemPath>notes.c</itemPath>
       </logicalFolder>
       <itemPath>main.c</itemPath>
       <itemPath>init.c</itemPath>
