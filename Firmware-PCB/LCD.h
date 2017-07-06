@@ -22,5 +22,14 @@
 #define LCD_PORTS_ADDRESS   0x4012
 #define LINE_MAX_LEN        22
 
+typedef void                    (*lcd_template)(void);
+
+void		template_note(void);
+void		template_default(void);
+void		template_encoder(void);
+void		template_main_menu_start(void);
+void		template_bpm(void);
+void		template_velocity(void);
+
 #endif	/* LCD_H */
 

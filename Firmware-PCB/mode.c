@@ -12,7 +12,7 @@ void set_mode_default(void)
     led_clr(E_SOURCE_BUTTON_INSTRUMENT);
     led_clr(E_SOURCE_BUTTON_PATTERN);
     led_clr(E_SOURCE_BUTTON_KEYBOARD);
-    template_default();
+        request_template(&template_default);
 }
 
 void display_instrument(void)

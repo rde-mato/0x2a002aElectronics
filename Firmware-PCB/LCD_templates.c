@@ -9,6 +9,21 @@ extern u8	cur_pattern;
 extern u8	cur_note;
 extern u8	cur_octave;
 extern u8	cur_velocity;
+extern u8       LCD_dirty;
+extern u8       cur_encoder;
+extern u8       encoders_values[];
+lcd_template  requested_template = &template_default;
+
+void    request_template(lcd_template template)
+{
+    LCD_dirty = 1;
+    requested_template = template;
+    if (template != &template_default)
+    {
+        TMR4 = 0;
+        T4CONbits.ON = 1;
+    }
+}
 
 void    negate_spaces(u8 *str)
 {
@@ -46,26 +61,25 @@ void		template_default(void)
 
 void __ISR(_TIMER_4_VECTOR, IPL1AUTO) Timer4Handler(void)
 {
+        request_template(&template_default);
 	IFS0bits.T4IF = 0;
 	T4CONbits.ON = 0;
 	template_default();
 }
 
-void		template_encoder(u8 encoder, u8 value)
+void		template_encoder(void)
 {
     u8 buf[LINE_MAX_LEN] = {0};
 
     LCD_clear();
-    snprintf(buf, LINE_MAX_LEN, "ENCODER %d VALUE", encoder + 1);
+    snprintf(buf, LINE_MAX_LEN, "ENCODER %d VALUE", cur_encoder + 1);
     LCD_putstr_negative(0, 0, buf);
-    snprintf(buf, LINE_MAX_LEN, "%d", value);
+    snprintf(buf, LINE_MAX_LEN, "%d", encoders_values[cur_encoder]);
     LCD_putstr(3, 3, buf);
     LCD_print_changed_chars();
-    TMR4 = 0;
-    T4CONbits.ON = 1;
 }
 
-void		template_main_menu(u8 position)
+void		template_main_menu_start(void)
 {
     LCD_clear();
     LCD_putstr(0, 0, "   TEST");
@@ -98,8 +112,6 @@ void		template_note(void)
     snprintf(line4, LINE_MAX_LEN, "%d", cur_note);
     LCD_putstr(4, 8, line4);
     LCD_print_changed_chars();
-    TMR4 = 0;
-    T4CONbits.ON = 1;
 }
 
 void		template_velocity(void)
@@ -115,39 +127,3 @@ void		template_velocity(void)
     TMR4 = 0;
     T4CONbits.ON = 1;
 }
-
-//void		lcditoa(u32 value, u8 *res, u8 nbsize)
-//{
-//	u8		i = 0;
-//
-//	while (i < nbsize)
-//	{
-//		if (!(value % 10))
-//			res[nbsize - i - 1] = '0';
-//		else
-//			res[nbsize - i - 1] = value % 10 + '0';
-//		value /= 10;
-//		i++;
-//	}
-//	res[nbsize] = '\0';
-//}
-
-//void		lcd_bzero(void *s, u32 n)
-//{
-//	u8		*ss;
-//
-//	ss = s;
-//	while (n--)
-//		*ss++ = 0;
-//}
-
-//void			lcd_strncpy(u8 *dest, const u8 *src, u32 n)
-//{
-//	u8		*d;
-//	u8		*s;
-//
-//	d = dest;
-//	s = (u8*)src;
-//	while (n-- && *s)
-//		*d++ = *s++;
-//}

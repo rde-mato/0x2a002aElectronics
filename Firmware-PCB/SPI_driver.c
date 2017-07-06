@@ -5,7 +5,10 @@
 extern u8   SPI_eeprom_write_request;
 extern u8   SPI_eeprom_read_request;
 extern u8   SPI_encoders_dirty;
-extern u32  SPI_LCD_count;
+extern u8   LCD_dirty;
+extern u8   LCD_writing;
+extern u8   SPI_LCD_clear;
+extern lcd_template  requested_template;
 
 u8          SPI1_state = E_SPI1_DONE;
 u8          SPI1_slave = E_SPI1_CS_MCP_ENC;
@@ -85,8 +88,9 @@ void    SPI1_manager(void)
         SPI1_RECEIVE_FLAG = 1;
         SPI1_RECEIVE_ENABLE = INT_ENABLED;
     }
-    else if (SPI_LCD_count)
+    else if (LCD_dirty)
     {
+        (*requested_template)();
         SPI1_slave = E_SPI1_CS_MCP_LCD;
         SPI1_state = E_SPI1_LCD_CONFIG;
         SPI1_RECEIVE_FLAG = 1;

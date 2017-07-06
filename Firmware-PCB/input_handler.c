@@ -8,6 +8,7 @@ extern u32  leds_status;
 extern u8   qtime;
 extern u8   HT16_write_leds_request;
 extern u8   current_mode;
+extern  u8  current_template;
 
 u32         leds_active = 0;
 u8          edit_pressed = 0;
@@ -23,6 +24,7 @@ u8          cur_pattern = 0;
 u8          cur_note = 36;
 u8          cur_octave = 3;
 u8          cur_velocity = 0x40;
+u8          cur_encoder;
 
 void    push_note(u8 instrument, u8 qtime, u8 note, u8 velocity)
 {
@@ -115,34 +117,16 @@ void	keys_handler(u8 event_type, u8 event_source)
 
 void	encoders_handler(u8 event_type, u8 event_source)
 {
-    u8 encoder_number;
-
-    encoder_number = event_source - E_SOURCE_ENCODER_0;
+    cur_encoder = event_source - E_SOURCE_ENCODER_0;
     switch (event_type)
     {
         case E_ENCODER_TURNED_RIGHT:
-            template_encoder(encoder_number, encoders_values[encoder_number]++);
-//            if (event_source == E_SOURCE_ENCODER_0)
-//            {
-//                template_encoder(encoder_number, encoders_values[encoder_number]++);
-//                break;
-//            }
-//            else
-//            {
-//                midi_send_control_change(0x00, 0x10, 0xFF);
-//            }
+            encoders_values[cur_encoder]++;
+            request_template(&template_encoder);
             break;
         case E_ENCODER_TURNED_LEFT:
-            template_encoder(encoder_number, encoders_values[encoder_number]--);
-//            if (event_source == E_SOURCE_ENCODER_0)
-//            {
-//                cpt--;
-//                template_encoder(event_source, cpt);
-//            }
-//            else
-//            {
-//                midi_send_control_change(0x00, 0x10, 0x00);
-//            }
+            encoders_values[cur_encoder]--;
+            request_template(&template_encoder);
             break;
     }
 }
@@ -154,7 +138,7 @@ void	main_encoder_handler(u8 event_type)
 		{
 		case E_KEY_PRESSED:
 			current_mode == E_MODE_MENU;
-                        template_main_menu(1);
+                        request_template(&template_main_menu_start);
                     break;
 		case E_KEY_RELEASED:
                     break;
@@ -164,34 +148,34 @@ void	main_encoder_handler(u8 event_type)
                     if(tap_pressed)
                     {
                         change_bpm(+1.);
-                        template_bpm();
+                        request_template(&template_bpm);
                     }
                     else if (edit_pressed)
                     {
                         cur_velocity++;
-                        template_velocity();
+                        request_template(&template_velocity);
                     }
                     else
                     {
                         cur_note++;
-                        template_note();
+                        request_template(&template_note);
                     }
                     break;
 		case E_ENCODER_TURNED_LEFT:
                     if(tap_pressed)
                     {
                         change_bpm(-1.);
-                        template_bpm();
+                        request_template(&template_bpm);
                     }
                     else if (edit_pressed)
                     {
                         cur_velocity--;
-                        template_velocity();
+                        request_template(&template_velocity);
                     }
                     else
                     {
                         cur_note--;
-                        template_note();
+                        request_template(&template_note);
                     }
                     break;
 		}
@@ -292,7 +276,7 @@ void	button_tap_handler(u8 event_type)
         case E_KEY_PRESSED:
             tap_pressed = 1;
             bpm_new_tap();
-            template_bpm();
+            request_template(&template_bpm);
             break;
         case E_KEY_RELEASED:
             tap_pressed = 0;

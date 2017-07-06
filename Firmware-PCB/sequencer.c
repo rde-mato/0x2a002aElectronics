@@ -47,7 +47,8 @@ void    send_MIDI_for_qtime(u8 qt)
     while (i < notes_count)
     {
         midi_note_on(00, notes[i], velocities[i]);
-        midi_note_off(00, notes[i], velocities[i++]);
+        midi_note_off(00, notes[i], velocities[i]);
+        ++i;
     }
     return ;
 }

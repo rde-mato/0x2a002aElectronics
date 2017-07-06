@@ -5,15 +5,16 @@
 extern u8 SPI1_state;
 
 u32  SPI_LCD_count = 0;
+u8   LCD_dirty = 0;
 
-static u16  SPI_buf_LCD[LCD_BUF_MAX] = { 0 };
-static u32  SPI_LCD_index = 0;
-static u8	lcd_chars[8][21] = { ' ' };
-static u8      lcd_changed_chars[8][21] = { 0 };
-static u8      lcd_line_ptr = 0;
-static u8      lcd_col_ptr = 1;
-static u8      lcd_pos_ptr = 0;
-static u8      lcd_current_side = LCD_LEFT;
+u16  SPI_buf_LCD[LCD_BUF_MAX] = { 0 };
+u32  SPI_LCD_index = 0;
+ u8	lcd_chars[8][21] = { ' ' };
+ u8      lcd_changed_chars[8][21] = { 0 };
+u8      lcd_line_ptr = 0;
+u8      lcd_col_ptr = 1;
+u8      lcd_pos_ptr = 0;
+u8      lcd_current_side = LCD_LEFT;
 
 const u8	charset[][6] =
 {
@@ -343,7 +344,6 @@ void    LCD_clear(void)
 {
     u8  line = 0;
     u8  pos = 0;
-
     while (line < 8)
     {
         pos = 0;
@@ -386,8 +386,8 @@ void    SPI1_LCD_state_machine(void)
 {
     u32 clear;
 
-    if (SPI_LCD_index > LCD_BUF_MAX - 2 )
-        SPI_LCD_index = 0;                  // juste pour le test
+//    if (SPI_LCD_index > LCD_BUF_MAX - 2 )
+//        SPI_LCD_index = 0;                  // juste pour le test
     switch (SPI1_state)
     {
         case E_SPI1_LCD_CONFIG:
@@ -428,6 +428,7 @@ void    SPI1_LCD_state_machine(void)
             CS_MCP_LCD = 0x1;
             SPI_LCD_index = 0;
             SPI_LCD_count = 0;
+            LCD_dirty = 0;
             break;
         }
 }
