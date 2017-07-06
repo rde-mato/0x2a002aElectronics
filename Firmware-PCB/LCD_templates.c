@@ -14,6 +14,31 @@ extern u8       cur_encoder;
 extern u8       encoders_values[];
 lcd_template  requested_template = &template_default;
 
+
+void    int_init_timer4(void)
+{
+    TIMER4_INT_FLAG_CLR;
+    TIMER4_INT_PRIORITY = 1;
+    TIMER4_INT_ENABLE = INT_ENABLED;
+}
+
+void    timer_4_init(void)
+{
+    TIMER4_STOP_AND_RESET;
+    TIMER4_VALUE = 0;
+    TIMER4_PRESCALE = TIMER_PRESCALE_256;
+    TIMER4_PERIOD = 60000;
+//	TIMER4_PERIOD = ONE_MILLISECOND / 64 * SCREEN_DURATION_MS - 1;
+}
+
+void __ISR(_TIMER_4_VECTOR, IPL1AUTO) Timer4Handler(void)
+{
+        request_template(&template_default);
+	IFS0bits.T4IF = 0;
+	T4CONbits.ON = 0;
+	template_default();
+}
+
 void    request_template(lcd_template template)
 {
     LCD_dirty = 1;
@@ -57,14 +82,6 @@ void		template_default(void)
     snprintf(buf, LINE_MAX_LEN, "%.2f        %d", GET_BPM(), cur_octave);
     LCD_putstr(7, 2, buf);
     LCD_print_changed_chars();
-}
-
-void __ISR(_TIMER_4_VECTOR, IPL1AUTO) Timer4Handler(void)
-{
-        request_template(&template_default);
-	IFS0bits.T4IF = 0;
-	T4CONbits.ON = 0;
-	template_default();
 }
 
 void		template_encoder(void)

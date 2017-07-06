@@ -157,7 +157,7 @@ void	main_encoder_handler(u8 event_type)
                     }
                     else
                     {
-                        cur_note++;
+                        cur_note = (cur_note + 1) & 0x7F;
                         request_template(&template_note);
                     }
                     break;
@@ -174,7 +174,7 @@ void	main_encoder_handler(u8 event_type)
                     }
                     else
                     {
-                        cur_note--;
+                        cur_note = (cur_note - 1) & 0x7F;
                         request_template(&template_note);
                     }
                     break;

@@ -73,6 +73,20 @@ void    display_LEDs_for_qtime(u8 qt)
 
 }
 
+void    timer_2_init(void)
+{
+    TIMER2_STOP_AND_RESET;
+    TIMER2_VALUE = 0;
+    TIMER2_PRESCALE = TIMER_PRESCALE_256;
+}
+
+void    int_init_timer2(void)
+{
+    TIMER2_INT_FLAG_CLR;
+    TIMER2_INT_PRIORITY = 3;
+    TIMER2_INT_ENABLE = INT_ENABLED;
+}
+
 void __ISR(_TIMER_2_VECTOR, IPL3AUTO) Timer2QTime(void)
 {
     TIMER2_INT_FLAG_CLR;

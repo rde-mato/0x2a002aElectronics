@@ -9,12 +9,29 @@ u16 __g_qbeat_pr = 0;
 u16 tap_button_old = 0;
 u16 tap_button_active = 0;
 
+
+
 void __ISR(_TIMER_3_VECTOR, IPL1AUTO) Timer3TapButton(void)
 {
     T3CONbits.ON = 0;
     TIMER3_INT_FLAG_CLR;
     tap_button_old = 0;
     tap_button_active = 0;
+}
+
+void    int_init_timer3(void)
+{
+    TIMER3_INT_FLAG_CLR;
+    TIMER3_INT_PRIORITY = 1;
+    TIMER3_INT_ENABLE = INT_ENABLED;
+}
+
+void    timer_3_init(void)
+{
+    TIMER3_STOP_AND_RESET;
+    TIMER3_VALUE = 0;
+    TIMER3_PRESCALE = TIMER_PRESCALE_256;
+    TIMER3_PERIOD = 0xFFFF;
 }
 
 void set_qbeat_pr(u16 pr)

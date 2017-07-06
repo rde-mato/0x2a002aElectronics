@@ -28,6 +28,21 @@ void __ISR(_EXTERNAL_0_VECTOR, IPL2AUTO) HT16IntHandler(void) {
     HT16_INT_FLAG_CLR;
 }
 
+void    int_init_timer5(void)
+{
+    TIMER5_INT_FLAG_CLR;
+    TIMER5_INT_PRIORITY = 3;
+    TIMER5_INT_ENABLE = INT_ENABLED;
+}
+
+void    timer_5_init(void)
+{
+    TIMER5_STOP_AND_RESET;
+    TIMER5_VALUE = 0;
+    TIMER5_PRESCALE = TIMER_PRESCALE_4;
+    TIMER5_PERIOD = 64 * FREQUENCY / (8000 / BUTTON_POLL_DELAY_MS) - 1;
+}
+
 void __ISR(_TIMER_5_VECTOR, IPL3AUTO) Timer5Handler(void)
 {
     IFS0bits.T5IF = 0;
