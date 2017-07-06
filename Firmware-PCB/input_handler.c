@@ -8,7 +8,8 @@ extern u32  leds_status;
 extern u8   qtime;
 extern u8   HT16_write_leds_request;
 extern u8   current_mode;
-extern  u8  current_template;
+extern u8  current_template;
+extern u8  tap_index;
 
 u32         leds_active = 0;
 u8          edit_pressed = 0;
@@ -147,6 +148,7 @@ void	main_encoder_handler(u8 event_type)
 		case E_ENCODER_TURNED_RIGHT:
                     if(tap_pressed)
                     {
+                        tap_index = 0;
                         change_bpm(+1.);
                         request_template(&template_bpm);
                     }
@@ -164,6 +166,7 @@ void	main_encoder_handler(u8 event_type)
 		case E_ENCODER_TURNED_LEFT:
                     if(tap_pressed)
                     {
+                        tap_index = 0;
                         change_bpm(-1.);
                         request_template(&template_bpm);
                     }
@@ -280,6 +283,7 @@ void	button_tap_handler(u8 event_type)
             break;
         case E_KEY_RELEASED:
             tap_pressed = 0;
+            bpm_new_tap_release();
             break;
         case E_KEY_LONG_PRESSED:
             break;

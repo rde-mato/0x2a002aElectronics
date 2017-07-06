@@ -8,6 +8,8 @@
 u16 __g_qbeat_pr = 0;
 u16 tap_button_old = 0;
 u16 tap_button_active = 0;
+u32 tap_timers[3] = { 0 };
+u8  tap_index = 0;
 
 
 
@@ -15,8 +17,7 @@ void __ISR(_TIMER_3_VECTOR, IPL1AUTO) Timer3TapButton(void)
 {
     T3CONbits.ON = 0;
     TIMER3_INT_FLAG_CLR;
-    tap_button_old = 0;
-    tap_button_active = 0;
+    tap_index = 0;
 }
 
 void    int_init_timer3(void)
@@ -67,20 +68,40 @@ void change_bpm(float incr)
 
 void    bpm_new_tap(void)
 {
+    T3CONbits.ON = 1;
+    tap_timers[tap_index++] = TIMER3_VALUE;
+    TIMER3_VALUE = 0;
 
-    u16 tap_button_new = TIMER3_VALUE;
-    if (tap_button_active)
+
+//    u16 tap_button_new = TIMER3_VALUE;
+//    if (tap_button_active)
+//    {
+//        if (tap_button_old)
+//        {
+//            set_qbeat_pr(((u32)tap_button_old + tap_button_new) / 8);
+//        }
+//        tap_button_old = tap_button_new;
+//        TIMER3_VALUE = 0;
+//    }
+//    else
+//    {
+//        tap_button_active = 1;
+//        T3CONbits.ON = 1;
+//    }
+}
+
+void    bpm_new_tap_release(void)
+{
+    u32 new_bpm_x100 = 0;
+
+    if (tap_index == 3)
     {
-        if (tap_button_old)
-        {
-            set_qbeat_pr(((u32)tap_button_old + tap_button_new) / 8);
-        }
-        tap_button_old = tap_button_new;
-        TIMER3_VALUE = 0;
-    }
-    else
-    {
-        tap_button_active = 1;
-        T3CONbits.ON = 1;
+        new_bpm_x100 = (tap_timers[0] + tap_timers[1] + tap_timers[2]) / (3 * 4); // pourquoi 4 ??
+//        new_bpm_x100 *= 100;
+        tap_timers[0] = tap_timers[1];
+        tap_timers[1] = tap_timers[2];
+        tap_index = 2;
+        set_qbeat_pr(new_bpm_x100);
+        request_template(&template_bpm);
     }
 }
