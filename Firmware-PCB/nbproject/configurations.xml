@@ -4,8 +4,15 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <logicalFolder name="f1" displayName="0x2a002a" projectFiles="true">
+        <itemPath>UART.h</itemPath>
+        <itemPath>SPI.h</itemPath>
+        <itemPath>EEPROM.h</itemPath>
+        <itemPath>I2C.h</itemPath>
+        <itemPath>SDCARD.h</itemPath>
+        <itemPath>LCD.h</itemPath>
+      </logicalFolder>
       <itemPath>0x2a002a.h</itemPath>
-      <itemPath>charset.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -14,23 +21,24 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <logicalFolder name="f1" displayName="drivers" projectFiles="true">
+        <itemPath>config.c</itemPath>
+        <itemPath>SPI_driver.c</itemPath>
+        <itemPath>UART_driver.c</itemPath>
+        <itemPath>LCD_driver.c</itemPath>
+        <itemPath>I2C_driver.c</itemPath>
+        <itemPath>HT16_leds_driver.c</itemPath>
+        <itemPath>HT16_keys_driver.c</itemPath>
+        <itemPath>EEPROM_driver.c</itemPath>
+        <itemPath>SDCARD_driver.c</itemPath>
+        <itemPath>encoders_driver.c</itemPath>
+      </logicalFolder>
       <itemPath>main.c</itemPath>
       <itemPath>init.c</itemPath>
-      <itemPath>encoders_driver.c</itemPath>
       <itemPath>input_handler.c</itemPath>
-      <itemPath>config.c</itemPath>
       <itemPath>timer.c</itemPath>
-      <itemPath>HT16_keys_driver.c</itemPath>
-      <itemPath>HT16_leds_driver.c</itemPath>
-      <itemPath>I2C_driver.c</itemPath>
-      <itemPath>I2C_handler.c</itemPath>
-      <itemPath>UART_driver.c</itemPath>
-      <itemPath>SPI_driver.c</itemPath>
-      <itemPath>LCD_driver.c</itemPath>
       <itemPath>LCD_templates.c</itemPath>
-      <itemPath>EEPROM.c</itemPath>
       <itemPath>bpm.c</itemPath>
-      <itemPath>sdcard.c</itemPath>
       <itemPath>MIDI.c</itemPath>
       <itemPath>mode.c</itemPath>
     </logicalFolder>

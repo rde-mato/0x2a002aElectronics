@@ -2,15 +2,9 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
-u8  UART1_buf[0x100];
-u8  UART1_buf_index = 0;
-u8  UART1_buf_len = 0;
-
-void __ISR(_UART_1_VECTOR, IPL5AUTO) UART1_TX_handler(void) {
-    U1TXREG = UART1_buf[UART1_buf_index++];
-    if (--UART1_buf_len == 0)
-        UART1_TX_INT_ENABLE = INT_DISABLED;
-}
+static u8  UART1_buf[0x100];
+static u8  UART1_buf_index = 0;
+static u8  UART1_buf_len = 0;
 
 void UART1_init(void)
 {
@@ -25,7 +19,14 @@ void UART1_init(void)
     U1MODEbits.ON = 1;
 }
 
-// Unsafe for midi if used from different places.
+void __ISR(_UART_1_VECTOR, IPL5AUTO) UART1_TX_handler(void)
+{
+    U1TXREG = UART1_buf[UART1_buf_index++];
+    if (--UART1_buf_len == 0)
+        UART1_TX_INT_ENABLE = INT_DISABLED;
+}
+
+// Unsafe for midi if used from different places. XXX
 void UART1_send(char byte)
 {
     UART1_TX_INT_ENABLE = INT_DISABLED;

@@ -23,8 +23,7 @@ enum E_MIDI_STATUS
     //////////////////,     //  0b1ttt         ?(0 - 7)        System Real Time
 };
 
-u8  running_status;
-static u8  last_note;
+static u8  running_status;
 
 /*
 ** Sets MIDI Note Off.
@@ -37,12 +36,11 @@ void midi_note_off(u8 channel, u8 note, u8 velocity)
     u8  status;
     
     status = E_MS_NOTE_OFF | channel;
-    if (note == last_note && velocity == 0 &&
-            running_status == E_MS_NOTE_ON | channel)
+    if (velocity == 0 && running_status == E_MS_NOTE_ON | channel)
         ;
     else if (status != running_status)
     {
-        UART1_send(E_MS_NOTE_OFF | channel);
+        UART1_send(status);
         running_status = status;
     }
     UART1_send(note);
@@ -62,11 +60,10 @@ void midi_note_on(u8 channel, u8 note, u8 velocity)
     status = E_MS_NOTE_ON | channel;
     if (status != running_status)
     {
-        UART1_send(E_MS_NOTE_ON | channel);
+        UART1_send(status);
         running_status = status;
     }
     UART1_send(note);
-    last_note = note;
     UART1_send(velocity);
 }
 

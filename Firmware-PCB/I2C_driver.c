@@ -2,22 +2,43 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
+extern u8               HT16_write_leds_request;
+extern u8               HT16_read_keys_request;
 
-u8	I2C1_state = E_I2C1_DONE;
+u8                      I2C1_read_buf[I2C1_READ_BUF_SIZE];
 
-u8	I2C1_RW;
+static u8               I2C1_state = E_I2C1_DONE;
+static u8               I2C1_RW;
+static u8               I2C1_write_buf[I2C1_WRITE_BUF_SIZE] = { 0 };
+static u8               I2C1_write_buf_index = 0;
+static u8               I2C1_write_buf_size = 0;
+static u8               I2C1_read_buf_expected;
+static u8               I2C1_read_buf_index = 0;
+static read_callback    I2C1_read_cb = NULL;
+static write_callback   I2C1_write_cb = NULL;
 
-u8	I2C1_write_buf[MAX_WRITE_BUF] = { 0 };
-u8	I2C1_write_buf_index = 0;
-u8	I2C1_write_buf_size = 0;
+void I2C1_init(void)
+{
+    u8	i = 0;
+    u16	cpt;
 
-u8	I2C1_read_buf[READ_BUF_SIZE];
-u8	I2C1_read_buf_expected;
-u8	I2C1_read_buf_index = 0;
-
-read_callback I2C1_read_cb = NULL;
-write_callback I2C1_write_cb = NULL;
-
+    // envoi de 9 coups de clock pour reset les chips
+    I2C1_PIN_GPIO = GPIO_OUTPUT;
+    I2C1_PIN_LATCH = 0;
+    while (i < 18)
+    {
+        I2C1_PIN_LATCH = !I2C1_PIN_LATCH;
+        ++i;
+        cpt = 0;
+        while (cpt++ < 2000);
+    }
+    I2C1BRG = (FREQUENCY / ( 2 * 400000)) - 2 ;
+    I2C1CONbits.DISSLW = 1;
+    I2C1CONbits.SMEN = 0;
+    I2C1CONbits.STREN = 1;
+    I2C1CONbits.RCEN = 1;
+    I2C1CONbits.ON = 1;
+}
 
 void I2C1_push(u8 data)
 {
@@ -40,6 +61,48 @@ void I2C1_write(u8 slave, u8 command, u8 *buffer, u32 size)
     I2C1_RW = I2C1_WRITE;
     I2C1_state = E_I2C1_WRITE;
     I2C1CONbits.SEN = 1;
+}
+
+void I2C1_read_callback(u8 slave, u8 command, u8 size, read_callback cb)
+{
+    I2C1_push(slave);
+    I2C1_push(command);
+    I2C1_read_cb = cb;
+    I2C1_RW = I2C1_READ;
+    I2C1_state = E_I2C1_WRITING_SLAVE_ADDR_WRITE;
+    I2C1_read_buf_expected = size;
+    I2C1CONbits.SEN = 1;
+}
+
+void HT16_init(void)
+{
+    u8  message[8] = {0};
+    u8	i;
+
+    u8  config[5] = {
+        0x00,
+        0x21,
+        0xA1, // Int on falling edge
+        0xEF, // No dimming
+        0x81, // Blinking off display ON
+    };
+
+    i = 0;
+    while (i < sizeof(config) / sizeof(*config))
+    {
+        I2C1_write(0xE0, config[i], NULL, 0);
+        while (!(I2C1_state == E_I2C1_DONE))
+            WDTCONbits.WDTCLR = 1;
+        i++;
+    }
+
+    I2C1_write(0xE0, 0x08, message, 8);
+    while (!(I2C1_state == E_I2C1_DONE))
+        WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
+
+    I2C1_read_callback(0xE0, 0x40, 6, NULL);
+    while (!(I2C1_state == E_I2C1_DONE))
+        WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 }
 
 void I2C1_write_callback(u8 slave, u8 command, u8 *buffer, u32 size, write_callback cb)
@@ -65,8 +128,8 @@ void I2C1_state_machine_write(void)
     switch (I2C1_state)
     {
         case E_I2C1_WRITE:
-//            if (I2C1STATbits.TRSTAT)
-//                break;
+        //            if (I2C1STATbits.TRSTAT)
+        //                break;
             if (I2C1_write_buf_index < I2C1_write_buf_size)
                 I2C1TRN = I2C1_write_buf[I2C1_write_buf_index++];
             else
@@ -82,19 +145,8 @@ void I2C1_state_machine_write(void)
             I2C1_write_buf_size = 0;
             I2C1_write_cb = NULL;
             I2C1_state = E_I2C1_DONE;
-            break;
+        break;
     }
-}
-
-void I2C1_read_callback(u8 slave, u8 command, u8 size, read_callback cb)
-{
-    I2C1_push(slave);
-    I2C1_push(command);
-    I2C1_read_cb = cb;
-    I2C1_RW = I2C1_READ;
-    I2C1_state = E_I2C1_WRITING_SLAVE_ADDR_WRITE;
-    I2C1_read_buf_expected = size;
-    I2C1CONbits.SEN = 1;
 }
 
 void I2C1_state_machine_read(void)
@@ -169,4 +221,14 @@ void __ISR(_I2C_1_VECTOR, IPL4AUTO) I2C1Handler(void)
         I2C1_state_machine_write();
     else
         I2C1_state_machine_read();
+}
+
+void    I2C1_manager(void)
+{
+    if (!I2C1_READY)
+        return ;
+    if (HT16_write_leds_request)
+        led_refresh();
+    else if (HT16_read_keys_request)
+         key_scan();
 }

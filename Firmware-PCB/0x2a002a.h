@@ -1,8 +1,28 @@
 #ifndef OX2A002A_H
 #define	OX2A002A_H
 
-//#include <stdint.h> //
+# include "UART.h"
+# include "I2C.h"
+# include "SPI.h"
 
+# include "LCD.h"
+# include "EEPROM.h"
+# include "SDCARD.h"
+/*
+# include "ENCODERS.h"
+
+
+
+*/
+
+
+
+typedef signed char s8;
+typedef signed short s16;
+typedef signed long s32;
+typedef unsigned char u8;
+typedef unsigned short u16;
+typedef unsigned long u32;
 
 #define FREQUENCY				(8000000ul)
 #define ONE_MILLISECOND         		(8000ul)
@@ -115,17 +135,6 @@
 #define TIMER5_INT_PRIORITY		IPC5bits.T5IP
 #define TIMER5_INT_ENABLE		IEC0bits.T5IE
 
-//I2C1
-#define I2C1_PIN_GPIO			TRISBbits.TRISB8
-#define I2C1_PIN_LATCH 			LATBbits.LATB8
-#define I2C1_INT_FLAG_CLR		IFS1CLR = (1 << 12)
-#define I2C1_INT_PRIORITY		IPC8bits.I2C1IP
-#define I2C1_INT_ENABLE			IEC1bits.I2C1MIE
-#define I2C1_READ				0
-#define I2C1_WRITE				1
-#define I2C1_ACK				0
-#define I2C1_NACK				1
-#define I2C1_READY				(I2C1_state == E_I2C1_DONE)
 
 //HT16
 #define HT16_INT_POLARITY	INTCONbits.INT0EP
@@ -134,42 +143,7 @@
 #define HT16_INT_PRIORITY	IPC0bits.INT0IP
 #define HT16_INT_ENABLE		IEC0bits.INT0IE
 
-//SPI1
-#define SPI1_CS0_GPIO				TRISBbits.TRISB10
-#define SPI1_CS1_GPIO				TRISBbits.TRISB11
-#define SPI1_CS2_GPIO				TRISBbits.TRISB12
-#define SPI1_CS3_GPIO				TRISBbits.TRISB15
-#define CS_MCP_LCD					LATBbits.LATB10
-#define CS_MCP_ENCODERS				LATBbits.LATB11
-#define CS_EEPROM					LATBbits.LATB12
-#define CS_SD						LATBbits.LATB15
-#define SPI1_RECEIVE_FLAG			IFS1bits.SPI1RX
-#define SPI1_TRANSFER_FLAG			IFS1bits.SPI1TX
-#define SPI1_INT_FLAGS_CLR_RX		IFS1CLR = (1 << 5)
-#define SPI1_INT_FLAGS_CLR_TX		IFS1CLR = (1 << 6)
-#define SPI1_INT_PRIORITIES			IPC7bits.SPI1IP
-#define SPI1_RECEIVE_ENABLE			IEC1bits.SPI1RXIE
-#define SPI1_TRANSFER_ENABLE		IEC1bits.SPI1TXIE
 
-//UART
-
-#define UART1_TX_INT_ENABLE     IEC1bits.U1TXIE
-#define UART1_TX_INT_PRIORITY   IPC8bits.U1IP
-#define UART1_TX_INT_FLAG       IFS1bits.U1TXIF
-#define UART1_TX_INT_FLAG_CLR   IFS1CLR = (1 << 8)
-
-// GPIO MCP =
-// GPA                                  GPB
-// 7  6  5  4    3    2  1   0           7   to 0
-// x  x  x  CS2  CS1  E  RW  DIouRS      DB7 to DB0
-
-#define LCD_DI_BIT          0x01
-#define LCD_RW_BIT          0x02
-#define LCD_ENABLE_BIT      0x04
-#define LCD_CS1_bit         0x08
-#define LCD_CS2_bit         0x10
-#define LCD_PORTS_ADDRESS   0x4012
-#define LINE_MAX_LEN        22
 
 #define MCP_ENC_READ_INT_FLAG 0x410E0000
 #define MCP_ENC_READ_INT_CAP  0x41100000
@@ -178,28 +152,18 @@
 #define MIDI_BAUD_RATE 31250
 #define SET_MIDI_BRG ((u16)(PBCLK / (16 * MIDI_BAUD_RATE) - 1))
 
-#define notestatus  0
-#define notevalue   1
-#define notevelo    2
-
-#define SPI1_READY (SPI1_state == E_SPI1_DONE)
-
-#define MAX_WRITE_BUF 10
-#define READ_BUF_SIZE 10
-
 #define SD_RETRIES 1000
 #define SD_BLOCK_SIZE   512
 
 
-typedef signed char s8;
-typedef signed short s16;
-typedef signed long s32;
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned long u32;
-
 typedef void (* read_callback)(u8 *);
 typedef void (* write_callback)(void);
+
+enum E_NOTE_ATTRS
+{
+    E_NOTE_VALUE = 0,
+    E_NOTE_VELOCITY,
+};
 
 enum E_EVENT_SOURCE // dans l'ordre de mapping des boutons, ne pas changer
 {
@@ -219,6 +183,7 @@ enum E_EVENT_SOURCE // dans l'ordre de mapping des boutons, ne pas changer
 	E_SOURCE_KEY_13,
 	E_SOURCE_KEY_14,
 	E_SOURCE_KEY_15,
+
 	E_SOURCE_BUTTON_PLAY_PAUSE,
 	E_SOURCE_BUTTON_CUE,
 	E_SOURCE_BUTTON_REC,
@@ -229,8 +194,6 @@ enum E_EVENT_SOURCE // dans l'ordre de mapping des boutons, ne pas changer
 	E_SOURCE_BUTTON_PATTERN,
 	E_SOURCE_BUTTON_KEYBOARD,
 
-
-
 	E_SOURCE_ENCODER_0,
 	E_SOURCE_ENCODER_1,
 	E_SOURCE_ENCODER_2,
@@ -239,6 +202,7 @@ enum E_EVENT_SOURCE // dans l'ordre de mapping des boutons, ne pas changer
 	E_SOURCE_ENCODER_5,
 	E_SOURCE_ENCODER_6,
 	E_SOURCE_ENCODER_7,
+
 	E_SOURCE_ENCODER_MAIN
 };
 
@@ -260,85 +224,6 @@ enum E_EVENT_TYPE
 	E_ENCODER_TURNED_RIGHT,
 	E_ENCODER_TURNED_LEFT
 };
-
-enum E_I2C1_STATE {
-	E_I2C1_DONE = 0,
-	E_I2C1_WRITE,
-	E_I2C1_WRITING_ADDR_CMD,
-	E_I2C1_RESTART_ADDR_CMD,
-	E_I2C1_SEND_SLAVE_ADDR,
-	E_I2C1_READ,
-	E_I2C1_NACK,
-	E_I2C1_ACK,
-	E_I2C1_WRITING_SLAVE_ADDR_WRITE,
-	E_I2C1_WRITING_COMMAND_REGISTER,
-	E_I2C1_SENDING_CMD_REGISTER_STOP,
-	E_I2C1_SENDING_CMD_REGISTER_RESTART,
-	E_I2C1_WRITING_SLAVE_ADDR_READ,
-	E_I2C1_START_READING_BYTE,
-	E_I2C1_READ_AND_ACK,
-	E_I2C1_READ_AND_NACK,
-	E_I2C1_CALLBACK
-};
-
-enum E_SPI1_STATE {
-	E_SPI1_DONE = 0,
-	E_SPI1_LCD_CONFIG,
-	E_SPI1_LCD_WRITE_ENABLE_HIGH,
-	E_SPI1_LCD_WRITE_ENABLE_LOW,
-	E_SPI1_LCD_RELEASE,
-	E_SPI1_ENC_READ_INT_FLAG,
-	E_SPI1_ENC_READ_INT_CAP,
-	E_SPI1_ENC_RELEASE,
-	E_SPI1_EEPROM_WRITE_ENABLE,
-	E_SPI1_EEPROM_WRITE_ENABLE_OK,
-	E_SPI1_EEPROM_WAIT_WRITE_STAT_OK,
-	E_SPI1_EEPROM_STILL_WAIT_WRITE_STAT_OK,
-	E_SPI1_EEPROM_WRITE_MODE,
-	E_SPI1_EEPROM_WRITE_ADDRESS,
-	E_SPI1_EEPROM_WRITE_DATA,
-	E_SPI1_EEPROM_WRITE_DONE,
-	E_SPI1_EEPROM_READ_ENABLE,
-	E_SPI1_EEPROM_READ_ENABLE_OK,
-	E_SPI1_EEPROM_READ_MODE,
-	E_SPI1_EEPROM_READ_ADDRESS,
-	E_SPI1_EEPROM_WAIT_READ_STAT_OK,
-	E_SPI1_EEPROM_READ_DATA,
-	E_SPI1_EEPROM_READ_DONE
-};
-
-enum E_SPI1_SLAVE {
-	E_SPI1_CS_MCP_LCD = 0,
-	E_SPI1_CS_MCP_ENC,
-	E_SPI1_CS_SD,
-	E_SPI1_CS_EEPROM
-};
-
-enum E_SD_CARD
-{
-	SD_R1,
-	SD_R3,
-	SD_R7,
-	SD_SDSC,
-	SD_SDHC,
-	SD_WRITE_NO_ERROR,
-	SD_WRITE_ERROR_WRONG_R1,
-	SD_WRITE_ERROR_WRONG_DATA_RESPONSE,
-	SD_WRITE_ERROR_WRONG_CRC,
-	SD_WRITE_ERROR_WRONG_TOKEN,
-	SD_READ_NO_ERROR,
-	SD_READ_ERROR_WRONG_R1,
-	SD_READ_ERROR_WRONG_TOKEN
-};
-
-u8	SPI1_state;
-u8	SPI_eeprom_write_request;
-u8	SPI_eeprom_read_request;
-u16	eeprom_address;
-u8	eeprom_buf_size;
-u8	eeprom_buf[128]; //size of page
-
-
 
 //#define FLASH_READ              0x03
 //#define FLASH_4K_ERASE          0x20

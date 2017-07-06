@@ -1,5 +1,5 @@
-build/default/production/input_handler.o:  \
-input_handler.c  \
+build/default/production/SDCARD_driver.o:  \
+SDCARD_driver.c  \
 0x2a002a.h  \
  UART.h  \
 I2C.h  \

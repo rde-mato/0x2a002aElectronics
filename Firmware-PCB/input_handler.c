@@ -77,12 +77,12 @@ void    add_note(u8 qt)
 
     while (i < NOTES_PER_QTIME)
     {
-        if (active_patterns[cur_instrument][qt][i][0] == cur_note)
+        if (active_patterns[cur_instrument][qt][i][E_NOTE_VALUE] == cur_note)
         {
-            if (active_patterns[cur_instrument][qt][i][1] == cur_velocity)
+            if (active_patterns[cur_instrument][qt][i][E_NOTE_VELOCITY] == cur_velocity)
                 pop_note(cur_instrument, qt);
             else
-                active_patterns[cur_instrument][qt][i][1] = cur_velocity;
+                active_patterns[cur_instrument][qt][i][E_NOTE_VELOCITY] = cur_velocity;
             break;
         }
         i++;
@@ -307,8 +307,8 @@ void	button_rec_handler(u8 event_type)
 	switch (event_type)
 	{
 		case E_KEY_PRESSED:
-			LCD_putnstr(0, 0, eeprom_buf, 8);
-			LCD_print_changed_chars();
+//			LCD_putnstr(0, 0, eeprom_buf, 8);
+//			LCD_print_changed_chars();
 			break;
 		case E_KEY_RELEASED:
 			break;
