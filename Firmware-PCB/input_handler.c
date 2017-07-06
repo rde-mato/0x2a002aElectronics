@@ -30,7 +30,7 @@ u8          cur_encoder;
 
 void	keys_handler(u8 event_type, u8 event_source)
 {
-    u8  n;
+    s8  n;
 
     if (current_mode == E_MODE_PATTERN)
     {

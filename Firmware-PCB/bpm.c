@@ -58,11 +58,11 @@ void change_bpm(float incr)
     a = (FREQUENCY / 256 * 15);
     b = (((FREQUENCY / 256) * 15 / __g_qbeat_pr) + incr);
     new_pr = (a / b);
-/*    if (incr > 0 && new_pr > __g_qbeat_pr)
+    if (incr > 0 && new_pr > __g_qbeat_pr)
         set_qbeat_pr(0x0001);
     else if (incr < 0 && new_pr < __g_qbeat_pr)
         set_qbeat_pr(0xFFFF);
-    else*/
+    else
         set_qbeat_pr(new_pr);
 }
 

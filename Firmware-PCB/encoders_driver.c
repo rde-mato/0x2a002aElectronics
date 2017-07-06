@@ -41,13 +41,13 @@ void    int_init_main_encoder(void)
 
 void    int_init_MCP_encoders(void)
 {
-    COD_MCP_A_INT_POLARITY = FALLING_EDGE;
-    COD_MCP_A_INT_FLAG_CLR;
-    COD_MCP_A_INT_PRIORITY = 3;
-    COD_MCP_A_INT_ENABLE = INT_ENABLED;
+//    COD_MCP_A_INT_POLARITY = FALLING_EDGE;
+//    COD_MCP_A_INT_FLAG_CLR;
+//    COD_MCP_A_INT_PRIORITY = 3;
+//    COD_MCP_A_INT_ENABLE = INT_ENABLED;
     COD_MCP_B_INT_POLARITY = FALLING_EDGE;
     COD_MCP_B_INT_FLAG_CLR;
-    COD_MCP_B_INT_PRIORITY = 3;
+    COD_MCP_B_INT_PRIORITY = 5;
     COD_MCP_B_INT_ENABLE = INT_ENABLED;
 }
 
@@ -89,14 +89,14 @@ void __ISR(_EXTERNAL_2_VECTOR, IPL5AUTO) Main_encoder_A_Handler(void) {
     COD_A_INT_FLAG_CLR;
 }
 
-void __ISR(_EXTERNAL_1_VECTOR, IPL3AUTO) MCP_encoders_port_A_Handler(void) {
+/* void __ISR(_EXTERNAL_1_VECTOR, IPL3AUTO) MCP_encoders_port_A_Handler(void) {
     COD_MCP_A_INT_FLAG_CLR;
     SPI_encoders_dirty = 1;
-}
+} XD */
 
-void __ISR(_EXTERNAL_3_VECTOR, IPL3AUTO) MCP_encoders_port_B_Handler(void) {
+void __ISR(_EXTERNAL_3_VECTOR, IPL5AUTO) MCP_encoders_port_B_Handler(void) {
     COD_MCP_B_INT_FLAG_CLR;
-     SPI_encoders_dirty = 1;
+    SPI_encoders_dirty = 1;
 }
 
 
@@ -119,6 +119,9 @@ void    SPI1_ENC_state_machine(void)
             SPI1_TRANSFER_ENABLE = INT_ENABLED;
             break;
         case E_SPI1_ENC_READ_INT_CAP:
+            COD_MCP_B_INT_ENABLE = INT_DISABLED;
+            SPI_encoders_dirty = 0;
+            COD_MCP_B_INT_ENABLE = INT_ENABLED;
             read32 = SPI1BUF;
             flags_A = read32 >> 8;
             CS_MCP_ENCODERS = 1;
@@ -141,7 +144,6 @@ void    SPI1_ENC_state_machine(void)
                     event_handler((intcap_A & (1 << i)) != (intcap_B & (1 << i)) ? E_ENCODER_TURNED_LEFT : E_ENCODER_TURNED_RIGHT, i + E_SOURCE_ENCODER_0);
                 ++i;
             }
-            SPI_encoders_dirty = 0;
             SPI1CONbits.MODE32 = 0;
             break;
     }
