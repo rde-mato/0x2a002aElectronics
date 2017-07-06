@@ -13,8 +13,8 @@ extern u32  leds_base_case;
 u8          edit_pressed = 0;
 u8          tap_pressed = 0;
 
-u8          active_patterns[INSTRUMENTS_COUNT][QTIME_PER_INSTRUMENT][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE] = { 0 };
-u8          active_instrument[PATTERNS_PER_INSTRUMENT][QTIME_PER_INSTRUMENT][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE] = { 0 };
+u8          active_patterns[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE] = { 0 };
+u8          active_instrument[PATTERNS_PER_INSTRUMENT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE] = { 0 };
 u16         active_instruments_u16 = 0b01010111;
 u8          encoders_values[8] = { 0x0F };
 

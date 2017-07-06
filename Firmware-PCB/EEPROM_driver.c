@@ -11,6 +11,27 @@ static u16  eeprom_address;
 static u8   eeprom_buf_size;
 static u8   eeprom_buf[128]; //size of page
 
+const   size_t pattern_size = QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE;
+
+void    save_pattern_to_eeprom(u8 instrument, u8 pattern)
+{
+//    u32 i;
+//    u8  qt;
+//    u8  n;
+//
+//    i = 0;
+//    qt = 0;
+//    n = 0;
+//    while (qt < QTIME_PER_PATTERN)
+//    {
+//        while (n < NOTES_PER_QTIME)
+//        {
+//            eeprom_buf[] = ;
+//        }
+//    }
+//    eeprom_address = (PATTERNS_PER_INSTRUMENT * instrument + pattern) * pattern_size;
+}
+
 void	eeprom_state_machine_write(void)
 {
     u16		eeprom_read_byte;

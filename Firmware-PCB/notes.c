@@ -13,18 +13,10 @@
 //u8          edit_pressed = 0;
 //u8          tap_pressed = 0;
 //
-extern u8          active_patterns[INSTRUMENTS_COUNT][QTIME_PER_INSTRUMENT][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
-//u8          active_instrument[PATTERNS_PER_INSTRUMENT][QTIME_PER_INSTRUMENT][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE] = { 0 };
-//u16         active_instruments_u16 = 0b01010111;
-//u8          encoders_values[8] = { 0x0F };
-//
+extern u8          active_patterns[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 extern u8          cur_instrument;
-//u8          cur_pattern = 0;
 extern u8          cur_note;
-//u8          current_mode = E_MODE_PATTERN;
-//u8          cur_octave = 3;
 extern u8          cur_velocity;
-//u8          cur_encoder;
 
 void    push_note(u8 instrument, u8 qtime, u8 note, u8 velocity)
 {
@@ -40,18 +32,25 @@ void    push_note(u8 instrument, u8 qtime, u8 note, u8 velocity)
     active_patterns[instrument][qtime][0][1] = velocity;
 }
 
-void    pop_note(u8 instrument, u8 qtime)
+void    pop_note(u8 qtime)
 {
     u8 i = 0;
 
+
     while (i < NOTES_PER_QTIME - 1)
     {
-        active_patterns[instrument][qtime][i][0] = active_patterns[instrument][qtime][i + 1][0];
-        active_patterns[instrument][qtime][i][1] = active_patterns[instrument][qtime][i + 1][1];
+        if (active_patterns[cur_instrument][qtime][i][0] == cur_note)
+            break ;
         ++i;
     }
-    active_patterns[instrument][qtime][NOTES_PER_QTIME - 1][0] = 0;
-    active_patterns[instrument][qtime][NOTES_PER_QTIME - 1][1] = 0;
+    while (i < NOTES_PER_QTIME - 1)
+    {
+        active_patterns[cur_instrument][qtime][i][0] = active_patterns[cur_instrument][qtime][i + 1][0];
+        active_patterns[cur_instrument][qtime][i][1] = active_patterns[cur_instrument][qtime][i + 1][1];
+        ++i;
+    }
+    active_patterns[cur_instrument][qtime][NOTES_PER_QTIME - 1][0] = 0;
+    active_patterns[cur_instrument][qtime][NOTES_PER_QTIME - 1][1] = 0;
 }
 
 
@@ -64,7 +63,7 @@ void    add_note(u8 qt)
         if (active_patterns[cur_instrument][qt][i][E_NOTE_VALUE] == cur_note)
         {
             if (active_patterns[cur_instrument][qt][i][E_NOTE_VELOCITY] == cur_velocity)
-                pop_note(cur_instrument, qt);
+                pop_note(qt);
             else
                 active_patterns[cur_instrument][qt][i][E_NOTE_VELOCITY] = cur_velocity;
             break;

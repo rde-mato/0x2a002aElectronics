@@ -6,7 +6,7 @@
 extern u8          current_mode;
 extern u8          cur_instrument;
 extern u8          cur_note;
-extern u8          active_patterns[INSTRUMENTS_COUNT][QTIME_PER_INSTRUMENT][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
+extern u8          active_patterns[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 extern u8          qtime;
 extern u16         active_instruments_u16;
 extern u8          HT16_write_leds_request;
@@ -68,7 +68,7 @@ void    update_leds_base_case(void)
             display_LEDs();
             break;
         case E_MODE_PATTERN:
-            while (qt < QTIME_PER_INSTRUMENT)
+            while (qt < QTIME_PER_PATTERN)
             {
                 n = 0;
                 while (n < NOTES_PER_QTIME)

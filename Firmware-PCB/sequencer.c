@@ -8,7 +8,7 @@ extern u8	cur_note;
 extern u8       current_mode;
 extern u32      leds_base_case;
 extern u8       pattern_mode;
-extern u8	active_patterns[INSTRUMENTS_COUNT][QTIME_PER_INSTRUMENT][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
+extern u8	active_patterns[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 
 void    send_MIDI_for_qtime(u8 qt)
 {

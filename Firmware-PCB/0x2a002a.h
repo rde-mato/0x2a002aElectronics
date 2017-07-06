@@ -31,7 +31,7 @@ extern u16                      __g_qbeat_pr;
 
 #define INSTRUMENTS_COUNT       16
 #define PATTERNS_PER_INSTRUMENT 16
-#define QTIME_PER_INSTRUMENT    16
+#define QTIME_PER_PATTERN    16
 #define NOTES_PER_QTIME         4
 #define ATTRIBUTES_PER_NOTE     2
 #define MUSIC_PLAYING           T2CONbits.ON
