@@ -80,7 +80,13 @@ void    update_leds_base_case(void)
             display_LEDs_for_qtime(qtime);
             break;
         case E_MODE_EDIT_KEYBOARD:
-            leds_base_case |= 0b1111111101101110;
+            leds_base_case |= PIANO_KEYS;
+            leds_base_case |= (1 << E_SOURCE_BUTTON_KEYBOARD);
+            leds_base_case |= (1 << E_SOURCE_BUTTON_EDIT);
+            display_LEDs();
+            break;
+        case E_MODE_KEYBOARD:
+            leds_base_case |= PIANO_KEYS;
             leds_base_case |= (1 << E_SOURCE_BUTTON_KEYBOARD);
             display_LEDs();
             break;

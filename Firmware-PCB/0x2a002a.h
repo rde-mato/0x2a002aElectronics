@@ -35,6 +35,7 @@ extern u16                      __g_qbeat_pr;
 #define NOTES_PER_QTIME         4
 #define ATTRIBUTES_PER_NOTE     2
 #define MUSIC_PLAYING           T2CONbits.ON
+#define PIANO_KEYS              0b1111111101110110
 
 // CONSTANTS
 #define DEFAULT_BPM             142

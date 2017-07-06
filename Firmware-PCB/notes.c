@@ -2,21 +2,21 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
-//extern float g_bpm;
-//
-//extern u32  current_leds_on;
-//extern u8   qtime;
-//extern u8   HT16_write_leds_request;
-//extern u8   current_template;
-//extern u8   tap_index;
-//extern u32  leds_base_case;
-//u8          edit_pressed = 0;
-//u8          tap_pressed = 0;
-//
 extern u8          active_patterns[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 extern u8          cur_instrument;
 extern u8          cur_note;
 extern u8          cur_velocity;
+
+const   s8  keysnotes[16] = {-1,  1, 3, -1, 6, 8, 10, -1, 0, 2, 4, 5, 7, 9, 11, 12 };
+
+
+s8      key_to_note(u8 key, u8 octave)
+{
+    key &= 0b1111;
+    if (keysnotes[key] == -1)
+        return (-1);
+    return (12 * octave + keysnotes[key]);
+}
 
 void    push_note(u8 instrument, u8 qtime, u8 note, u8 velocity)
 {

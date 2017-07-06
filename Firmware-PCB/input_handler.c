@@ -30,22 +30,40 @@ u8          cur_encoder;
 
 void	keys_handler(u8 event_type, u8 event_source)
 {
+    u8  n;
+
     if (current_mode == E_MODE_PATTERN)
     {
 	switch (event_type)
 	{
 		case E_KEY_PRESSED:
                     add_note(event_source);
-//                    led_toggle(event_source);
-
 			break;
 		case E_KEY_RELEASED:
-//			led_toggle(event_source);
 			break;
 		case E_KEY_LONG_PRESSED:
-//			led_toggle(event_source);
 			break;
 	}
+    }
+    else if (current_mode == E_MODE_KEYBOARD)
+    {
+	switch (event_type)
+	{
+		case E_KEY_PRESSED:
+                    if ((n = key_to_note(event_source, cur_octave)) == -1)
+                            break;
+                    cur_note = n;
+                    midi_note_on(00, cur_note, cur_velocity);
+                    midi_note_off(00, cur_note, cur_velocity);
+                    update_leds_base_case();
+                    request_template(&template_note);
+                    break;
+		case E_KEY_RELEASED:
+			break;
+		case E_KEY_LONG_PRESSED:
+			break;
+	}
+
     }
 }
 
@@ -92,11 +110,6 @@ void	main_encoder_handler(u8 event_type)
                     }
                     else
                     {
-                        cur_note = (cur_note + 1) & 0x7F;
-                        midi_note_on(00, cur_note, cur_velocity);
-                        midi_note_off(00, cur_note, cur_velocity);
-                        update_leds_base_case();
-                        request_template(&template_note);
                     }
                     break;
 		case E_ENCODER_TURNED_LEFT:
@@ -113,11 +126,6 @@ void	main_encoder_handler(u8 event_type)
                     }
                     else
                     {
-                        cur_note = (cur_note - 1) & 0x7F;
-                        midi_note_on(00, cur_note, cur_velocity);
-                        midi_note_off(00, cur_note, cur_velocity);
-                        update_leds_base_case();
-                        request_template(&template_note);
                     }
                     break;
 		}
