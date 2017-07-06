@@ -24,7 +24,7 @@ extern u16                      __g_qbeat_pr;
 //#define GET_BPM() ((((float)FREQUENCY / (float)__g_qbeat_pr) * 15) / 256)
 
 #define FREQUENCY		(8000000ul)
-#define ONE_MILLISECOND         (8000ul)
+#define ONE_MILLISECOND         FREQUENCY / 1000
 #define BUTTON_POLL_DELAY_MS	50
 #define LONG_PRESS_LIMIT	100
 #define SCREEN_DURATION_MS	1000
@@ -34,6 +34,7 @@ extern u16                      __g_qbeat_pr;
 #define QTIME_PER_INSTRUMENT    16
 #define NOTES_PER_QTIME         4
 #define ATTRIBUTES_PER_NOTE     2
+#define MUSIC_PLAYING           T2CONbits.ON
 
 // CONSTANTS
 #define DEFAULT_BPM             142
@@ -175,11 +176,13 @@ enum E_EVENT_TYPE
 
 enum E_MODES
 {
-    E_MODE_DEFAULT,
+    E_MODE_EDIT_PATTERN,
     E_MODE_PATTERN,
-    E_MODE_MENU,
+    E_MODE_EDIT_INSTRU,
     E_MODE_INSTRU,
-    E_MODE_KEYBOARD
+    E_MODE_EDIT_KEYBOARD,
+    E_MODE_KEYBOARD,
+    E_MODE_MENU
 };
 
 #endif	/* OX2A002A_H */

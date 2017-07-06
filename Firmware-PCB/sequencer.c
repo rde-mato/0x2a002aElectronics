@@ -3,10 +3,10 @@
 #include "0x2a002a.h"
 
 u8              qtime = 0;
-extern u32      leds_status;
+extern u32      current_leds_on;
 extern u8	cur_note;
 extern u8       current_mode;
-extern u32      leds_active;
+extern u32      leds_base_case;
 extern u8       pattern_mode;
 extern u8	active_patterns[INSTRUMENTS_COUNT][QTIME_PER_INSTRUMENT][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 
@@ -53,25 +53,6 @@ void    send_MIDI_for_qtime(u8 qt)
     return ;
 }
 
-void    display_LEDs_for_qtime(u8 qt)
-{
-//    static u32 last_display = 0;
-    u8 i;
-    u32 new_display;
-    u32 to_toggle;
-
-    new_display = leds_active ^ (1 << qt);
-    to_toggle = leds_status ^ new_display;
-    i = 0;
-    while (i < 16)
-    {
-        if (to_toggle & (1 << i))
-            led_toggle(i);
-        ++i;
-    }
-    leds_status = new_display;
-
-}
 
 void    timer_2_init(void)
 {
@@ -91,11 +72,8 @@ void __ISR(_TIMER_2_VECTOR, IPL3AUTO) Timer2QTime(void)
 {
     TIMER2_INT_FLAG_CLR;
 
-    if (current_mode == E_MODE_DEFAULT)
-    {
-        if (leds_active & (1 << qtime))
-            send_MIDI_for_qtime(qtime);
+    if (current_mode == E_MODE_PATTERN)
         display_LEDs_for_qtime(qtime);
-    }
+    send_MIDI_for_qtime(qtime);
     qtime = (qtime + 1) & 15;
 }

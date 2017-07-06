@@ -4,20 +4,19 @@
 
 extern float g_bpm;
 
-extern u32  leds_status;
+extern u32  current_leds_on;
 extern u8   qtime;
 extern u8   HT16_write_leds_request;
 extern u8   current_mode;
 extern u8  current_template;
 extern u8  tap_index;
-
-u32         leds_active = 0;
+extern u32         leds_base_case;
 u8          edit_pressed = 0;
 u8          tap_pressed = 0;
 
 u8          active_patterns[INSTRUMENTS_COUNT][QTIME_PER_INSTRUMENT][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE] = { 0 };
 u8          active_instrument[PATTERNS_PER_INSTRUMENT][QTIME_PER_INSTRUMENT][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE] = { 0 };
-u16         active_instruments_u16;
+u16         active_instruments_u16 = 0b01010111;
 u8          encoders_values[8] = { 0x0F };
 
 u8          cur_instrument = 0;
@@ -55,23 +54,6 @@ void    pop_note(u8 instrument, u8 qtime)
     active_patterns[instrument][qtime][NOTES_PER_QTIME - 1][1] = 0;
 }
 
-void    update_leds(void)
-{
-    u8  qt = 0;
-
-    leds_active = 0;
-    if (current_mode == E_MODE_DEFAULT)
-    {
-        while (qt < QTIME_PER_INSTRUMENT)
-        {
-            if (active_patterns[cur_instrument][qt][0][0])
-                leds_active |= (1 << qt);
-            else
-                leds_active &= ~(1 << qt);
-            qt++;
-        }
-    }
-}
 
 void    add_note(u8 qt)
 {
@@ -91,13 +73,13 @@ void    add_note(u8 qt)
     }
     if (i == NOTES_PER_QTIME)
         push_note(cur_instrument, qt, cur_note, cur_velocity);
-    update_leds();
+    update_leds_base_case();
 }
 
 
 void	keys_handler(u8 event_type, u8 event_source)
 {
-    if (current_mode == E_MODE_DEFAULT)
+    if (current_mode == E_MODE_PATTERN)
     {
 	switch (event_type)
 	{
@@ -193,8 +175,10 @@ void	button_play_handler(u8 event_type)
 	switch (event_type)
 	{
 		case E_KEY_PRESSED:
-                    T2CONbits.ON = !T2CONbits.ON;
-                    led_toggle(E_SOURCE_BUTTON_PLAY_PAUSE);
+                    MUSIC_PLAYING = !MUSIC_PLAYING;
+                    update_leds_base_case();
+
+//                    led_toggle(E_SOURCE_BUTTON_PLAY_PAUSE);
 //			eeprom_buf_size = 8;
 //			eeprom_address = 0;
 //			lcd_strncpy(eeprom_buf, "abcd 345", 8);
@@ -213,6 +197,9 @@ void	button_cue_handler(u8 event_type)
 	{
 		case E_KEY_PRESSED:
                     led_set(E_SOURCE_BUTTON_CUE);
+                    led_toggle((qtime - 1) & 15);
+                    TIMER2_VALUE = 0;
+                    qtime = 0;
 //			eeprom_buf_size = 8;
 //			lcd_bzero(eeprom_buf, 8);
 //			eeprom_address = 0;
@@ -221,9 +208,6 @@ void	button_cue_handler(u8 event_type)
 		case E_KEY_RELEASED:
 //                    led_toggle(qtime - 1);
                     led_clr(E_SOURCE_BUTTON_CUE);
-                    led_toggle((qtime - 1) & 15);
-                    TIMER2_VALUE = 0;
-                    qtime = 0;
 			break;
 		case E_KEY_LONG_PRESSED:
 			break;
@@ -235,7 +219,8 @@ void	button_instrument_handler(u8 event_type)
 	switch (event_type)
 	{
 		case E_KEY_PRESSED:
-                    display_instrument();
+                    current_mode = E_MODE_INSTRU;
+                    update_leds_base_case();
 			break;
 		case E_KEY_RELEASED:
 			break;
@@ -249,7 +234,8 @@ void	button_pattern_handler(u8 event_type)
 	switch (event_type)
 	{
 		case E_KEY_PRESSED:
-                    display_pattern();
+                    current_mode = E_MODE_PATTERN;
+                    update_leds_base_case();
 			break;
 		case E_KEY_RELEASED:
 			break;
@@ -263,6 +249,11 @@ void	button_keyboard_handler(u8 event_type)
 	switch (event_type)
 	{
 		case E_KEY_PRESSED:
+                    if (edit_pressed)
+                        current_mode = E_MODE_EDIT_KEYBOARD;
+                    else
+                        current_mode = E_MODE_KEYBOARD;
+                    update_leds_base_case();
                     break;
 		case E_KEY_RELEASED:
 //                    display_keyboard();

@@ -33,6 +33,8 @@ int main(void)
 
     IFS0bits.INT1IF = 1; // a garder pour reset les encoders
 
+    update_leds_base_case();
+
     while (42)
     {
         I2C1_manager();

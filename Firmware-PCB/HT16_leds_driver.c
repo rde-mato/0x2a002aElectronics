@@ -1,25 +1,24 @@
 #include <xc.h>
 #include "0x2a002a.h"
 
-u32     leds_status;
-
-u8      HT16_write_leds_request = 1;
+extern u32     current_leds_on;
+u8             HT16_write_leds_request = 1;
 
 void led_set(u8 index)
 {
-    leds_status |= (1 << index);
+    current_leds_on |= (1 << index);
     HT16_write_leds_request = 1;
 }
 
 void led_toggle(u8 index)
 {
-    leds_status ^= (1 << index);
+    current_leds_on ^= (1 << index);
     HT16_write_leds_request = 1;
 }
 
 void led_clr(u8 index)
 {
-    leds_status &= ~(1 << index);
+    current_leds_on &= ~(1 << index);
     HT16_write_leds_request = 1;
 }
 
@@ -28,7 +27,7 @@ void led_refresh(void)
 {
     u8	i = 0;
     u8  buffer[8] = { 0 };
-    u32 leds = leds_status;
+    u32 leds = current_leds_on;
 
     while (i < 4)
     {

@@ -2,16 +2,16 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
-u8  current_mode = E_MODE_DEFAULT;
+u8  current_mode = E_MODE_PATTERN;
 
 void set_mode_default(void)
 {
     //il faut charger les current instru en coours de play
 
-   current_mode = E_MODE_DEFAULT;
-    led_clr(E_SOURCE_BUTTON_INSTRUMENT);
-    led_clr(E_SOURCE_BUTTON_PATTERN);
-    led_clr(E_SOURCE_BUTTON_KEYBOARD);
+   current_mode = E_MODE_PATTERN;
+//    led_clr(E_SOURCE_BUTTON_INSTRUMENT);
+//    led_clr(E_SOURCE_BUTTON_PATTERN);
+//    led_clr(E_SOURCE_BUTTON_KEYBOARD);
         request_template(&template_default);
 }
 

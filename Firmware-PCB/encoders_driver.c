@@ -20,9 +20,11 @@ void    pps_init_encoders(void)
 
     //MCP encoders
     PPS_MCP_ENC_A;
+    MCP_ENC_A_ANALOG = DIGITAL_PIN;
+    COD_MCP_A_GPIO = GPIO_INPUT;
+    PPS_MCP_ENC_B;
     MCP_ENC_B_ANALOG = DIGITAL_PIN;
     COD_MCP_B_GPIO = GPIO_INPUT;
-    PPS_MCP_ENC_B;
 }
 
 void    int_init_main_encoder(void)
@@ -38,15 +40,15 @@ void    int_init_main_encoder(void)
 }
 
 void    int_init_MCP_encoders(void)
-{    //         COD_MCP_INT_POLARITY = FALLING_EDGE;
-    //         COD_MCP_INT_FLAG = 0; // Reset the flag
-    //         IPC1bits.INT1IP = 3; // Set priority
-    //         IEC0bits.INT1IE = 1; // Enable interrupt
-
-    INTCONbits.INT3EP = FALLING_EDGE;
-    IFS0bits.INT3IF = 0; // Reset the flag
-    IPC3bits.INT3IP = 2; // Set priority
-    IEC0bits.INT3IE = 1; // Enable interrupt
+{
+    COD_MCP_A_INT_POLARITY = FALLING_EDGE;
+    COD_MCP_A_INT_FLAG_CLR;
+    COD_MCP_A_INT_PRIORITY = 3;
+    COD_MCP_A_INT_ENABLE = INT_ENABLED;
+    COD_MCP_B_INT_POLARITY = FALLING_EDGE;
+    COD_MCP_B_INT_FLAG_CLR;
+    COD_MCP_B_INT_PRIORITY = 3;
+    COD_MCP_B_INT_ENABLE = INT_ENABLED;
 }
 
 void MCP_ENCODERS_init_blocking(void)
@@ -87,15 +89,13 @@ void __ISR(_EXTERNAL_2_VECTOR, IPL5AUTO) Main_encoder_A_Handler(void) {
     COD_A_INT_FLAG_CLR;
 }
 
-//void __ISR(_EXTERNAL_4_VECTOR, IPL2AUTO) Main_encoder_B_Handler(void) {
-//    COD_B_INT_FLAG_CLR;
-//    if (!PORTBbits.RB2 && PORTBbits.RB3)
-//        event_handler(E_ENCODER_TURNED_LEFT, E_SOURCE_ENCODER_MAIN);
-//
-//}
+void __ISR(_EXTERNAL_1_VECTOR, IPL3AUTO) MCP_encoders_port_A_Handler(void) {
+    COD_MCP_A_INT_FLAG_CLR;
+    SPI_encoders_dirty = 1;
+}
 
-void __ISR(_EXTERNAL_3_VECTOR, IPL2AUTO) MCP_encoders_port_B_Handler(void) {
-     IFS0CLR = (1 << 18);
+void __ISR(_EXTERNAL_3_VECTOR, IPL3AUTO) MCP_encoders_port_B_Handler(void) {
+    COD_MCP_B_INT_FLAG_CLR;
      SPI_encoders_dirty = 1;
 }
 
@@ -130,6 +130,7 @@ void    SPI1_ENC_state_machine(void)
             break;
         case E_SPI1_ENC_RELEASE:
             read32 = SPI1BUF;
+            IEC0bits.INT3IE = 1;
             intcap_A = (u8)(read32 >> 8);
             intcap_B = (u8)read32;
             CS_MCP_ENCODERS = 1;
