@@ -6,7 +6,6 @@ u8  current_mode = E_MODE_DEFAULT;
 
 void set_mode_default(void)
 {
-
     //il faut charger les current instru en coours de play
 
    current_mode = E_MODE_DEFAULT;
@@ -41,7 +40,6 @@ void display_pattern(void)
 void display_keyboard(void)
 {
     u8 i = 0;
-
 
     current_mode = E_MODE_KEYBOARD;
     led_set(E_SOURCE_BUTTON_KEYBOARD);

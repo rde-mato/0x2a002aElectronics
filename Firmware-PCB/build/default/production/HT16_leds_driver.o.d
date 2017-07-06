@@ -4,6 +4,8 @@ HT16_leds_driver.c  \
 UART.h  \
 I2C.h  \
 SPI.h  \
+HT16.h  \
+ENCODERS.h  \
 LCD.h  \
 EEPROM.h  \
 SDCARD.h 

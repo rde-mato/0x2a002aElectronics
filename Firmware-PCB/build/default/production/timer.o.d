@@ -4,6 +4,8 @@ timer.c  \
 UART.h  \
 I2C.h  \
 SPI.h  \
- LCD.h  \
+ HT16.h  \
+ENCODERS.h  \
+LCD.h  \
 EEPROM.h  \
 SDCARD.h 

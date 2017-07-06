@@ -2,25 +2,25 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
-u8          SPI1_state = E_SPI1_DONE;
-u8          SPI1_slave = E_SPI1_CS_MCP_ENC;
-
 extern u8   SPI_eeprom_write_request;
 extern u8   SPI_eeprom_read_request;
 extern u8   SPI_encoders_dirty;
 extern u32  SPI_LCD_count;
 
+u8          SPI1_state = E_SPI1_DONE;
+u8          SPI1_slave = E_SPI1_CS_MCP_ENC;
+
 void SPI1_init(void)
 {
-	SPI1CON = 0;
-	SPI1BUF = 0;
-	SPI1BRG = 0; //set baudrate 1Mhz suivant 8 Mhz du pbclk
-	SPI1CONbits.CKE = 1;
-	SPI1CONbits.CKP = 0; // mode 00 tás vue
-	SPI1CONbits.MODE16 = 0;
-	SPI1CONbits.MODE32 = 0;
-	SPI1CONbits.MSTEN = 1; //activer master mode
-	SPI1CONbits.ON = 1; //ON SPI1
+    SPI1CON = 0;
+    SPI1BUF = 0;
+    SPI1BRG = 0; //set baudrate 1Mhz suivant 8 Mhz du pbclk
+    SPI1CONbits.CKE = 1;
+    SPI1CONbits.CKP = 0; // mode 00 tás vue
+    SPI1CONbits.MODE16 = 0;
+    SPI1CONbits.MODE32 = 0;
+    SPI1CONbits.MSTEN = 1; //activer master mode
+    SPI1CONbits.ON = 1; //ON SPI1
 }
 
 

@@ -5,30 +5,24 @@
 # include "I2C.h"
 # include "SPI.h"
 
+# include "HT16.h"
+# include "ENCODERS.h"
 # include "LCD.h"
 # include "EEPROM.h"
 # include "SDCARD.h"
-/*
-# include "ENCODERS.h"
 
+typedef signed char             s8;
+typedef signed short            s16;
+typedef signed long             s32;
+typedef unsigned char           u8;
+typedef unsigned short          u16;
+typedef unsigned long           u32;
 
-
-*/
-
-
-
-typedef signed char s8;
-typedef signed short s16;
-typedef signed long s32;
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned long u32;
-
-#define FREQUENCY				(8000000ul)
-#define ONE_MILLISECOND         		(8000ul)
+#define FREQUENCY		(8000000ul)
+#define ONE_MILLISECOND         (8000ul)
 #define BUTTON_POLL_DELAY_MS	50
-#define LONG_PRESS_LIMIT		100
-#define SCREEN_DURATION_MS		1000
+#define LONG_PRESS_LIMIT	100
+#define SCREEN_DURATION_MS	1000
 
 #define INSTRUMENTS_COUNT       16
 #define PATTERNS_PER_INSTRUMENT 16
@@ -41,49 +35,30 @@ typedef unsigned long u32;
 #define GPIO_INPUT		1
 #define GPIO_OUTPUT		0
 #define RISING_EDGE		1
-#define FALLING_EDGE	0
+#define FALLING_EDGE            0
 #define FLAG_UP			1
 #define FLAG_DOWN		0
 #define INT_ENABLED		1
-#define INT_DISABLED	0
+#define INT_DISABLED            0
 #define CS_LINE_UP		1
-#define CS_LINE_DOWN	0
+#define CS_LINE_DOWN            0
 #define DIGITAL_PIN		0
 #define ANALOG_PIN		1
 
-//MAIN ENCODER
-#define COD_A_GPIO			TRISBbits.TRISB2
-#define COD_A_INT_POLARITY	INTCONbits.INT2EP
-#define COD_A_INT_FLAG		IFS0bits.INT2IF
-#define COD_A_INT_FLAG_CLR	IFS0CLR = (1 << 13)
-#define COD_A_INT_PRIORITY	IPC2bits.INT2IP
-#define COD_A_INT_ENABLE	IEC0bits.INT2IE
-#define COD_B_GPIO			TRISBbits.TRISB3
-#define COD_B_INT_POLARITY	INTCONbits.INT4EP
-#define COD_B_INT_FLAG_CLR	IFS0CLR = (1 << 23)
-#define COD_B_INT_FLAG		IFS0bits.INT4IF
-#define COD_B_INT_PRIORITY	IPC4bits.INT4IP
-#define COD_B_INT_ENABLE	IEC0bits.INT4IE
-
-//MCP ENCODERS
-#define COD_MCP_A_GPIO			TRISBbits.TRISB0
-#define COD_MCP_B_GPIO			TRISBbits.TRISB1
-#define COD_MCP_INT_POLARITY	INTCONbits.INT1EP
-#define COD_MCP_INT_FLAG		IFS0bits.INT1IF
 
 //PERIPHERAL PIN SELECT
-#define PPS_COD_A			INT2R = 0b0100
+#define PPS_COD_A		INT2R = 0b0100
 #define COD_A_ANALOG		ANSELBbits.ANSB2
-#define PPS_COD_B			INT4R = 0b0001
+#define PPS_COD_B		INT4R = 0b0001
 #define COD_B_ANALOG		ANSELBbits.ANSB3
-#define PPS_SDI1			SDI1R = 0b0000
-#define SDI1_ANALOG			ANSELAbits.ANSA1
-#define PPS_SDO1			RPB13R = 0b0011
-#define SDO1_ANALOG			ANSELBbits.ANSB13
+#define PPS_SDI1		SDI1R = 0b0000
+#define SDI1_ANALOG		ANSELAbits.ANSA1
+#define PPS_SDO1		RPB13R = 0b0011
+#define SDO1_ANALOG		ANSELBbits.ANSB13
 #define SPI1_CS2_ANALOG		ANSELBbits.ANSB12
 #define SPI1_CS3_ANALOG		ANSELBbits.ANSB15
-#define PPS_MIDI			RPA0R = 0b0001
-#define MIDI_ANALOG			ANSELAbits.ANSA0
+#define PPS_MIDI		RPA0R = 0b0001
+#define MIDI_ANALOG		ANSELAbits.ANSA0
 #define PPS_MCP_ENC_A		INT1R = 0b0010
 #define MCP_ENC_A_ANALOG	ANSELBbits.ANSB0
 #define PPS_MCP_ENC_B		INT3R = 0b0010
@@ -119,45 +94,21 @@ typedef unsigned long u32;
 
 // timer 4 used for duration of templates
 #define TIMER4_STOP_AND_RESET	T4CON = 0
-#define TIMER4_VALUE			TMR4
-#define TIMER4_PERIOD			PR4
-#define TIMER4_PRESCALE			T4CONbits.TCKPS
-#define TIMER4_INT_FLAG_CLR		IFS0CLR = (1 << 19)
-#define TIMER4_INT_PRIORITY		IPC4bits.T4IP
-#define TIMER4_INT_ENABLE		IEC0bits.T4IE
+#define TIMER4_VALUE		TMR4
+#define TIMER4_PERIOD		PR4
+#define TIMER4_PRESCALE		T4CONbits.TCKPS
+#define TIMER4_INT_FLAG_CLR	IFS0CLR = (1 << 19)
+#define TIMER4_INT_PRIORITY	IPC4bits.T4IP
+#define TIMER4_INT_ENABLE	IEC0bits.T4IE
 
 // timer 5 used for key press management
 #define TIMER5_STOP_AND_RESET	T5CON = 0
-#define TIMER5_VALUE			TMR5
-#define TIMER5_PERIOD			PR5
-#define TIMER5_PRESCALE			T5CONbits.TCKPS
-#define TIMER5_INT_FLAG_CLR		IFS0CLR = (1 << 24)
-#define TIMER5_INT_PRIORITY		IPC5bits.T5IP
-#define TIMER5_INT_ENABLE		IEC0bits.T5IE
-
-
-//HT16
-#define HT16_INT_POLARITY	INTCONbits.INT0EP
-#define HT16_INT_FLAG		IFS0bits.INT0IF
-#define HT16_INT_FLAG_CLR	IFS0CLR = (1 << 3)
-#define HT16_INT_PRIORITY	IPC0bits.INT0IP
-#define HT16_INT_ENABLE		IEC0bits.INT0IE
-
-
-
-#define MCP_ENC_READ_INT_FLAG 0x410E0000
-#define MCP_ENC_READ_INT_CAP  0x41100000
-
-#define PBCLK 8000000
-#define MIDI_BAUD_RATE 31250
-#define SET_MIDI_BRG ((u16)(PBCLK / (16 * MIDI_BAUD_RATE) - 1))
-
-#define SD_RETRIES 1000
-#define SD_BLOCK_SIZE   512
-
-
-typedef void (* read_callback)(u8 *);
-typedef void (* write_callback)(void);
+#define TIMER5_VALUE		TMR5
+#define TIMER5_PERIOD		PR5
+#define TIMER5_PRESCALE		T5CONbits.TCKPS
+#define TIMER5_INT_FLAG_CLR	IFS0CLR = (1 << 24)
+#define TIMER5_INT_PRIORITY	IPC5bits.T5IP
+#define TIMER5_INT_ENABLE	IEC0bits.T5IE
 
 enum E_NOTE_ATTRS
 {
@@ -167,71 +118,63 @@ enum E_NOTE_ATTRS
 
 enum E_EVENT_SOURCE // dans l'ordre de mapping des boutons, ne pas changer
 {
-	E_SOURCE_KEY_0,
-	E_SOURCE_KEY_1,
-	E_SOURCE_KEY_2,
-	E_SOURCE_KEY_3,
-	E_SOURCE_KEY_4,
-	E_SOURCE_KEY_5,
-	E_SOURCE_KEY_6,
-	E_SOURCE_KEY_7,
-	E_SOURCE_KEY_8,
-	E_SOURCE_KEY_9,
-	E_SOURCE_KEY_10,
-	E_SOURCE_KEY_11,
-	E_SOURCE_KEY_12,
-	E_SOURCE_KEY_13,
-	E_SOURCE_KEY_14,
-	E_SOURCE_KEY_15,
+    E_SOURCE_KEY_0,
+    E_SOURCE_KEY_1,
+    E_SOURCE_KEY_2,
+    E_SOURCE_KEY_3,
+    E_SOURCE_KEY_4,
+    E_SOURCE_KEY_5,
+    E_SOURCE_KEY_6,
+    E_SOURCE_KEY_7,
+    E_SOURCE_KEY_8,
+    E_SOURCE_KEY_9,
+    E_SOURCE_KEY_10,
+    E_SOURCE_KEY_11,
+    E_SOURCE_KEY_12,
+    E_SOURCE_KEY_13,
+    E_SOURCE_KEY_14,
+    E_SOURCE_KEY_15,
 
-	E_SOURCE_BUTTON_PLAY_PAUSE,
-	E_SOURCE_BUTTON_CUE,
-	E_SOURCE_BUTTON_REC,
-	E_SOURCE_BUTTON_TAP,
+    E_SOURCE_BUTTON_PLAY_PAUSE,
+    E_SOURCE_BUTTON_CUE,
+    E_SOURCE_BUTTON_REC,
+    E_SOURCE_BUTTON_TAP,
 
-	E_SOURCE_BUTTON_EDIT,
-	E_SOURCE_BUTTON_INSTRUMENT,
-	E_SOURCE_BUTTON_PATTERN,
-	E_SOURCE_BUTTON_KEYBOARD,
+    E_SOURCE_BUTTON_EDIT,
+    E_SOURCE_BUTTON_INSTRUMENT,
+    E_SOURCE_BUTTON_PATTERN,
+    E_SOURCE_BUTTON_KEYBOARD,
 
-	E_SOURCE_ENCODER_0,
-	E_SOURCE_ENCODER_1,
-	E_SOURCE_ENCODER_2,
-	E_SOURCE_ENCODER_3,
-	E_SOURCE_ENCODER_4,
-	E_SOURCE_ENCODER_5,
-	E_SOURCE_ENCODER_6,
-	E_SOURCE_ENCODER_7,
+    E_SOURCE_ENCODER_0,
+    E_SOURCE_ENCODER_1,
+    E_SOURCE_ENCODER_2,
+    E_SOURCE_ENCODER_3,
+    E_SOURCE_ENCODER_4,
+    E_SOURCE_ENCODER_5,
+    E_SOURCE_ENCODER_6,
+    E_SOURCE_ENCODER_7,
 
-	E_SOURCE_ENCODER_MAIN
-};
-
-enum E_MODES
-{
-	E_MODE_DEFAULT,
-        E_MODE_PATTERN,
-	E_MODE_MENU,
-        E_MODE_INSTRU,
-        E_MODE_KEYBOARD
+    E_SOURCE_ENCODER_MAIN
 };
 
 enum E_EVENT_TYPE
 {
-	E_EVENT_NONE = 0,
-	E_KEY_PRESSED,
-	E_KEY_RELEASED,
-	E_KEY_LONG_PRESSED,
-	E_ENCODER_TURNED_RIGHT,
-	E_ENCODER_TURNED_LEFT
+    E_EVENT_NONE = 0,
+    E_KEY_PRESSED,
+    E_KEY_RELEASED,
+    E_KEY_LONG_PRESSED,
+    E_ENCODER_TURNED_RIGHT,
+    E_ENCODER_TURNED_LEFT
 };
 
-//#define FLASH_READ              0x03
-//#define FLASH_4K_ERASE          0x20
-//#define FLASH_BYTE_PROGRAM      0x02
-//#define FLASH_AAI_WORD          0xAD
-//#define FLASH_RDSR              0x05
-//#define FLASH_EWSR              0x50
-//#define FLASH_WRSR              0x01
-//#define FLASH_WREN              0x06
+
+enum E_MODES
+{
+    E_MODE_DEFAULT,
+    E_MODE_PATTERN,
+    E_MODE_MENU,
+    E_MODE_INSTRU,
+    E_MODE_KEYBOARD
+};
 
 #endif	/* OX2A002A_H */

@@ -2,39 +2,38 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
-u8      SPI_encoders_dirty = 0;
+extern u8   SPI1_state;
 
-extern u8 SPI1_state;
+u8          SPI_encoders_dirty = 0;
 
 void MCP_ENCODERS_init_blocking(void)
 {
+    u16 read;
 
-	u16 read;
+    SPI1CONbits.MODE16 = 1;
 
-	SPI1CONbits.MODE16 = 1;
-
-	//read GPIO pour clear flags
-	CS_MCP_ENCODERS = 0x0;
-	SPI1BUF = 0x4110;
-	while (SPI1STATbits.SPIBUSY) ;
-	read = SPI1BUF;
-	SPI1BUF = 0x0000;
-	while (SPI1STATbits.SPIBUSY) ;
-	read = SPI1BUF;
-	CS_MCP_ENCODERS = 0x1;
+    //read GPIO pour clear flags
+    CS_MCP_ENCODERS = 0x0;
+    SPI1BUF = 0x4110;
+    while (SPI1STATbits.SPIBUSY) ;
+    read = SPI1BUF;
+    SPI1BUF = 0x0000;
+    while (SPI1STATbits.SPIBUSY) ;
+    read = SPI1BUF;
+    CS_MCP_ENCODERS = 0x1;
 
 
-	//activation des interrupts sur le port A
-	CS_MCP_ENCODERS = 0x0;
-	SPI1BUF = 0x4004;
-	while (SPI1STATbits.SPIBUSY) ;
-	read = SPI1BUF;
-	SPI1BUF = 0xFFFF;
-	while (SPI1STATbits.SPIBUSY) ;
-	read = SPI1BUF;
-	CS_MCP_ENCODERS = 0x1;
+    //activation des interrupts sur le port A
+    CS_MCP_ENCODERS = 0x0;
+    SPI1BUF = 0x4004;
+    while (SPI1STATbits.SPIBUSY) ;
+    read = SPI1BUF;
+    SPI1BUF = 0xFFFF;
+    while (SPI1STATbits.SPIBUSY) ;
+    read = SPI1BUF;
+    CS_MCP_ENCODERS = 0x1;
 
-	SPI1CONbits.MODE16 = 0;
+    SPI1CONbits.MODE16 = 0;
 }
 
 void __ISR(_EXTERNAL_2_VECTOR, IPL2AUTO) Main_encoder_A_Handler(void) {

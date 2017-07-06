@@ -1,6 +1,9 @@
 #ifndef SDCARD_H
 #define	SDCARD_H
 
+#define SD_RETRIES      1000
+#define SD_BLOCK_SIZE   512
+
 enum E_SD_CARD
 {
     SD_R1,

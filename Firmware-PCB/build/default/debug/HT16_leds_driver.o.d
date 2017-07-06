@@ -1,5 +1,5 @@
-build/default/production/input_handler.o:  \
-input_handler.c  \
+build/default/debug/HT16_leds_driver.o:  \
+HT16_leds_driver.c  \
 0x2a002a.h  \
  UART.h  \
 I2C.h  \

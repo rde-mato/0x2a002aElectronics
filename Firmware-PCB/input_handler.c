@@ -2,28 +2,27 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
-//extern u8	led;		// a degager
-
 extern float g_bpm;
-extern u32      leds_status;
-extern u8   qtime;
-u32         leds_active = 0;
 
-extern u8      HT16_write_leds_request;
-u8          edit_pressed = 0;
+extern u32  leds_status;
+extern u8   qtime;
+extern u8   HT16_write_leds_request;
 extern u8   current_mode;
+
+u32         leds_active = 0;
+u8          edit_pressed = 0;
 u8          tap_pressed = 0;
 
-u8	active_patterns[INSTRUMENTS_COUNT][QTIME_PER_INSTRUMENT][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE] = { 0 };
-u8	active_instrument[PATTERNS_PER_INSTRUMENT][QTIME_PER_INSTRUMENT][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE] = { 0 };
-u16     active_instruments_u16;
-u8      encoders_values[8] = { 0x0F };
+u8          active_patterns[INSTRUMENTS_COUNT][QTIME_PER_INSTRUMENT][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE] = { 0 };
+u8          active_instrument[PATTERNS_PER_INSTRUMENT][QTIME_PER_INSTRUMENT][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE] = { 0 };
+u16         active_instruments_u16;
+u8          encoders_values[8] = { 0x0F };
 
-u8	cur_instrument = 0;
-u8	cur_pattern = 0;
-u8	cur_note = 36;
-u8	cur_octave = 3;
-u8	cur_velocity = 0x40;
+u8          cur_instrument = 0;
+u8          cur_pattern = 0;
+u8          cur_note = 36;
+u8          cur_octave = 3;
+u8          cur_velocity = 0x40;
 
 void    push_note(u8 instrument, u8 qtime, u8 note, u8 velocity)
 {
@@ -91,6 +90,7 @@ void    add_note(u8 qt)
         push_note(cur_instrument, qt, cur_note, cur_velocity);
     update_leds();
 }
+
 
 void	keys_handler(u8 event_type, u8 event_source)
 {

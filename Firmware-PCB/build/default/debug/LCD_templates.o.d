@@ -1,5 +1,5 @@
-build/default/production/I2C_driver.o:  \
-I2C_driver.c  \
+build/default/debug/LCD_templates.o:  \
+LCD_templates.c  \
 0x2a002a.h  \
 UART.h  \
  I2C.h  \
