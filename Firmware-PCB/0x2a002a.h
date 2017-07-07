@@ -191,4 +191,5 @@ enum E_MODES
     E_MODE_MENU
 };
 
+u8  haha[128];
 #endif	/* OX2A002A_H */

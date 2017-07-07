@@ -177,14 +177,17 @@ void	button_play_handler(u8 event_type)
 	switch (event_type)
 	{
 		case E_KEY_PRESSED:
-                    playing = !playing;
-                    update_leds_base_case();
+//                    playing = !playing;
+//                    update_leds_base_case();
+                    /*********/
 
 //                    led_toggle(E_SOURCE_BUTTON_PLAY_PAUSE);
 //			eeprom_buf_size = 8;
 //			eeprom_address = 0;
 //			lcd_strncpy(eeprom_buf, "abcd 345", 8);
 //			SPI_eeprom_write_request = 1;
+                    
+            eeprom_write("abcd 345", 8, 128);
 			break;
 		case E_KEY_RELEASED:
 			break;
@@ -198,14 +201,15 @@ void	button_cue_handler(u8 event_type)
 	switch (event_type)
 	{
 		case E_KEY_PRESSED:
-                    led_set(E_SOURCE_BUTTON_CUE);
-                    led_toggle((qtime - 1) & 15);
-                    TIMER2_VALUE = 0;
-                    qtime = 0;
+//                    led_set(E_SOURCE_BUTTON_CUE);
+//                    led_toggle((qtime - 1) & 15);
+//                    TIMER2_VALUE = 0;
+//                    qtime = 0;
+                    /*******/
 //			eeprom_buf_size = 8;
 //			lcd_bzero(eeprom_buf, 8);
 //			eeprom_address = 0;
-//			SPI_eeprom_read_request = 1;
+            eeprom_read(8, 128);
 			break;
 		case E_KEY_RELEASED:
 //                    led_toggle(qtime - 1);
@@ -289,6 +293,9 @@ void	button_rec_handler(u8 event_type)
 	switch (event_type)
 	{
 		case E_KEY_PRESSED:
+            eeprom_read_buf(haha, 8);
+            LCD_putnstr(0, 0, haha, 8);
+
 //			LCD_putnstr(0, 0, eeprom_buf, 8);
 //			LCD_print_changed_chars();
 			break;

@@ -1,7 +1,19 @@
 #ifndef EEPROM_H
 #define	EEPROM_H
 
-//a faire
+# define EEPROM_READ    0b00000011
+# define EEPROM_WRITE   0b00000010
+# define EEPROM_WREN    0b00000110
+# define EEPROM_WRDI    0b00000100
+# define EEPROM_RDSR    0b00000101
+# define EEPROM_WRSR    0b00000001
+# define EEPROM_PE      0b01000010
+# define EEPROM_SE      0b11011000
+# define EEPROM_CE      0b11000111
+# define EEPROM_RDID    0b10101011
+# define EEPROM_DPD     0b10111001
+# define EEPROM_RDSR_WEL    0b00000010
+# define EEPROM_RDSR_WIP    0b00000001
 
 #endif	/* EEPROM_H */
 
