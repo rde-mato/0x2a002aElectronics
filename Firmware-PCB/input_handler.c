@@ -18,6 +18,7 @@ u8          active_patterns[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_QTIM
 u8          active_instrument[PATTERNS_PER_INSTRUMENT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE] = { 0 };
 u16         active_instruments_u16 = 0b01010111;
 u8          encoders_values[8] = { 0x0F };
+u8          encoders_scale[8] = { 16 };
 
 u8          cur_instrument = 0;
 u8          cur_pattern = 0;
@@ -26,6 +27,7 @@ u8          current_mode = E_MODE_PATTERN;
 u8          cur_octave = 3;
 u8          cur_velocity = 0x40;
 u8          cur_encoder;
+u8          playing = MUSIC_PAUSE;
 
 
 
@@ -70,25 +72,40 @@ void	keys_handler(u8 event_type, u8 event_source)
 
 void	encoders_handler(u8 event_type, u8 event_source)
 {
+
     cur_encoder = event_source - E_SOURCE_ENCODER_0;
     switch (event_type)
     {
         case E_ENCODER_TURNED_RIGHT:
-            if (encoders_values[cur_encoder] != 0xFF)
-                encoders_values[cur_encoder]++;
-            if (encoders_values[cur_encoder] & 0x01)
+            if (edit_pressed)
             {
-                midi_control_change(0x00, encoder_midi_cc[cur_encoder], encoders_values[cur_encoder] / 2);
-                request_template(&template_encoder);
+                
+            }
+            else
+            {
+                if (encoders_values[cur_encoder] != 0xFF)
+                    encoders_values[cur_encoder]++;
+                if (encoders_values[cur_encoder] & 0x01)
+                {
+                    midi_control_change(0x00, encoder_midi_cc[cur_encoder], encoders_values[cur_encoder] / 2);
+                    request_template(&template_encoder);
+                }
             }
             break;
         case E_ENCODER_TURNED_LEFT:
-            if (encoders_values[cur_encoder] != 0x00)
-                encoders_values[cur_encoder]--;
-            if (encoders_values[cur_encoder] & 0x01)
+            if (edit_pressed)
             {
-                midi_control_change(0x00, encoder_midi_cc[cur_encoder], encoders_values[cur_encoder] / 2);
-                request_template(&template_encoder);
+
+            }
+            else
+            {
+                if (encoders_values[cur_encoder] != 0x00)
+                    encoders_values[cur_encoder]--;
+                if (encoders_values[cur_encoder] & 0x01)
+                {
+                    midi_control_change(0x00, encoder_midi_cc[cur_encoder], encoders_values[cur_encoder] / 2);
+                    request_template(&template_encoder);
+                }
             }
             break;
     }
@@ -153,8 +170,8 @@ void	button_play_handler(u8 event_type)
 	switch (event_type)
 	{
 		case E_KEY_PRESSED:
-                    MUSIC_PLAYING = !MUSIC_PLAYING;
-                    update_leds_base_case();
+                    playing = !playing;
+//                    update_leds_base_case();
 
 //                    led_toggle(E_SOURCE_BUTTON_PLAY_PAUSE);
 //			eeprom_buf_size = 8;

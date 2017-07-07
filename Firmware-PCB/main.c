@@ -34,6 +34,7 @@ int main(void)
     IFS0bits.INT1IF = 1; // a garder pour reset les encoders
 
     update_leds_base_case();
+    TIMER_2_ON;
 
     while (42)
     {

@@ -36,7 +36,8 @@ extern u16                      __g_qbeat_pr;
 #define QTIME_PER_PATTERN    16
 #define NOTES_PER_QTIME         4
 #define ATTRIBUTES_PER_NOTE     2
-#define MUSIC_PLAYING           T2CONbits.ON
+#define MUSIC_PLAYING           1
+#define MUSIC_PAUSE             0
 #define PIANO_KEYS              0b1111111101110110
 
 // CONSTANTS
@@ -83,7 +84,7 @@ extern u16                      __g_qbeat_pr;
 #define TIMER_PRESCALE_64       0b110
 #define TIMER_PRESCALE_256	0b111
 
-// timer 2 used for pattern management
+// timer 2 used for pattern management and blinking during pause
 #define TIMER2_STOP_AND_RESET	T2CON = 0
 #define TIMER2_VALUE		TMR2
 #define TIMER2_PERIOD           PR2
@@ -91,6 +92,7 @@ extern u16                      __g_qbeat_pr;
 #define TIMER2_INT_FLAG_CLR     IFS0CLR = (1 << 9)
 #define TIMER2_INT_PRIORITY     IPC2bits.T2IP
 #define TIMER2_INT_ENABLE	IEC0bits.T2IE
+#define TIMER_2_ON              T2CONbits.ON = 1
 
 // timer 3 used for bpm button
 #define TIMER3_STOP_AND_RESET   T3CON = 0

@@ -12,6 +12,7 @@ extern u16         active_instruments_u16;
 extern u8          HT16_write_leds_request;
 u32                current_leds_on;
 u32                leds_base_case = 0;
+extern u8          playing;
 
 void    display_LEDs(void)
 {
@@ -29,13 +30,16 @@ void    display_LEDs(void)
     current_leds_on = leds_base_case;
 
 }
-void    display_LEDs_for_qtime(u8 qt)
+void    display_LEDs_for_qtime(void)
 {
     u8 i;
     u32 new_display;
     u32 to_toggle;
+    static  u8  blink = 0;
 
-    new_display = leds_base_case ^ (1 << qt);
+    new_display = leds_base_case;
+    if (playing == MUSIC_PLAYING || (blink = !blink) == 1)
+        new_display |= leds_base_case ^ (1 << qtime);
     to_toggle = current_leds_on ^ new_display;
     i = 0;
     while (i < 32)
@@ -77,7 +81,7 @@ void    update_leds_base_case(void)
                 qt++;
             }
             leds_base_case |= (1 << E_SOURCE_BUTTON_PATTERN);
-            display_LEDs_for_qtime(qtime);
+            display_LEDs_for_qtime();
             break;
         case E_MODE_EDIT_KEYBOARD:
             leds_base_case |= PIANO_KEYS;

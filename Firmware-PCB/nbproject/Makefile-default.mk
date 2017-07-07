@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=config.c SPI_driver.c UART_driver.c LCD_driver.c I2C_driver.c HT16_leds_driver.c HT16_keys_driver.c EEPROM_driver.c SDCARD_driver.c encoders_driver.c bpm.c input_handler.c LCD_templates.c MIDI.c sequencer.c output_handler.c notes.c main.c init.c mappings.c
+SOURCEFILES_QUOTED_IF_SPACED=config.c SPI_driver.c UART_driver.c LCD_driver.c I2C_driver.c HT16_leds_driver.c HT16_keys_driver.c EEPROM_driver.c SDCARD_driver.c encoders_driver.c bpm.c input_handler.c LCD_templates.c MIDI.c sequencer.c output_handler.c notes.c mappings.c main.c init.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/config.o ${OBJECTDIR}/SPI_driver.o ${OBJECTDIR}/UART_driver.o ${OBJECTDIR}/LCD_driver.o ${OBJECTDIR}/I2C_driver.o ${OBJECTDIR}/HT16_leds_driver.o ${OBJECTDIR}/HT16_keys_driver.o ${OBJECTDIR}/EEPROM_driver.o ${OBJECTDIR}/SDCARD_driver.o ${OBJECTDIR}/encoders_driver.o ${OBJECTDIR}/bpm.o ${OBJECTDIR}/input_handler.o ${OBJECTDIR}/LCD_templates.o ${OBJECTDIR}/MIDI.o ${OBJECTDIR}/sequencer.o ${OBJECTDIR}/output_handler.o ${OBJECTDIR}/notes.o ${OBJECTDIR}/main.o ${OBJECTDIR}/init.o ${OBJECTDIR}/mappings.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/config.o.d ${OBJECTDIR}/SPI_driver.o.d ${OBJECTDIR}/UART_driver.o.d ${OBJECTDIR}/LCD_driver.o.d ${OBJECTDIR}/I2C_driver.o.d ${OBJECTDIR}/HT16_leds_driver.o.d ${OBJECTDIR}/HT16_keys_driver.o.d ${OBJECTDIR}/EEPROM_driver.o.d ${OBJECTDIR}/SDCARD_driver.o.d ${OBJECTDIR}/encoders_driver.o.d ${OBJECTDIR}/bpm.o.d ${OBJECTDIR}/input_handler.o.d ${OBJECTDIR}/LCD_templates.o.d ${OBJECTDIR}/MIDI.o.d ${OBJECTDIR}/sequencer.o.d ${OBJECTDIR}/output_handler.o.d ${OBJECTDIR}/notes.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/init.o.d ${OBJECTDIR}/mappings.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/config.o ${OBJECTDIR}/SPI_driver.o ${OBJECTDIR}/UART_driver.o ${OBJECTDIR}/LCD_driver.o ${OBJECTDIR}/I2C_driver.o ${OBJECTDIR}/HT16_leds_driver.o ${OBJECTDIR}/HT16_keys_driver.o ${OBJECTDIR}/EEPROM_driver.o ${OBJECTDIR}/SDCARD_driver.o ${OBJECTDIR}/encoders_driver.o ${OBJECTDIR}/bpm.o ${OBJECTDIR}/input_handler.o ${OBJECTDIR}/LCD_templates.o ${OBJECTDIR}/MIDI.o ${OBJECTDIR}/sequencer.o ${OBJECTDIR}/output_handler.o ${OBJECTDIR}/notes.o ${OBJECTDIR}/mappings.o ${OBJECTDIR}/main.o ${OBJECTDIR}/init.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/config.o.d ${OBJECTDIR}/SPI_driver.o.d ${OBJECTDIR}/UART_driver.o.d ${OBJECTDIR}/LCD_driver.o.d ${OBJECTDIR}/I2C_driver.o.d ${OBJECTDIR}/HT16_leds_driver.o.d ${OBJECTDIR}/HT16_keys_driver.o.d ${OBJECTDIR}/EEPROM_driver.o.d ${OBJECTDIR}/SDCARD_driver.o.d ${OBJECTDIR}/encoders_driver.o.d ${OBJECTDIR}/bpm.o.d ${OBJECTDIR}/input_handler.o.d ${OBJECTDIR}/LCD_templates.o.d ${OBJECTDIR}/MIDI.o.d ${OBJECTDIR}/sequencer.o.d ${OBJECTDIR}/output_handler.o.d ${OBJECTDIR}/notes.o.d ${OBJECTDIR}/mappings.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/init.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/config.o ${OBJECTDIR}/SPI_driver.o ${OBJECTDIR}/UART_driver.o ${OBJECTDIR}/LCD_driver.o ${OBJECTDIR}/I2C_driver.o ${OBJECTDIR}/HT16_leds_driver.o ${OBJECTDIR}/HT16_keys_driver.o ${OBJECTDIR}/EEPROM_driver.o ${OBJECTDIR}/SDCARD_driver.o ${OBJECTDIR}/encoders_driver.o ${OBJECTDIR}/bpm.o ${OBJECTDIR}/input_handler.o ${OBJECTDIR}/LCD_templates.o ${OBJECTDIR}/MIDI.o ${OBJECTDIR}/sequencer.o ${OBJECTDIR}/output_handler.o ${OBJECTDIR}/notes.o ${OBJECTDIR}/main.o ${OBJECTDIR}/init.o ${OBJECTDIR}/mappings.o
+OBJECTFILES=${OBJECTDIR}/config.o ${OBJECTDIR}/SPI_driver.o ${OBJECTDIR}/UART_driver.o ${OBJECTDIR}/LCD_driver.o ${OBJECTDIR}/I2C_driver.o ${OBJECTDIR}/HT16_leds_driver.o ${OBJECTDIR}/HT16_keys_driver.o ${OBJECTDIR}/EEPROM_driver.o ${OBJECTDIR}/SDCARD_driver.o ${OBJECTDIR}/encoders_driver.o ${OBJECTDIR}/bpm.o ${OBJECTDIR}/input_handler.o ${OBJECTDIR}/LCD_templates.o ${OBJECTDIR}/MIDI.o ${OBJECTDIR}/sequencer.o ${OBJECTDIR}/output_handler.o ${OBJECTDIR}/notes.o ${OBJECTDIR}/mappings.o ${OBJECTDIR}/main.o ${OBJECTDIR}/init.o
 
 # Source Files
-SOURCEFILES=config.c SPI_driver.c UART_driver.c LCD_driver.c I2C_driver.c HT16_leds_driver.c HT16_keys_driver.c EEPROM_driver.c SDCARD_driver.c encoders_driver.c bpm.c input_handler.c LCD_templates.c MIDI.c sequencer.c output_handler.c notes.c main.c init.c mappings.c
+SOURCEFILES=config.c SPI_driver.c UART_driver.c LCD_driver.c I2C_driver.c HT16_leds_driver.c HT16_keys_driver.c EEPROM_driver.c SDCARD_driver.c encoders_driver.c bpm.c input_handler.c LCD_templates.c MIDI.c sequencer.c output_handler.c notes.c mappings.c main.c init.c
 
 
 CFLAGS=
@@ -196,6 +196,12 @@ ${OBJECTDIR}/notes.o: notes.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/notes.o 
 	@${FIXDEPS} "${OBJECTDIR}/notes.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/notes.o.d" -o ${OBJECTDIR}/notes.o notes.c   
 	
+${OBJECTDIR}/mappings.o: mappings.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/mappings.o.d 
+	@${RM} ${OBJECTDIR}/mappings.o 
+	@${FIXDEPS} "${OBJECTDIR}/mappings.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/mappings.o.d" -o ${OBJECTDIR}/mappings.o mappings.c   
+	
 ${OBJECTDIR}/main.o: main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/main.o.d 
@@ -207,12 +213,6 @@ ${OBJECTDIR}/init.o: init.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/init.o.d 
 	@${RM} ${OBJECTDIR}/init.o 
 	@${FIXDEPS} "${OBJECTDIR}/init.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/init.o.d" -o ${OBJECTDIR}/init.o init.c   
-	
-${OBJECTDIR}/mappings.o: mappings.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/mappings.o.d 
-	@${RM} ${OBJECTDIR}/mappings.o 
-	@${FIXDEPS} "${OBJECTDIR}/mappings.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/mappings.o.d" -o ${OBJECTDIR}/mappings.o mappings.c   
 	
 else
 ${OBJECTDIR}/config.o: config.c  nbproject/Makefile-${CND_CONF}.mk
@@ -317,6 +317,12 @@ ${OBJECTDIR}/notes.o: notes.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/notes.o 
 	@${FIXDEPS} "${OBJECTDIR}/notes.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/notes.o.d" -o ${OBJECTDIR}/notes.o notes.c   
 	
+${OBJECTDIR}/mappings.o: mappings.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/mappings.o.d 
+	@${RM} ${OBJECTDIR}/mappings.o 
+	@${FIXDEPS} "${OBJECTDIR}/mappings.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/mappings.o.d" -o ${OBJECTDIR}/mappings.o mappings.c   
+	
 ${OBJECTDIR}/main.o: main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/main.o.d 
@@ -328,12 +334,6 @@ ${OBJECTDIR}/init.o: init.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/init.o.d 
 	@${RM} ${OBJECTDIR}/init.o 
 	@${FIXDEPS} "${OBJECTDIR}/init.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/init.o.d" -o ${OBJECTDIR}/init.o init.c   
-	
-${OBJECTDIR}/mappings.o: mappings.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/mappings.o.d 
-	@${RM} ${OBJECTDIR}/mappings.o 
-	@${FIXDEPS} "${OBJECTDIR}/mappings.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/mappings.o.d" -o ${OBJECTDIR}/mappings.o mappings.c   
 	
 endif
 

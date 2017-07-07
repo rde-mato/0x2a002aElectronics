@@ -135,8 +135,8 @@ void I2C1_state_machine_write(void)
     switch (I2C1_state)
     {
         case E_I2C1_WRITE:
-        //            if (I2C1STATbits.TRSTAT)
-        //                break;
+            if (I2C1STATbits.TRSTAT)
+                break;
             if (I2C1_write_buf_index < I2C1_write_buf_size)
                 I2C1TRN = I2C1_write_buf[I2C1_write_buf_index++];
             else

@@ -12,6 +12,7 @@ extern u8	cur_velocity;
 extern u8       LCD_dirty;
 extern u8       cur_encoder;
 extern u8       encoders_values[];
+extern u8       encoders_scale[];
 lcd_template    requested_template = &template_default;
 /*
 ** we can't use requested_template as last_template because request_template
@@ -97,8 +98,8 @@ void		template_encoder(void)
         LCD_clear();
     if ((last_encoder != cur_encoder) || last_template != TEMPLATE_ENCODER)
     {
-        snprintf(buf, LINE_MAX_LEN, "ENCODER %d VALUE", cur_encoder + 1);
-        LCD_putstr_negative(0, 0, buf);
+        snprintf(buf, LINE_MAX_LEN, "      ENCODER %d      ", cur_encoder + 1);
+        LCD_putstr_negative(1, 0, buf);
         last_encoder = cur_encoder;
     }
     snprintf(buf, LINE_MAX_LEN, "%-3d", encoders_values[cur_encoder] / 2);

@@ -9,6 +9,7 @@ extern u8       current_mode;
 extern u32      leds_base_case;
 extern u8       pattern_mode;
 extern u8	active_patterns[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
+extern u8       playing;
 
 void    send_MIDI_for_qtime(u8 qt)
 {
@@ -73,7 +74,8 @@ void __ISR(_TIMER_2_VECTOR, IPL7AUTO) Timer2QTime(void)
     TIMER2_INT_FLAG_CLR;
 
     if (current_mode == E_MODE_PATTERN)
-        display_LEDs_for_qtime(qtime);
+        display_LEDs_for_qtime();
     send_MIDI_for_qtime(qtime);
-    qtime = (qtime + 1) & 15;
+    if (playing == MUSIC_PLAYING)
+        qtime = (qtime + 1) & 15;
 }
