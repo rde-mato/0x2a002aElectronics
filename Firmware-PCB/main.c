@@ -28,7 +28,6 @@ int main(void)
     INT_init();
     HT16_init();
 
-    set_bpm(DEFAULT_BPM);
     request_template(&template_default);
 
     IFS0bits.INT1IF = 1; // a garder pour reset les encoders

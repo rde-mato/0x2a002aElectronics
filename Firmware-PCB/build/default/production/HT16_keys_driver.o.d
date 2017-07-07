@@ -8,4 +8,5 @@ HT16.h  \
 ENCODERS.h  \
 LCD.h  \
 EEPROM.h  \
-SDCARD.h 
+SDCARD.h  \
+ MIDI.h 

@@ -20,16 +20,17 @@ typedef unsigned char           u8;
 typedef unsigned short          u16;
 typedef unsigned long           u32;
 
-extern u16                      __g_qbeat_pr;
+//extern u16                      __g_qbeat_pr;
 
-#define GET_BPM() ((((float)FREQUENCY / 256) * 15) / __g_qbeat_pr)
-//#define GET_BPM() ((((float)FREQUENCY / (float)__g_qbeat_pr) * 15) / 256)
+//#define GET_BPM() ((((float)FREQUENCY / 256) * 15) / __g_qbeat_pr)
+////#define GET_BPM() ((((float)FREQUENCY / (float)__g_qbeat_pr) * 15) / 256)
 
 #define FREQUENCY		(8000000ul)
 #define ONE_MILLISECOND         FREQUENCY / 1000
 #define BUTTON_POLL_DELAY_MS	50
 #define LONG_PRESS_LIMIT	100
 #define SCREEN_DURATION_MS	1000
+#define INITIAL_BPM_x100        14200
 
 #define INSTRUMENTS_COUNT       16
 #define PATTERNS_PER_INSTRUMENT 16

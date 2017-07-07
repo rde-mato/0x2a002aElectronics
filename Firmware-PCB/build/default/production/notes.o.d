@@ -1,10 +1,10 @@
-build/default/production/input_handler.o:  \
-input_handler.c  \
+build/default/production/notes.o:  \
+notes.c  \
 0x2a002a.h  \
- UART.h  \
+UART.h  \
 I2C.h  \
 SPI.h  \
-HT16.h  \
+ HT16.h  \
 ENCODERS.h  \
 LCD.h  \
 EEPROM.h  \

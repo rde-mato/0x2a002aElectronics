@@ -3,8 +3,9 @@
 #include <stdlib.h>
 #include "0x2a002a.h"
 
-#define BPM_TO_QBEAT_PR(bpm) ((FREQUENCY * 15) / (256 * bpm))
+//#define BPM_TO_QBEAT_PR(bpm) ((FREQUENCY * 15) / (256 * bpm))
 
+u32 bpm_x100 = INITIAL_BPM_x100;
 u16 __g_qbeat_pr = 0;
 u16 tap_button_old = 0;
 u16 tap_button_active = 0;
@@ -35,35 +36,41 @@ void    timer_3_init(void)
     TIMER3_PERIOD = 0xFFFF;
 }
 
-void set_qbeat_pr(u16 pr)
+//void set_qbeat_pr(u16 pr)
+//{
+//    __g_qbeat_pr = pr;
+//    TIMER2_PERIOD = pr;
+//    TIMER2_VALUE = 0; //XXX
+//}
+
+//void set_bpm(u16 bpm)
+//{
+//    __g_qbeat_pr = BPM_TO_QBEAT_PR(bpm);
+//    TIMER2_PERIOD = __g_qbeat_pr / MIDI_PPQN;
+//    TIMER2_VALUE = 0;
+//}
+
+void set_bpm(void)
 {
-    __g_qbeat_pr = pr;
-    TIMER2_PERIOD = pr;
-    TIMER2_VALUE = 0; //XXX
+    TIMER2_PERIOD = (FREQUENCY * 15) / (MIDI_PPQN * 256 / 100 * bpm_x100);
+    if (TIMER2_VALUE > TIMER2_PERIOD - 2000)
+        TIMER2_VALUE = 0;
 }
 
-void set_bpm(u16 bpm)
-{
-    __g_qbeat_pr = BPM_TO_QBEAT_PR(bpm);
-    TIMER2_PERIOD = __g_qbeat_pr;
-    TIMER2_VALUE = 0;
-}
+//void set_period(u32 pr)
+//{
+//    TIMER2_PERIOD = (FREQUENCY * 15) / (MIDI_PPQN * 256 / 100 * bpm_x100);
+//    if (TIMER2_VALUE > TIMER2_PERIOD - 2000)
+//        TIMER2_VALUE = 0;
+//}
 
-void change_bpm(float incr)
+void change_bpm(s8 incr, u8 rounded)
 {
-    u16 new_pr;
-    u32 a;
-    u32 b;
-
-    a = (FREQUENCY / 256 * 15);
-    b = (((FREQUENCY / 256) * 15 / __g_qbeat_pr) + incr);
-    new_pr = (a / b);
-    if (incr > 0 && new_pr > __g_qbeat_pr)
-        set_qbeat_pr(0x0001);
-    else if (incr < 0 && new_pr < __g_qbeat_pr)
-        set_qbeat_pr(0xFFFF);
-    else
-        set_qbeat_pr(new_pr);
+    bpm_x100 += incr;
+    if (bpm_x100 < 200)
+        bpm_x100 = 200;
+    if (rounded)
+        bpm_x100 = bpm_x100 - bpm_x100 % 100;
 }
 
 void    bpm_new_tap(void)
@@ -75,14 +82,22 @@ void    bpm_new_tap(void)
 
 void    bpm_new_tap_release(void)
 {
-    u32 new_bpm = 0;
+    u32     new_pr = 0;
+    u32     mean_tap;
+    u32     taps_per_minute;
+//    float   fl_bpm;
 
     if (tap_index == 3)
     {
-        new_bpm = (tap_timers[0] + tap_timers[1] + tap_timers[2]) / (3 * 4); // pourquoi 4 ?? parce que l'on tape sur un beat pas un qbeat.
+        mean_tap = (tap_timers[0] + tap_timers[1] + tap_timers[2]) / 3;
+        bpm_x100 = (70.3125 * FREQUENCY) / (tap_timers[0] + tap_timers[1] + tap_timers[2]);
+//        bpm_x100 = (47 * FREQUENCY) / (mean_tap / 100);//(100 * 60 * FREQUENCY / 256) / mean_tap;
+//        bpm_x100 = 100 * taps_per_minute;
+//        new_pr = (tap_timers[0] + tap_timers[1] + tap_timers[2]) / (3 * 4); // pourquoi 4 ?? parce que l'on tape sur un beat pas un qbeat.
         tap_timers[0] = tap_timers[1];
         tap_timers[1] = tap_timers[2];
         tap_index = 2;
-        set_qbeat_pr(new_bpm);
+        TIMER2_PERIOD = mean_tap / (4 * MIDI_PPQN);
+        TIMER2_VALUE = 0;
     }
 }

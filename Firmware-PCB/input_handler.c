@@ -11,6 +11,7 @@ extern u8   HT16_write_leds_request;
 extern u8   current_template;
 extern u8   tap_index;
 extern u32  leds_base_case;
+extern u32  bpm_x100;
 u8          edit_pressed = 0;
 u8          tap_pressed = 0;
 
@@ -57,11 +58,11 @@ void	keys_handler(u8 event_type, u8 event_source)
                             break;
                     cur_note = n;
                     midi_note_on(00, cur_note, cur_velocity);
-                    midi_note_off(00, cur_note, cur_velocity);
                     update_leds_base_case();
                     request_template(&template_note);
                     break;
 		case E_KEY_RELEASED:
+                    midi_note_off(00, cur_note, cur_velocity);
 			break;
 		case E_KEY_LONG_PRESSED:
 			break;
@@ -136,7 +137,7 @@ void	main_encoder_handler(u8 event_type)
                     if(tap_pressed)
                     {
                         tap_index = 0;
-                        change_bpm(+1.);
+                        change_bpm(100, 1);
                         request_template(&template_bpm);
                     }
                     else if (edit_pressed)
@@ -152,7 +153,7 @@ void	main_encoder_handler(u8 event_type)
                     if(tap_pressed)
                     {
                         tap_index = 0;
-                        change_bpm(-1.);
+                        change_bpm(-100, 1);
                         request_template(&template_bpm);
                     }
                     else if (edit_pressed)

@@ -59,6 +59,7 @@ void    timer_2_init(void)
 {
     TIMER2_STOP_AND_RESET;
     TIMER2_VALUE = 0;
+    TIMER2_PERIOD = (FREQUENCY * 15) / (MIDI_PPQN * 256 /100 * INITIAL_BPM_x100);
     TIMER2_PRESCALE = TIMER_PRESCALE_256;
 }
 
@@ -71,13 +72,22 @@ void    int_init_timer2(void)
 
 void __ISR(_TIMER_2_VECTOR, IPL7AUTO) Timer2QTime(void)
 {
+    static u8 ppqn_count = 0;
+
     TIMER2_INT_FLAG_CLR;
 
-    if (current_mode == E_MODE_PATTERN)
-        display_LEDs_for_qtime();
-    if (playing == MUSIC_PLAYING)
+    if (++ppqn_count == MIDI_PPQN)
     {
-        send_MIDI_for_qtime(qtime);
-        qtime = (qtime + 1) & 15;
+        if (current_mode == E_MODE_PATTERN)
+            display_LEDs_for_qtime();
+        if (playing == MUSIC_PLAYING)
+        {
+            send_MIDI_for_qtime(qtime);
+            qtime = (qtime + 1) & 15;
+        }
+        ppqn_count = 0;
+            UART1_send(TIMING_CLOCK);
+
     }
+//    UART1_send(TIMING_CLOCK);
 }

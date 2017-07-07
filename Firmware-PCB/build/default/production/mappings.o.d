@@ -1,9 +1,9 @@
-build/default/production/input_handler.o:  \
-input_handler.c  \
+build/default/production/mappings.o:  \
+mappings.c  \
 0x2a002a.h  \
- UART.h  \
+UART.h  \
 I2C.h  \
-SPI.h  \
+ SPI.h  \
 HT16.h  \
 ENCODERS.h  \
 LCD.h  \
