@@ -101,7 +101,7 @@ void		template_encoder(void)
         LCD_putstr_negative(0, 0, buf);
         last_encoder = cur_encoder;
     }
-    snprintf(buf, LINE_MAX_LEN, "%-3d", encoders_values[cur_encoder]);
+    snprintf(buf, LINE_MAX_LEN, "%-3d", encoders_values[cur_encoder] / 2);
     LCD_putstr(3, 3, buf);
     LCD_print_changed_chars();
     TMR4 = 0;

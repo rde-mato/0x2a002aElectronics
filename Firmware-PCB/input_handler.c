@@ -74,11 +74,13 @@ void	encoders_handler(u8 event_type, u8 event_source)
     {
         case E_ENCODER_TURNED_RIGHT:
             encoders_values[cur_encoder]++;
-            request_template(&template_encoder);
+            if (encoders_values[cur_encoder] & 0x01)
+                request_template(&template_encoder);
             break;
         case E_ENCODER_TURNED_LEFT:
             encoders_values[cur_encoder]--;
-            request_template(&template_encoder);
+            if (encoders_values[cur_encoder] & 0x01)
+                request_template(&template_encoder);
             break;
     }
 }
