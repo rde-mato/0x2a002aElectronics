@@ -13,6 +13,7 @@ extern u8       LCD_dirty;
 extern u8       cur_encoder;
 extern u8       encoders_values[];
 extern u8       encoders_scale[];
+extern const u8    *notesnames[];
 lcd_template    requested_template = &template_default;
 /*
 ** we can't use requested_template as last_template because request_template
@@ -80,10 +81,10 @@ void		template_default(void)
     snprintf(buf, LINE_MAX_LEN, "%d          %d", cur_instrument + 1, cur_pattern + 1);
     LCD_putstr(1, 4, buf);
     LCD_putstr_negative(3, 3, line3);
-    snprintf(buf, LINE_MAX_LEN, "%d         %d", cur_note, cur_velocity);
+    snprintf(buf, LINE_MAX_LEN, "%-2s         %d", notesnames[cur_note % 12], cur_velocity);
     LCD_putstr(4, 4, buf);
     LCD_putstr_negative(6, 3, line6);
-    snprintf(buf, LINE_MAX_LEN, "%.2f        %d", GET_BPM(), cur_octave);
+    snprintf(buf, LINE_MAX_LEN, "%.2f        %d", GET_BPM(), cur_octave + 1);
     LCD_putstr(7, 2, buf);
     LCD_print_changed_chars();
     last_template = TEMPLATE_DEFAULT;
@@ -152,7 +153,25 @@ void		template_note(void)
         LCD_clear();
         LCD_putstr_negative(3, 0, line2);
     }
-    snprintf(line4, LINE_MAX_LEN, "%-3d", cur_note);
+    snprintf(line4, LINE_MAX_LEN, "%-2s", notesnames[cur_note % 12]);
+    LCD_putstr(4, 8, line4);
+    LCD_print_changed_chars();
+    TMR4 = 0;
+    T4CONbits.ON = 1;
+    last_template = TEMPLATE_NOTE;
+}
+
+void		template_octave(void)
+{
+    u8 line2[LINE_MAX_LEN] = "        OCTAVE       ";
+    u8 line4[LINE_MAX_LEN] = { 0 };
+
+    if (last_template != TEMPLATE_NOTE)
+    {
+        LCD_clear();
+        LCD_putstr_negative(3, 0, line2);
+    }
+    snprintf(line4, LINE_MAX_LEN, "%d", cur_octave + 1);
     LCD_putstr(4, 8, line4);
     LCD_print_changed_chars();
     TMR4 = 0;

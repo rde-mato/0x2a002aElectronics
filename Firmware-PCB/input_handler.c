@@ -108,6 +108,12 @@ void	encoders_handler(u8 event_type, u8 event_source)
                 }
             }
             break;
+        case E_KEY_PRESSED:
+            cur_octave = cur_encoder;
+            cur_note = cur_note % 12 + 12 * cur_octave;
+            update_leds_base_case();
+            request_template(&template_octave);
+            break;
     }
 }
 void	main_encoder_handler(u8 event_type)

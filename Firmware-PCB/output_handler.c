@@ -6,6 +6,7 @@
 extern u8          current_mode;
 extern u8          cur_instrument;
 extern u8          cur_note;
+extern u8          cur_octave;
 extern u8          active_patterns[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 extern u8          qtime;
 extern u16         active_instruments_u16;
@@ -57,8 +58,9 @@ void    update_leds_base_case(void)
     u8  n;
 
     leds_base_case = 0;
-    if (MUSIC_PLAYING)
+    if (playing == MUSIC_PLAYING)
         leds_base_case |= (1 << E_SOURCE_BUTTON_PLAY_PAUSE);
+    leds_base_case |= (1 << cur_octave + E_SOURCE_ENCODER_0);
     switch (current_mode)
     {
         case E_MODE_INSTRU:

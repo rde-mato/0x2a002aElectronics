@@ -30,6 +30,8 @@ void		template_encoder(void);
 void		template_main_menu_start(void);
 void		template_bpm(void);
 void		template_velocity(void);
+void		template_octave(void);
+
 
 enum E_LCD_TEMPLATES
 {
