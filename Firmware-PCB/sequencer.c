@@ -86,8 +86,7 @@ void __ISR(_TIMER_2_VECTOR, IPL7AUTO) Timer2QTime(void)
             qtime = (qtime + 1) & 15;
         }
         ppqn_count = 0;
-            UART1_send(TIMING_CLOCK);
 
     }
-//    UART1_send(TIMING_CLOCK);
+    UART1_send(TIMING_CLOCK);
 }

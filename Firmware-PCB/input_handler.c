@@ -137,7 +137,7 @@ void	main_encoder_handler(u8 event_type)
                     if(tap_pressed)
                     {
                         tap_index = 0;
-                        change_bpm(100, 1);
+                        change_bpm(10, 0);
                         request_template(&template_bpm);
                     }
                     else if (edit_pressed)
@@ -153,7 +153,7 @@ void	main_encoder_handler(u8 event_type)
                     if(tap_pressed)
                     {
                         tap_index = 0;
-                        change_bpm(-100, 1);
+                        change_bpm(-10, 0);
                         request_template(&template_bpm);
                     }
                     else if (edit_pressed)

@@ -34,8 +34,8 @@ typedef unsigned long           u32;
 
 #define INSTRUMENTS_COUNT       16
 #define PATTERNS_PER_INSTRUMENT 16
-#define QTIME_PER_PATTERN    16
-#define NOTES_PER_QTIME         4
+#define QTIME_PER_PATTERN       16
+#define NOTES_PER_QTIME         8
 #define ATTRIBUTES_PER_NOTE     2
 #define MUSIC_PLAYING           1
 #define MUSIC_PAUSE             0

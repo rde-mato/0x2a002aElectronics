@@ -85,7 +85,7 @@ void		template_default(void)
     snprintf(buf, LINE_MAX_LEN, "%-2s         %d", notesnames[cur_note % 12], cur_velocity);
     LCD_putstr(4, 4, buf);
     LCD_putstr_negative(6, 3, line6);
-    snprintf(buf, LINE_MAX_LEN, "%.2f        %d", (float)(bpm_x100 / 100), cur_octave + 1);
+    snprintf(buf, LINE_MAX_LEN, "%.2f        %d", ((float)bpm_x100 / 100.0), cur_octave + 1);
     LCD_putstr(7, 2, buf);
     LCD_print_changed_chars();
     last_template = TEMPLATE_DEFAULT;
@@ -133,7 +133,7 @@ void		template_bpm(void)
         LCD_clear();
         LCD_putstr_negative(3, 0, line2);
     }
-    snprintf(line4, LINE_MAX_LEN, "%-7.2f", (float)(bpm_x100 / 100)); // change padding to 6 if bpm restricted < 1000
+    snprintf(line4, LINE_MAX_LEN, "%-7.2f", ((float)bpm_x100 / 100.0)); // change padding to 6 if bpm restricted < 1000
     LCD_putstr(4, 8, line4);
     LCD_print_changed_chars();
     if (!tap_pressed)
