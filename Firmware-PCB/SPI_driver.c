@@ -91,6 +91,7 @@ void    SPI1_manager(void)
     else if (LCD_dirty)
     {
         (*requested_template)();
+
         SPI1_slave = E_SPI1_CS_MCP_LCD;
         SPI1_state = E_SPI1_LCD_CONFIG;
         SPI1_RECEIVE_FLAG = 1;

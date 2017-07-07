@@ -79,12 +79,10 @@ void    bpm_new_tap_release(void)
 
     if (tap_index == 3)
     {
-        new_bpm = (tap_timers[0] + tap_timers[1] + tap_timers[2]) / (3 * 4); // pourquoi 4 ??
-//        new_bpm *= 100;
+        new_bpm = (tap_timers[0] + tap_timers[1] + tap_timers[2]) / (3 * 4); // pourquoi 4 ?? parce que l'on tape sur un beat pas un qbeat.
         tap_timers[0] = tap_timers[1];
         tap_timers[1] = tap_timers[2];
         tap_index = 2;
         set_qbeat_pr(new_bpm);
-        request_template(&template_bpm);
     }
 }

@@ -240,6 +240,7 @@ void	button_tap_handler(u8 event_type)
         case E_KEY_RELEASED:
             tap_pressed = 0;
             bpm_new_tap_release();
+            request_template(&template_bpm);
             break;
         case E_KEY_LONG_PRESSED:
             break;

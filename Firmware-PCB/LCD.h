@@ -31,5 +31,16 @@ void		template_main_menu_start(void);
 void		template_bpm(void);
 void		template_velocity(void);
 
+enum E_LCD_TEMPLATES
+{
+    NO_TEMPLATE = 0,
+    TEMPLATE_NOTE,
+    TEMPLATE_DEFAULT,
+    TEMPLATE_ENCODER,
+    TEMPLATE_MAIN_MENU_START,
+    TEMPLATE_BPM,
+    TEMPLATE_VELOCITY,
+};
+
 #endif	/* LCD_H */
 
