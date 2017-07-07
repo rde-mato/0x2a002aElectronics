@@ -13,6 +13,7 @@
         <itemPath>LCD.h</itemPath>
         <itemPath>ENCODERS.h</itemPath>
         <itemPath>HT16.h</itemPath>
+        <itemPath>MIDI.h</itemPath>
       </logicalFolder>
       <itemPath>0x2a002a.h</itemPath>
     </logicalFolder>
@@ -43,6 +44,7 @@
         <itemPath>sequencer.c</itemPath>
         <itemPath>output_handler.c</itemPath>
         <itemPath>notes.c</itemPath>
+        <itemPath>mappings.c</itemPath>
       </logicalFolder>
       <itemPath>main.c</itemPath>
       <itemPath>init.c</itemPath>

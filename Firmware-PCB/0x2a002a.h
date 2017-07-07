@@ -11,6 +11,8 @@
 # include "EEPROM.h"
 # include "SDCARD.h"
 
+# include "MIDI.h"
+
 typedef signed char             s8;
 typedef signed short            s16;
 typedef signed long             s32;

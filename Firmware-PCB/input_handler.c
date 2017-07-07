@@ -4,6 +4,7 @@
 
 extern float g_bpm;
 
+extern u8   encoder_midi_cc[8];
 extern u32  current_leds_on;
 extern u8   qtime;
 extern u8   HT16_write_leds_request;
@@ -73,25 +74,35 @@ void	encoders_handler(u8 event_type, u8 event_source)
     switch (event_type)
     {
         case E_ENCODER_TURNED_RIGHT:
-            encoders_values[cur_encoder]++;
+            if (encoders_values[cur_encoder] != 0xFF)
+                encoders_values[cur_encoder]++;
             if (encoders_values[cur_encoder] & 0x01)
+            {
+                midi_control_change(0x00, encoder_midi_cc[cur_encoder], encoders_values[cur_encoder] / 2);
                 request_template(&template_encoder);
+            }
             break;
         case E_ENCODER_TURNED_LEFT:
-            encoders_values[cur_encoder]--;
+            if (encoders_values[cur_encoder] != 0x00)
+                encoders_values[cur_encoder]--;
             if (encoders_values[cur_encoder] & 0x01)
+            {
+                midi_control_change(0x00, encoder_midi_cc[cur_encoder], encoders_values[cur_encoder] / 2);
                 request_template(&template_encoder);
+            }
             break;
     }
 }
 void	main_encoder_handler(u8 event_type)
 {
+    static u8 truc = 0;
 	if (current_mode != E_MODE_MENU)
 	{
 		switch (event_type)
 		{
 		case E_KEY_PRESSED:
 			current_mode == E_MODE_MENU;
+                        midi_control_change(00, truc++, 40);
                         request_template(&template_main_menu_start);
                     break;
 		case E_KEY_RELEASED:

@@ -1,11 +1,11 @@
-build/default/debug/notes.o:  \
-notes.c  \
+build/default/debug/mappings.o:  \
+mappings.c  \
 0x2a002a.h  \
 UART.h  \
 I2C.h  \
 SPI.h  \
-HT16.h  \
- ENCODERS.h  \
+ HT16.h  \
+ENCODERS.h  \
 LCD.h  \
 EEPROM.h  \
 SDCARD.h  \
