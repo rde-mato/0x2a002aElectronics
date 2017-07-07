@@ -75,7 +75,9 @@ void __ISR(_TIMER_2_VECTOR, IPL7AUTO) Timer2QTime(void)
 
     if (current_mode == E_MODE_PATTERN)
         display_LEDs_for_qtime();
-    send_MIDI_for_qtime(qtime);
     if (playing == MUSIC_PLAYING)
+    {
+        send_MIDI_for_qtime(qtime);
         qtime = (qtime + 1) & 15;
+    }
 }

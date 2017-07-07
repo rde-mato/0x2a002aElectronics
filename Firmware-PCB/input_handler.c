@@ -177,7 +177,7 @@ void	button_play_handler(u8 event_type)
 	{
 		case E_KEY_PRESSED:
                     playing = !playing;
-//                    update_leds_base_case();
+                    update_leds_base_case();
 
 //                    led_toggle(E_SOURCE_BUTTON_PLAY_PAUSE);
 //			eeprom_buf_size = 8;

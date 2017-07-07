@@ -40,7 +40,7 @@ void    display_LEDs_for_qtime(void)
 
     new_display = leds_base_case;
     if (playing == MUSIC_PLAYING || (blink = !blink) == 1)
-        new_display |= leds_base_case ^ (1 << qtime);
+        new_display ^= (1 << qtime);
     to_toggle = current_leds_on ^ new_display;
     i = 0;
     while (i < 32)
