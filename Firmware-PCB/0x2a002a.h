@@ -40,6 +40,7 @@ typedef unsigned long           u32;
 #define MUSIC_PLAYING           1
 #define MUSIC_PAUSE             0
 #define PIANO_KEYS              0b1111111101110110
+#define NO_NOTE                 0xFF
 
 // CONSTANTS
 #define DEFAULT_BPM             142

@@ -27,6 +27,7 @@ int main(void)
 
     INT_init();
     HT16_init();
+    active_patterns_init();
 
     request_template(&template_default);
 

@@ -15,8 +15,8 @@ extern u32  bpm_x100;
 u8          edit_pressed = 0;
 u8          tap_pressed = 0;
 
-u8          active_patterns[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE] = { 0 };
-u8          active_instrument[PATTERNS_PER_INSTRUMENT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE] = { 0 };
+u8          active_patterns[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE] = { NO_NOTE };
+u8          active_instrument[PATTERNS_PER_INSTRUMENT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE] = { NO_NOTE };
 u16         active_instruments_u16 = 0b01010111;
 u8          encoders_values[8] = { 0x0F };
 u8          encoders_scale[8] = { 16 };
@@ -30,7 +30,10 @@ u8          cur_velocity = 0x40;
 u8          cur_encoder;
 u8          playing = MUSIC_PAUSE;
 
-
+void    active_patterns_init(void)
+{
+    memset(active_patterns, NO_NOTE, INSTRUMENTS_COUNT * QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE);
+}
 
 void	keys_handler(u8 event_type, u8 event_source)
 {

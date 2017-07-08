@@ -7,7 +7,7 @@ extern u8          cur_instrument;
 extern u8          cur_note;
 extern u8          cur_velocity;
 
-const   s8  keysnotes[16] = {-1,  1, 3, -1, 6, 8, 10, -1, 0, 2, 4, 5, 7, 9, 11, 12 };
+const   u8  keysnotes[16] = {NO_NOTE,  1, 3, NO_NOTE, 6, 8, 10, NO_NOTE, 0, 2, 4, 5, 7, 9, 11, 12 };
 const u8    *notesnames[13] = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "C" };
 
 s8      key_to_note(u8 key, u8 octave)
@@ -24,12 +24,12 @@ void    push_note(u8 instrument, u8 qtime, u8 note, u8 velocity)
 
     while (i)
     {
-        active_patterns[instrument][qtime][i][0] = active_patterns[instrument][qtime][i - 1][0];
-        active_patterns[instrument][qtime][i][1] = active_patterns[instrument][qtime][i - 1][1];
+        active_patterns[instrument][qtime][i][E_NOTE_VALUE] = active_patterns[instrument][qtime][i - 1][E_NOTE_VALUE];
+        active_patterns[instrument][qtime][i][E_NOTE_VELOCITY] = active_patterns[instrument][qtime][i - 1][E_NOTE_VELOCITY];
         --i;
     }
-    active_patterns[instrument][qtime][0][0] = note;
-    active_patterns[instrument][qtime][0][1] = velocity;
+    active_patterns[instrument][qtime][0][E_NOTE_VALUE] = note;
+    active_patterns[instrument][qtime][0][E_NOTE_VELOCITY] = velocity;
 }
 
 void    pop_note(u8 qtime)
@@ -39,18 +39,18 @@ void    pop_note(u8 qtime)
 
     while (i < NOTES_PER_QTIME - 1)
     {
-        if (active_patterns[cur_instrument][qtime][i][0] == cur_note)
+        if (active_patterns[cur_instrument][qtime][i][E_NOTE_VALUE] == cur_note)
             break ;
         ++i;
     }
     while (i < NOTES_PER_QTIME - 1)
     {
-        active_patterns[cur_instrument][qtime][i][0] = active_patterns[cur_instrument][qtime][i + 1][0];
-        active_patterns[cur_instrument][qtime][i][1] = active_patterns[cur_instrument][qtime][i + 1][1];
+        active_patterns[cur_instrument][qtime][i][E_NOTE_VALUE] = active_patterns[cur_instrument][qtime][i + 1][E_NOTE_VALUE];
+        active_patterns[cur_instrument][qtime][i][E_NOTE_VELOCITY] = active_patterns[cur_instrument][qtime][i + 1][E_NOTE_VELOCITY];
         ++i;
     }
-    active_patterns[cur_instrument][qtime][NOTES_PER_QTIME - 1][0] = 0;
-    active_patterns[cur_instrument][qtime][NOTES_PER_QTIME - 1][1] = 0;
+    active_patterns[cur_instrument][qtime][NOTES_PER_QTIME - 1][E_NOTE_VALUE] = NO_NOTE;
+    active_patterns[cur_instrument][qtime][NOTES_PER_QTIME - 1][E_NOTE_VELOCITY] = 0;
 }
 
 

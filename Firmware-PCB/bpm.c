@@ -71,6 +71,7 @@ void change_bpm(s8 incr, u8 rounded)
         bpm_x100 = 200;
     if (rounded)
         bpm_x100 = bpm_x100 - bpm_x100 % 100;
+    set_bpm();
 }
 
 void    bpm_new_tap(void)
@@ -82,18 +83,12 @@ void    bpm_new_tap(void)
 
 void    bpm_new_tap_release(void)
 {
-    u32     new_pr = 0;
     u32     mean_tap;
-    u32     taps_per_minute;
-//    float   fl_bpm;
 
     if (tap_index == 3)
     {
         mean_tap = (tap_timers[0] + tap_timers[1] + tap_timers[2]) / 3;
-        bpm_x100 = (70.3125 * FREQUENCY) / (tap_timers[0] + tap_timers[1] + tap_timers[2]);
-//        bpm_x100 = (47 * FREQUENCY) / (mean_tap / 100);//(100 * 60 * FREQUENCY / 256) / mean_tap;
-//        bpm_x100 = 100 * taps_per_minute;
-//        new_pr = (tap_timers[0] + tap_timers[1] + tap_timers[2]) / (3 * 4); // pourquoi 4 ?? parce que l'on tape sur un beat pas un qbeat.
+        bpm_x100 = (70.3125 * FREQUENCY) / (tap_timers[0] + tap_timers[1] + tap_timers[2]);//(100 * 60 * FREQUENCY / 256) / mean_tap;
         tap_timers[0] = tap_timers[1];
         tap_timers[1] = tap_timers[2];
         tap_index = 2;
