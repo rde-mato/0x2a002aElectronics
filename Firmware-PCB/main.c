@@ -29,7 +29,7 @@ int main(void)
     HT16_init();
     active_patterns_init();
 
-    request_template(&template_default);
+    request_template(TEMPLATE_DEFAULT);
 
     IFS0bits.INT1IF = 1; // a garder pour reset les encoders
 

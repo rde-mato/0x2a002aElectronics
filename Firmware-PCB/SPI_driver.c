@@ -8,7 +8,6 @@ extern u8   SPI_encoders_dirty;
 extern u8   LCD_dirty;
 extern u8   LCD_writing;
 extern u8   SPI_LCD_clear;
-extern lcd_template  requested_template;
 
 u8          SPI1_state = E_SPI1_DONE;
 u8          SPI1_slave = E_SPI1_CS_MCP_ENC;
@@ -90,7 +89,7 @@ void    SPI1_manager(void)
     }
     else if (LCD_dirty)
     {
-        (*requested_template)();
+        display_current_template();
 
         SPI1_slave = E_SPI1_CS_MCP_LCD;
         SPI1_state = E_SPI1_LCD_CONFIG;

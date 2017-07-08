@@ -20,28 +20,18 @@
 #define LCD_CS1_bit         0x08
 #define LCD_CS2_bit         0x10
 #define LCD_PORTS_ADDRESS   0x4012
-#define LINE_MAX_LEN        22
-
-typedef void                    (*lcd_template)(void);
-
-void		template_note(void);
-void		template_default(void);
-void		template_encoder(void);
-void		template_main_menu_start(void);
-void		template_bpm(void);
-void		template_velocity(void);
-void		template_octave(void);
-
+#define LINES_COUNT          8
+#define CHARS_PER_LINE       21
 
 enum E_LCD_TEMPLATES
 {
-    NO_TEMPLATE = 0,
+    TEMPLATE_DEFAULT = 0,
     TEMPLATE_NOTE,
-    TEMPLATE_DEFAULT,
     TEMPLATE_ENCODER,
     TEMPLATE_MAIN_MENU_START,
     TEMPLATE_BPM,
     TEMPLATE_VELOCITY,
+    TEMPLATE_OCTAVE
 };
 
 #endif	/* LCD_H */

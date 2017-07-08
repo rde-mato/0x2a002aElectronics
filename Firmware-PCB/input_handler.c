@@ -62,7 +62,7 @@ void	keys_handler(u8 event_type, u8 event_source)
                     cur_note = n;
                     midi_note_on(00, cur_note, cur_velocity);
                     update_leds_base_case();
-                    request_template(&template_note);
+                    request_template(TEMPLATE_NOTE);
                     break;
 		case E_KEY_RELEASED:
                     midi_note_off(00, cur_note, cur_velocity);
@@ -92,7 +92,7 @@ void	encoders_handler(u8 event_type, u8 event_source)
                 if (encoders_values[cur_encoder] & 0x01)
                 {
                     midi_control_change(0x00, encoder_midi_cc[cur_encoder], encoders_values[cur_encoder] / 2);
-                    request_template(&template_encoder);
+                    request_template(TEMPLATE_ENCODER);
                 }
             }
             break;
@@ -108,7 +108,7 @@ void	encoders_handler(u8 event_type, u8 event_source)
                 if (encoders_values[cur_encoder] & 0x01)
                 {
                     midi_control_change(0x00, encoder_midi_cc[cur_encoder], encoders_values[cur_encoder] / 2);
-                    request_template(&template_encoder);
+                    request_template(TEMPLATE_ENCODER);
                 }
             }
             break;
@@ -116,7 +116,7 @@ void	encoders_handler(u8 event_type, u8 event_source)
             cur_octave = cur_encoder;
             cur_note = cur_note % 12 + 12 * cur_octave;
             update_leds_base_case();
-            request_template(&template_octave);
+            request_template(TEMPLATE_OCTAVE);
             break;
     }
 }
@@ -130,7 +130,7 @@ void	main_encoder_handler(u8 event_type)
 		case E_KEY_PRESSED:
 			current_mode == E_MODE_MENU;
                         midi_control_change(00, truc++, 40);
-                        request_template(&template_main_menu_start);
+                        request_template(TEMPLATE_MAIN_MENU_START);
                     break;
 		case E_KEY_RELEASED:
                     break;
@@ -141,12 +141,12 @@ void	main_encoder_handler(u8 event_type)
                     {
                         tap_index = 0;
                         change_bpm(10, 0);
-                        request_template(&template_bpm);
+                        request_template(TEMPLATE_BPM);
                     }
                     else if (edit_pressed)
                     {
                         cur_velocity++;
-                        request_template(&template_velocity);
+                        request_template(TEMPLATE_VELOCITY);
                     }
                     else
                     {
@@ -157,12 +157,12 @@ void	main_encoder_handler(u8 event_type)
                     {
                         tap_index = 0;
                         change_bpm(-10, 0);
-                        request_template(&template_bpm);
+                        request_template(TEMPLATE_BPM);
                     }
                     else if (edit_pressed)
                     {
                         cur_velocity--;
-                        request_template(&template_velocity);
+                        request_template(TEMPLATE_VELOCITY);
                     }
                     else
                     {
@@ -275,12 +275,12 @@ void	button_tap_handler(u8 event_type)
         case E_KEY_PRESSED:
             tap_pressed = 1;
             bpm_new_tap();
-            request_template(&template_bpm);
+            request_template(TEMPLATE_BPM);
             break;
         case E_KEY_RELEASED:
             tap_pressed = 0;
             bpm_new_tap_release();
-            request_template(&template_bpm);
+            request_template(TEMPLATE_BPM);
             break;
         case E_KEY_LONG_PRESSED:
             break;

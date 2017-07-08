@@ -3,7 +3,6 @@
 #include "0x2a002a.h"
 #include <stdlib.h>
 
-#define NEG_SPACE 160 //' ' + 0x80
 extern u32      bpm_x100;
 extern u8	cur_instrument;
 extern u8	cur_pattern;
@@ -14,13 +13,16 @@ extern u8       LCD_dirty;
 extern u8       cur_encoder;
 extern u8       encoders_values[];
 extern u8       encoders_scale[];
-extern const u8    *notesnames[];
-lcd_template    requested_template = &template_default;
-/*
-** we can't use requested_template as last_template because request_template
-** can be called multiple times before actually displaying the template.
-*/
-u8              last_template = NO_TEMPLATE;
+extern const u8 *notesnames[];
+extern u8	lcd_chars[8][21];
+u8              cur_template = TEMPLATE_DEFAULT;
+
+
+void    request_template(u8 template)
+{
+    cur_template = template;
+    LCD_dirty = 1;
+}
 
 void    int_init_timer4(void)
 {
@@ -40,160 +42,101 @@ void    timer_4_init(void)
 
 void __ISR(_TIMER_4_VECTOR, IPL1AUTO) Timer4Handler(void)
 {
-        request_template(&template_default);
+        request_template(TEMPLATE_DEFAULT);
 	IFS0bits.T4IF = 0;
 	T4CONbits.ON = 0;
 }
 
-void    request_template(lcd_template template)
+u8      *negate_string(u8 *str, u8 *dest)
 {
-    LCD_dirty = 1;
-    requested_template = template;
-//    if (template != &template_default)  Handled by templates themselves ?
-//    {
-//        TMR4 = 0;
-//        T4CONbits.ON = 1;
-//    }
-}
+    u8  i;
 
-void    negate_spaces(u8 *str)
-{
-    while (*str)
+    i = 0;
+    while (dest[i])
+        dest[i++] = 0;
+    i = 0;
+    while (str[i])
     {
-        if (*str == ' ')
-            *str += 0x80;
-        str++;
+        dest[i] = str[i] + 0x80;
+        i++;
     }
+    return (dest);
 }
 
-void		template_default(void)
+void    display_current_template(void)
 {
-    u8 line0[LINE_MAX_LEN] = "INSTRUMENT  PATTERN ";
-    u8 line3[LINE_MAX_LEN] = "NOTE     VELOCITY";
-    u8 line6[LINE_MAX_LEN] = "BPM       OCTAVE";
-    u8 buf[LINE_MAX_LEN] = {0};
+    static u8 previous = TEMPLATE_DEFAULT;
+    static u8 last_encoder = 0;
+    u8  lines[LINES_COUNT][CHARS_PER_LINE + 1] = { 0 };
+    u8  i = 0;
+    u8  s1[CHARS_PER_LINE + 1];
+    u8  s2[CHARS_PER_LINE + 1];
 
-    negate_spaces(line0);
-    negate_spaces(line3);
-    negate_spaces(line6);
-
-    LCD_clear();
-    LCD_putstr_negative(0, 0, line0);
-    snprintf(buf, LINE_MAX_LEN, "%d          %d", cur_instrument + 1, cur_pattern + 1);
-    LCD_putstr(1, 4, buf);
-    LCD_putstr_negative(3, 3, line3);
-    snprintf(buf, LINE_MAX_LEN, "%-2s         %d", notesnames[cur_note % 12], cur_velocity);
-    LCD_putstr(4, 4, buf);
-    LCD_putstr_negative(6, 3, line6);
-    snprintf(buf, LINE_MAX_LEN, "%.2f        %d", ((float)bpm_x100 / 100.0), cur_octave + 1);
-    LCD_putstr(7, 2, buf);
-    LCD_print_changed_chars();
-    last_template = TEMPLATE_DEFAULT;
-}
-
-void		template_encoder(void)
-{
-    static u8   last_encoder = 0xFF;
-    u8          buf[LINE_MAX_LEN] = {0};
-
-    if (last_template != TEMPLATE_ENCODER)
-        LCD_clear();
-    if ((last_encoder != cur_encoder) || last_template != TEMPLATE_ENCODER)
+    if (cur_template == TEMPLATE_ENCODER && cur_template == previous)
     {
-        snprintf(buf, LINE_MAX_LEN, "      ENCODER %d      ", cur_encoder + 1);
-        LCD_putstr_negative(1, 0, buf);
+        snprintf(s1, CHARS_PER_LINE + 1, "%3d", encoders_values[cur_encoder] / 2);
+        LCD_print_char(3, 11, cur_encoder + '1' + 0x80);
+        lcd_chars[3][11] = cur_encoder + '1' + 0x80;
+        LCD_print_char(4, 7, s1[0]);
+        lcd_chars[4][7] = s1[0];
+        LCD_print_char(4, 8, s1[1]);
+        lcd_chars[4][8] = s1[1];
+        LCD_print_char(4, 9, s1[2]);
+        lcd_chars[4][9] = s1[2];
         last_encoder = cur_encoder;
     }
-    snprintf(buf, LINE_MAX_LEN, "%-3d", encoders_values[cur_encoder] / 2);
-    LCD_putstr(3, 3, buf);
-    LCD_print_changed_chars();
-    TMR4 = 0;
-    T4CONbits.ON = 1;
-    last_template = TEMPLATE_ENCODER;
-}
-
-void		template_main_menu_start(void)
-{
-    LCD_clear();
-    LCD_putstr(0, 0, "   TEST");
-    LCD_print_changed_chars();
-    TMR4 = 0;
-    T4CONbits.ON = 1;
-    last_template = TEMPLATE_MAIN_MENU_START;
-}
-
-void		template_bpm(void)
-{
-    u8          line2[LINE_MAX_LEN] = "         BPM         ";
-    u8          line4[LINE_MAX_LEN] = { 0 };
-    extern u8   tap_pressed;
-
-    if (last_template != TEMPLATE_BPM)
+    else
     {
         LCD_clear();
-        LCD_putstr_negative(3, 0, line2);
+        switch (cur_template)
+        {
+            case TEMPLATE_DEFAULT:
+                snprintf(lines[0], CHARS_PER_LINE + 1, "%10s%10s", negate_string("INSTRUMENT", s1), negate_string("PATTERN", s2));
+                snprintf(lines[1], CHARS_PER_LINE + 1, "%10d%10d", cur_instrument + 1, cur_pattern + 1);
+                snprintf(lines[3], CHARS_PER_LINE + 1, "%10s%10s", negate_string("NOTE", s1), negate_string("VELOCITY", s2));
+                snprintf(lines[4], CHARS_PER_LINE + 1, "%10s%10d", notesnames[cur_note % 12], cur_velocity);
+                snprintf(lines[6], CHARS_PER_LINE + 1, "%10s%10s", negate_string("BPM", s1), negate_string("OCTAVE", s2));
+                snprintf(lines[7], CHARS_PER_LINE + 1, "%10.2f%10d", ((float)bpm_x100 / 100.0), cur_octave + 1);
+                break;
+            case TEMPLATE_BPM:
+                snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "BPM", 0);
+                snprintf(lines[3], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
+                snprintf(lines[4], CHARS_PER_LINE + 1, "%10.2f", ((float)bpm_x100 / 100.0));
+                break;
+            case TEMPLATE_ENCODER:
+                snprintf(s1, CHARS_PER_LINE + 1, "%10s %d%20c", "ENCODER", cur_encoder + 1, 0);
+                snprintf(lines[3], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
+                snprintf(lines[4], CHARS_PER_LINE + 1, "%10d", encoders_values[cur_encoder] / 2);
+                break;
+            case TEMPLATE_MAIN_MENU_START:
+                break;
+            case TEMPLATE_NOTE:
+                snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "NOTE", 0);
+                snprintf(lines[3], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
+                snprintf(lines[4], CHARS_PER_LINE + 1, "%10s", notesnames[cur_note % 12]);
+                break;
+            case TEMPLATE_VELOCITY:
+                snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "VELOCITY", 0);
+                snprintf(lines[3], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
+                snprintf(lines[4], CHARS_PER_LINE + 1, "%10d", cur_velocity);
+                break;
+            case TEMPLATE_OCTAVE:
+                snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "OCTAVE", 0);
+                snprintf(lines[3], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
+                snprintf(lines[4], CHARS_PER_LINE + 1, "%10d", cur_octave + 1);
+                break;
+        }
+        while (i < LINES_COUNT)
+        {
+            LCD_putstr(i, 0, lines[i]);
+            ++i;
+        }
+        LCD_print_changed_chars();
     }
-    snprintf(line4, LINE_MAX_LEN, "%-7.2f", ((float)bpm_x100 / 100.0)); // change padding to 6 if bpm restricted < 1000
-    LCD_putstr(4, 8, line4);
-    LCD_print_changed_chars();
-    if (!tap_pressed)
+    if (cur_template != TEMPLATE_DEFAULT)
     {
         TMR4 = 0;
         T4CONbits.ON = 1;
     }
-    last_template = TEMPLATE_BPM;
-}
-
-void		template_note(void)
-{
-    u8 line2[LINE_MAX_LEN] = "        NOTE         ";
-    u8 line4[LINE_MAX_LEN] = { 0 };
-
-    if (last_template != TEMPLATE_NOTE)
-    {
-        LCD_clear();
-        LCD_putstr_negative(3, 0, line2);
-    }
-    snprintf(line4, LINE_MAX_LEN, "%-2s", notesnames[cur_note % 12]);
-    LCD_putstr(4, 8, line4);
-    LCD_print_changed_chars();
-    TMR4 = 0;
-    T4CONbits.ON = 1;
-    last_template = TEMPLATE_NOTE;
-}
-
-void		template_octave(void)
-{
-    u8 line2[LINE_MAX_LEN] = "        OCTAVE       ";
-    u8 line4[LINE_MAX_LEN] = { 0 };
-
-    if (last_template != TEMPLATE_NOTE)
-    {
-        LCD_clear();
-        LCD_putstr_negative(3, 0, line2);
-    }
-    snprintf(line4, LINE_MAX_LEN, "%d", cur_octave + 1);
-    LCD_putstr(4, 8, line4);
-    LCD_print_changed_chars();
-    TMR4 = 0;
-    T4CONbits.ON = 1;
-    last_template = TEMPLATE_NOTE;
-}
-
-void		template_velocity(void)
-{
-    u8 line2[LINE_MAX_LEN] = "      VELOCITY       ";
-    u8 line4[LINE_MAX_LEN] = { 0 };
-
-    if (last_template != TEMPLATE_VELOCITY)
-    {
-        LCD_clear();
-        LCD_putstr_negative(3, 0, line2);
-    }
-    snprintf(line4, LINE_MAX_LEN, "%-3d", cur_velocity);
-    LCD_putstr(4, 8, line4);
-    LCD_print_changed_chars();
-    TMR4 = 0;
-    T4CONbits.ON = 1;
-    last_template = TEMPLATE_VELOCITY;
+    previous = cur_template;
 }
