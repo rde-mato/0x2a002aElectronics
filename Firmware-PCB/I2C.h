@@ -7,8 +7,8 @@
 #define I2C1_PIN_LATCH 		LATBbits.LATB8
 #define I2C1_INT_PRIORITY	IPC8bits.I2C1IP
 #define I2C1_INT_ENABLE		IEC1bits.I2C1MIE
-#define I2C1_READ		0
-#define I2C1_WRITE		1
+#define I2C1_RW_READ		0
+#define I2C1_RW_WRITE		1
 #define I2C1_ACK		0
 #define I2C1_NACK		1
 

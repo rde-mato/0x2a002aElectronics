@@ -7,21 +7,19 @@ extern u8               HT16_read_keys_request;
 
 u8                      I2C1_read_buf[I2C1_READ_BUF_SIZE];
 
-static u8               I2C1_state = E_I2C1_DONE;
-static u8               I2C1_RW;
-static u8               I2C1_write_buf[I2C1_WRITE_BUF_SIZE] = { 0 };
-static u8               I2C1_write_buf_index = 0;
-static u8               I2C1_write_buf_size = 0;
-static u8               I2C1_read_buf_expected;
-static u8               I2C1_read_buf_index = 0;
-static read_callback    I2C1_read_cb = NULL;
-static write_callback   I2C1_write_cb = NULL;
+u8               I2C1_state = E_I2C1_DONE;
+u8               I2C1_RW;
+u8               I2C1_write_buf[I2C1_WRITE_BUF_SIZE] = { 0 };
+u8               I2C1_write_buf_index = 0;
+u8               I2C1_write_buf_size = 0;
+u8               I2C1_read_buf_expected;
+u8               I2C1_read_buf_index = 0;
+read_callback    I2C1_read_cb = NULL;
+write_callback   I2C1_write_cb = NULL;
 
 void    int_init_I2C1(void)
 {
-    I2C1_INT_FLAG_CLR;
     I2C1_INT_PRIORITY = 4;
-    I2C1_INT_ENABLE = 1;
 }
 
 void I2C1_init(void)
@@ -47,6 +45,7 @@ void I2C1_init(void)
     I2C1CONbits.ON = 1;
 }
 
+
 void I2C1_push(u8 data)
 {
     I2C1_write_buf[I2C1_write_buf_size++] = data;
@@ -65,9 +64,29 @@ void I2C1_write(u8 slave, u8 command, u8 *buffer, u32 size)
             I2C1_push(buffer[i++]);
     }
     I2C1_write_cb = NULL;
-    I2C1_RW = I2C1_WRITE;
+    I2C1_RW = I2C1_RW_WRITE;
     I2C1_state = E_I2C1_WRITE;
     I2C1CONbits.SEN = 1;
+    I2C1_INT_ENABLE = INT_ENABLED;
+}
+
+void I2C1_write_callback(u8 slave, u8 command, u8 *buffer, u32 size, write_callback cb)
+{
+    u32	i;
+
+    I2C1_push(slave);
+    I2C1_push(command);
+    if (buffer)
+    {
+        i = 0;
+        while (i < size)
+            I2C1_push(buffer[i++]);
+    }
+    I2C1_write_cb = cb;
+    I2C1_RW = I2C1_RW_WRITE;
+    I2C1_state = E_I2C1_WRITE;
+    I2C1CONbits.SEN = 1;
+    I2C1_INT_ENABLE = INT_ENABLED;
 }
 
 void I2C1_read_callback(u8 slave, u8 command, u8 size, read_callback cb)
@@ -75,10 +94,11 @@ void I2C1_read_callback(u8 slave, u8 command, u8 size, read_callback cb)
     I2C1_push(slave);
     I2C1_push(command);
     I2C1_read_cb = cb;
-    I2C1_RW = I2C1_READ;
+    I2C1_RW = I2C1_RW_READ;
     I2C1_state = E_I2C1_WRITING_SLAVE_ADDR_WRITE;
     I2C1_read_buf_expected = size;
     I2C1CONbits.SEN = 1;
+    I2C1_INT_ENABLE = INT_ENABLED;
 }
 
 void HT16_init(void)
@@ -112,38 +132,27 @@ void HT16_init(void)
         WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
 }
 
-void I2C1_write_callback(u8 slave, u8 command, u8 *buffer, u32 size, write_callback cb)
-{
-    u32	i;
-
-    I2C1_push(slave);
-    I2C1_push(command);
-    if (buffer)
-    {
-        i = 0;
-        while (i < size)
-            I2C1_push(buffer[i++]);
-    }
-    I2C1_write_cb = cb;
-    I2C1_RW = I2C1_WRITE;
-    I2C1_state = E_I2C1_WRITE;
-    I2C1CONbits.SEN = 1;
-}
-
 void I2C1_state_machine_write(void)
 {
     switch (I2C1_state)
     {
         case E_I2C1_WRITE:
-            if (I2C1STATbits.TRSTAT)
-                break;
-            if (I2C1_write_buf_index < I2C1_write_buf_size)
-                I2C1TRN = I2C1_write_buf[I2C1_write_buf_index++];
-            else
-            {
-                I2C1_state = E_I2C1_CALLBACK;
-                I2C1CONbits.PEN = 1;
-            }
+//            if (I2C1STAT != 8 || I2C1STAT != 0)
+//                break;
+//            if (!I2C1STATbits.TRSTAT)
+//            {
+                if (I2C1_write_buf_index < I2C1_write_buf_size)
+                {
+                    I2C1TRN = I2C1_write_buf[I2C1_write_buf_index++];
+                    I2C1_INT_ENABLE = INT_ENABLED;
+                }
+                else
+                {
+                    I2C1_state = E_I2C1_CALLBACK;
+                    I2C1CONbits.PEN = 1;
+                    I2C1_INT_ENABLE = INT_ENABLED;
+                }
+//            }
             break;
         case E_I2C1_CALLBACK:
             if (I2C1_write_cb)
@@ -163,18 +172,22 @@ void I2C1_state_machine_read(void)
         case E_I2C1_WRITING_SLAVE_ADDR_WRITE:
             I2C1TRN = I2C1_write_buf[0];
             I2C1_state = E_I2C1_WRITING_COMMAND_REGISTER;
+            I2C1_INT_ENABLE = INT_ENABLED;
             break;
         case E_I2C1_WRITING_COMMAND_REGISTER:
             I2C1TRN = I2C1_write_buf[1];
             I2C1_state = E_I2C1_SENDING_CMD_REGISTER_RESTART;
+            I2C1_INT_ENABLE = INT_ENABLED;
             break;
         case E_I2C1_SENDING_CMD_REGISTER_RESTART:
             I2C1CONbits.RSEN = 1;
             I2C1_state = E_I2C1_WRITING_SLAVE_ADDR_READ;
+            I2C1_INT_ENABLE = INT_ENABLED;
             break;
         case E_I2C1_WRITING_SLAVE_ADDR_READ:
             I2C1TRN = I2C1_write_buf[0] | 1;
             I2C1_state = E_I2C1_START_READING_BYTE;
+            I2C1_INT_ENABLE = INT_ENABLED;
             break;
         case E_I2C1_READ_AND_ACK:
             if (I2C1STATbits.RBF)
@@ -183,6 +196,7 @@ void I2C1_state_machine_read(void)
                 I2C1CONbits.ACKDT = 0;
                 I2C1CONbits.ACKEN = 1;
                 I2C1_state = E_I2C1_START_READING_BYTE;
+                I2C1_INT_ENABLE = INT_ENABLED;
             }
             break;
         case E_I2C1_START_READING_BYTE:
@@ -190,11 +204,13 @@ void I2C1_state_machine_read(void)
             {
                 I2C1_state = E_I2C1_READ_AND_ACK;
                 I2C1CONbits.RCEN = 1;
+                I2C1_INT_ENABLE = INT_ENABLED;
             }
             else
             {
                 I2C1_state = E_I2C1_READ_AND_NACK;
                 I2C1CONbits.RCEN = 1;
+                I2C1_INT_ENABLE = INT_ENABLED;
             }
             break;
         case E_I2C1_READ_AND_NACK:
@@ -209,6 +225,7 @@ void I2C1_state_machine_read(void)
                 I2C1_read_buf_index = 0;
                 I2C1_read_buf_expected = 0; // PAS SUR
                 I2C1_state = E_I2C1_CALLBACK;
+                I2C1_INT_ENABLE = INT_ENABLED;
             }
             break;
         case E_I2C1_CALLBACK:
@@ -223,8 +240,8 @@ void I2C1_state_machine_read(void)
 
 void __ISR(_I2C_1_VECTOR, IPL4AUTO) I2C1Handler(void)
 {
-    I2C1_INT_FLAG_CLR;
-    if (I2C1_RW == I2C1_WRITE)
+    I2C1_INT_ENABLE = INT_DISABLED;
+    if (I2C1_RW == I2C1_RW_WRITE)
         I2C1_state_machine_write();
     else
         I2C1_state_machine_read();
