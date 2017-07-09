@@ -4,14 +4,20 @@
 
 extern u8   SPI1_state;
 
-u8          SPI_eeprom_write_request;
-u8          SPI_eeprom_read_request;
+u8          SPI_eeprom_write_request = 0;
+u8          SPI_eeprom_read_request = 0;
+u8          EEPROM_requested_instrument = 0;
 
 static u16  eeprom_address;
 static u8   eeprom_buf_size;
 static u8   eeprom_buf[128]; //size of a page
+//u8          instrument_buffer[PATTERNS_PER_INSTRUMENT * QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE];
+
+extern u8          active_patterns[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
+extern u8          active_instrument[PATTERNS_PER_INSTRUMENT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 
 const   size_t pattern_size = QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE;
+const   size_t instrument_size = INSTRUMENTS_COUNT * QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE;
 
 void    eeprom_write(u8 *src, u8 size, u16 address)
 {
@@ -364,13 +370,4 @@ void SPI1_eeprom_state_machine(void)
 	eeprom_state_machine_read();
     else if (SPI_eeprom_write_request)
 	eeprom_state_machine_write();
-//	switch (SPI1_state)
-//	{
-//		case E_SPI1_EEPROM_WRITE_ENABLE:
-//			eeprom_state_machine_write();
-//			break;
-//		case E_SPI1_EEPROM_READ_ENABLE:
-//			eeprom_state_machine_read();
-//			break;
-//	}
 }
