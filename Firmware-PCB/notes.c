@@ -2,7 +2,7 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
-extern u8          active_patterns[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
+extern u8          cur_active_pattern[QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 extern u8          cur_instrument;
 extern u8          cur_note;
 extern u8          cur_velocity;
@@ -18,18 +18,18 @@ s8      key_to_note(u8 key, u8 octave)
     return (12 * octave + keysnotes[key]);
 }
 
-void    push_note(u8 instrument, u8 qtime, u8 note, u8 velocity)
+void    push_note(u8 qtime, u8 note, u8 velocity)
 {
     u8 i = NOTES_PER_QTIME - 1;
 
     while (i)
     {
-        active_patterns[instrument][qtime][i][E_NOTE_VALUE] = active_patterns[instrument][qtime][i - 1][E_NOTE_VALUE];
-        active_patterns[instrument][qtime][i][E_NOTE_VELOCITY] = active_patterns[instrument][qtime][i - 1][E_NOTE_VELOCITY];
+        cur_active_pattern[qtime][i][E_NOTE_VALUE] = cur_active_pattern[qtime][i - 1][E_NOTE_VALUE];
+        cur_active_pattern[qtime][i][E_NOTE_VELOCITY] = cur_active_pattern[qtime][i - 1][E_NOTE_VELOCITY];
         --i;
     }
-    active_patterns[instrument][qtime][0][E_NOTE_VALUE] = note;
-    active_patterns[instrument][qtime][0][E_NOTE_VELOCITY] = velocity;
+    cur_active_pattern[qtime][0][E_NOTE_VALUE] = note;
+    cur_active_pattern[qtime][0][E_NOTE_VELOCITY] = velocity;
 }
 
 void    pop_note(u8 qtime)
@@ -39,18 +39,18 @@ void    pop_note(u8 qtime)
 
     while (i < NOTES_PER_QTIME - 1)
     {
-        if (active_patterns[cur_instrument][qtime][i][E_NOTE_VALUE] == cur_note)
+        if (cur_active_pattern[qtime][i][E_NOTE_VALUE] == cur_note)
             break ;
         ++i;
     }
     while (i < NOTES_PER_QTIME - 1)
     {
-        active_patterns[cur_instrument][qtime][i][E_NOTE_VALUE] = active_patterns[cur_instrument][qtime][i + 1][E_NOTE_VALUE];
-        active_patterns[cur_instrument][qtime][i][E_NOTE_VELOCITY] = active_patterns[cur_instrument][qtime][i + 1][E_NOTE_VELOCITY];
+        cur_active_pattern[qtime][i][E_NOTE_VALUE] = cur_active_pattern[qtime][i + 1][E_NOTE_VALUE];
+        cur_active_pattern[qtime][i][E_NOTE_VELOCITY] = cur_active_pattern[qtime][i + 1][E_NOTE_VELOCITY];
         ++i;
     }
-    active_patterns[cur_instrument][qtime][NOTES_PER_QTIME - 1][E_NOTE_VALUE] = NO_NOTE;
-    active_patterns[cur_instrument][qtime][NOTES_PER_QTIME - 1][E_NOTE_VELOCITY] = 0;
+    cur_active_pattern[qtime][NOTES_PER_QTIME - 1][E_NOTE_VALUE] = NO_NOTE;
+    cur_active_pattern[qtime][NOTES_PER_QTIME - 1][E_NOTE_VELOCITY] = 0;
 }
 
 
@@ -60,17 +60,16 @@ void    add_note(u8 qt)
 
     while (i < NOTES_PER_QTIME)
     {
-        if (active_patterns[cur_instrument][qt][i][E_NOTE_VALUE] == cur_note)
+        if (cur_active_pattern[qt][i][E_NOTE_VALUE] == cur_note)
         {
-            if (active_patterns[cur_instrument][qt][i][E_NOTE_VELOCITY] == cur_velocity)
+            if (cur_active_pattern[qt][i][E_NOTE_VELOCITY] == cur_velocity)
                 pop_note(qt);
             else
-                active_patterns[cur_instrument][qt][i][E_NOTE_VELOCITY] = cur_velocity;
+                cur_active_pattern[qt][i][E_NOTE_VELOCITY] = cur_velocity;
             break;
         }
         i++;
     }
     if (i == NOTES_PER_QTIME)
-        push_note(cur_instrument, qt, cur_note, cur_velocity);
-    update_leds_base_case();
+        push_note(qt, cur_note, cur_velocity);
 }

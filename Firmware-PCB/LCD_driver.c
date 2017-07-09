@@ -396,7 +396,7 @@ void    SPI1_LCD_state_machine(void)
             SPI1_state = E_SPI1_LCD_WRITE_ENABLE_HIGH;
             SPI1BUF = LCD_PORTS_ADDRESS;
             SPI1_RECEIVE_ENABLE = INT_ENABLED;
-            SPI1_TRANSFER_ENABLE = INT_ENABLED;
+            SPI1_TRANSMIT_ENABLE = INT_ENABLED;
             break;
         case E_SPI1_LCD_WRITE_ENABLE_LOW:
             if (SPI1STATbits.SPIBUSY)
@@ -405,7 +405,7 @@ void    SPI1_LCD_state_machine(void)
             SPI1_state = E_SPI1_LCD_WRITE_ENABLE_HIGH;
             SPI1BUF = SPI_buf_LCD[SPI_LCD_index++];
             SPI1_RECEIVE_ENABLE = INT_ENABLED;
-            SPI1_TRANSFER_ENABLE = INT_ENABLED;
+            SPI1_TRANSMIT_ENABLE = INT_ENABLED;
             break ;
         case E_SPI1_LCD_WRITE_ENABLE_HIGH:
             if (SPI1STATbits.SPIBUSY)
@@ -416,7 +416,7 @@ void    SPI1_LCD_state_machine(void)
                 SPI1_state = E_SPI1_LCD_WRITE_ENABLE_LOW;
                 SPI1BUF = SPI_buf_LCD[SPI_LCD_index] | (LCD_ENABLE_BIT << 8);
                 SPI1_RECEIVE_ENABLE = INT_ENABLED;
-                SPI1_TRANSFER_ENABLE = INT_ENABLED;
+                SPI1_TRANSMIT_ENABLE = INT_ENABLED;
                 break ;
             }
             else

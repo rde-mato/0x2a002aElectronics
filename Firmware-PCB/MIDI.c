@@ -1,6 +1,6 @@
 #include "0x2a002a.h"
 ;
-static u8  running_status;
+u8  running_status;
 
 /*
 ** Sets MIDI Note Off.

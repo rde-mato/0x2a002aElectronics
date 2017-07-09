@@ -19,6 +19,9 @@ int main(void)
     LCD_init();
     MCP_ENCODERS_init_blocking();
     UART1_init();
+    eeprom_init();
+    active_patterns_init();
+
 
     //		SD_card_init();
     //		ret1 = SD_card_read_block(block);
@@ -27,7 +30,7 @@ int main(void)
 
     INT_init();
     HT16_init();
-    active_patterns_init();
+    active_instrument_init();
 
     request_template(TEMPLATE_DEFAULT);
 

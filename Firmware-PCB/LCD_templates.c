@@ -125,6 +125,16 @@ void    display_current_template(void)
                 snprintf(lines[3], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
                 snprintf(lines[4], CHARS_PER_LINE + 1, "%10d", cur_octave + 1);
                 break;
+            case TEMPLATE_INSTRUMENT:
+                snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "INSTRUMENT", 0);
+                snprintf(lines[3], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
+                snprintf(lines[4], CHARS_PER_LINE + 1, "%10d", cur_instrument + 1);
+                break ;
+            case TEMPLATE_PATTERN_RECORDED:
+                snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "PATTERN RECORDED", 0);
+                snprintf(lines[3], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
+                break ;
+
         }
         while (i < LINES_COUNT)
         {

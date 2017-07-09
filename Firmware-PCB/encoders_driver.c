@@ -116,7 +116,7 @@ void    SPI1_ENC_state_machine(void)
             SPI1_state = E_SPI1_ENC_READ_INT_CAP;
             SPI1BUF = MCP_ENC_READ_INT_FLAG;
             SPI1_RECEIVE_ENABLE = INT_ENABLED;
-            SPI1_TRANSFER_ENABLE = INT_ENABLED;
+            SPI1_TRANSMIT_ENABLE = INT_ENABLED;
             break;
         case E_SPI1_ENC_READ_INT_CAP:
             COD_MCP_B_INT_ENABLE = INT_DISABLED;
@@ -129,7 +129,7 @@ void    SPI1_ENC_state_machine(void)
             CS_MCP_ENCODERS = 0;
             SPI1BUF = MCP_ENC_READ_INT_CAP;
             SPI1_RECEIVE_ENABLE = INT_ENABLED;
-            SPI1_TRANSFER_ENABLE = INT_ENABLED;
+            SPI1_TRANSMIT_ENABLE = INT_ENABLED;
             break;
         case E_SPI1_ENC_RELEASE:
             read32 = SPI1BUF;

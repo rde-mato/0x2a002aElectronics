@@ -8,7 +8,7 @@ extern u8	cur_note;
 extern u8       current_mode;
 extern u32      leds_base_case;
 extern u8       pattern_mode;
-extern u8	active_patterns[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
+extern u8	active_patterns_array[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 extern u8       playing;
 
 void    send_MIDI_for_qtime(u8 qt)
@@ -27,10 +27,10 @@ void    send_MIDI_for_qtime(u8 qt)
         note = 0;
         while (note < NOTES_PER_QTIME && notes_count < 32)
         {
-            if ((n = active_patterns[instrument][qt][note][0]) != 0)
+            if ((n = active_patterns_array[instrument][qt][note][0]) != 0)
             {
                 notes[notes_count] = n;
-                velocities[notes_count] = active_patterns[instrument][qt][note][1];
+                velocities[notes_count] = active_patterns_array[instrument][qt][note][1];
                 if (++notes_count >= 32)
                     break;
                 else

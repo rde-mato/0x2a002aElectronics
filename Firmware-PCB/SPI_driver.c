@@ -50,16 +50,13 @@ void    int_init_SPI1(void)
     SPI1_INT_PRIORITIES = 4;
     //PERSISTANT !!!!!!!!!!!!!!!!!!!!!!!!!!!
     SPI1_RECEIVE_ENABLE = INT_DISABLED;
-    SPI1_TRANSFER_ENABLE = INT_DISABLED;
+    SPI1_TRANSMIT_ENABLE = INT_DISABLED;
 }
 
 void __ISR(_SPI_1_VECTOR, IPL4AUTO) SPI1Handler(void)           // a voir apres comment faire plusieurs state machines en fonction du slave
 {
     SPI1_RECEIVE_ENABLE = INT_DISABLED;
-    SPI1_TRANSFER_ENABLE = INT_DISABLED;
-
-    SPI1_INT_FLAGS_CLR_RX;
-    SPI1_INT_FLAGS_CLR_TX;
+    SPI1_TRANSMIT_ENABLE = INT_DISABLED;
 
     switch (SPI1_slave)
     {
@@ -85,7 +82,7 @@ void    SPI1_manager(void)
         SPI1_slave = E_SPI1_CS_MCP_ENC;
         SPI1_state = E_SPI1_ENC_READ_INT_FLAG;
 //        SPI1_RECEIVE_FLAG = 1;
-        SPI1_RECEIVE_ENABLE = INT_ENABLED;
+        SPI1_TRANSMIT_ENABLE = INT_ENABLED;
     }
     else if (LCD_dirty)
     {
@@ -94,20 +91,20 @@ void    SPI1_manager(void)
         SPI1_slave = E_SPI1_CS_MCP_LCD;
         SPI1_state = E_SPI1_LCD_CONFIG;
 //        SPI1_RECEIVE_FLAG = 1;
-        SPI1_RECEIVE_ENABLE = INT_ENABLED;
+        SPI1_TRANSMIT_ENABLE = INT_ENABLED;
     }
     else if (SPI_eeprom_write_request)
     {
         SPI1_slave = E_SPI1_CS_EEPROM;
-        SPI1_state = E_SPI1_EEPROM_WRITE_ENABLE;
+        SPI1_state = E_SPI1_EEPROM_WRITE_INSTRUCTION;
 //        SPI1_RECEIVE_FLAG = 1;
         SPI1_TRANSMIT_ENABLE = INT_ENABLED;
     }
     else if (SPI_eeprom_read_request)
     {
         SPI1_slave = E_SPI1_CS_EEPROM;
-        SPI1_state = E_SPI1_EEPROM_READ_ENABLE;
+        SPI1_state = E_SPI1_EEPROM_READ_INSTRUCTION;
 //        SPI1_RECEIVE_FLAG = 1;
-        SPI1_RECEIVE_ENABLE = INT_ENABLED;
+        SPI1_TRANSMIT_ENABLE = INT_ENABLED;
     }
 }

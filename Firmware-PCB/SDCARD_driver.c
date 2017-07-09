@@ -2,12 +2,12 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
-static u32 SD_return;
-static u8  SD_error = 0;
-static u8  SD_type = SD_SDSC;
+u32 SD_return;
+u8  SD_error = 0;
+u8  SD_type = SD_SDSC;
 
-static u8  SD_read_buf[SD_BLOCK_SIZE] = {0};
-static u8  SD_write_buf[SD_BLOCK_SIZE] = "coucou c'est moi";
+u8  SD_read_buf[SD_BLOCK_SIZE] = {0};
+u8  SD_write_buf[SD_BLOCK_SIZE] = "coucou c'est moi";
 
 void    send_lots_clk(void)
 {

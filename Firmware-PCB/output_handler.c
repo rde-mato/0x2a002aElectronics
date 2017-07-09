@@ -7,7 +7,7 @@ extern u8          current_mode;
 extern u8          cur_instrument;
 extern u8          cur_note;
 extern u8          cur_octave;
-extern u8          active_patterns[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
+extern u8          cur_active_pattern[QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 extern u8          qtime;
 extern u16         active_instruments_u16;
 extern u8          HT16_write_leds_request;
@@ -73,12 +73,22 @@ void    update_leds_base_case(void)
             leds_base_case |= (1 << E_SOURCE_BUTTON_INSTRUMENT);
             display_LEDs();
             break;
+        case E_MODE_EDIT_INSTRU:
+            while (qt < INSTRUMENTS_COUNT)
+            {
+                if (active_instruments_u16 & (1 << qt))
+                    leds_base_case |= (1 << qt);
+                qt++;
+            }
+            leds_base_case |= (1 << E_SOURCE_BUTTON_INSTRUMENT);
+            display_LEDs();
+            break;
         case E_MODE_PATTERN:
             while (qt < QTIME_PER_PATTERN)
             {
                 n = 0;
                 while (n < NOTES_PER_QTIME)
-                    if (active_patterns[cur_instrument][qt][n++][0] == cur_note)
+                    if (cur_active_pattern[qt][n++][0] == cur_note)
                         leds_base_case |= (1 << qt);
                 qt++;
             }

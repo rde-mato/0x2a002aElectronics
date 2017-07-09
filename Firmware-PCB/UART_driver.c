@@ -2,9 +2,9 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
-static u8  UART1_buf[0x100];
-static u8  UART1_buf_index = 0;
-static u8  UART1_buf_len = 0;
+u8  UART1_buf[0x100];
+u8  UART1_buf_index = 0;
+u8  UART1_buf_len = 0;
 
 void UART1_init(void)
 {
