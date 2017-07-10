@@ -11,6 +11,10 @@ extern u8          cur_active_pattern[QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIB
 extern u8          qtime;
 extern u16         active_instruments_u16;
 extern u8          HT16_write_leds_request;
+extern u8          sequencer_notes[MAX_NOTES_PER_QTIME];
+extern u8          sequencer_velocities[MAX_NOTES_PER_QTIME];
+extern u8          sequencer_notes_count;
+extern u8          noteskeys[13];
 u32                current_leds_on;
 u32                leds_base_case = 0;
 extern u8          playing;
@@ -38,16 +42,34 @@ void    display_LEDs_for_qtime(void)
     u32 to_toggle;
     static  u8  blink = 0;
 
-    new_display = leds_base_case;
-    if (playing == MUSIC_PLAYING || (blink = !blink) == 1)
-        new_display ^= (1 << qtime);
-    to_toggle = current_leds_on ^ new_display;
-    i = 0;
-    while (i < 32)
+    if (current_mode == E_MODE_PATTERN)
     {
-        if (to_toggle & (1 << i))
-            led_toggle(i);
-        ++i;
+        new_display = leds_base_case;
+        if (playing == MUSIC_PLAYING || (blink = !blink) == 1)
+            new_display ^= (1 << qtime);
+        to_toggle = current_leds_on ^ new_display;
+        i = 0;
+        while (i < 32)
+        {
+            if (to_toggle & (1 << i))
+                led_toggle(i);
+            ++i;
+        }
+    }
+    if (current_mode == E_MODE_KEYBOARD)
+    {
+        update_leds_base_case();
+        new_display = leds_base_case;
+        if (playing == MUSIC_PLAYING || (blink = !blink) == 1)
+            new_display ^= (1 << qtime);
+        to_toggle = current_leds_on ^ new_display;
+        i = 0;
+        while (i < 32)
+        {
+            if (to_toggle & (1 << i))
+                led_toggle(i);
+            ++i;
+        }
     }
     current_leds_on = new_display;
 }
@@ -56,6 +78,7 @@ void    update_leds_base_case(void)
 {
     u8  qt = 0;
     u8  n;
+    u8  i;
 
     leds_base_case = 0;
     if (playing == MUSIC_PLAYING)
@@ -104,6 +127,18 @@ void    update_leds_base_case(void)
         case E_MODE_KEYBOARD:
             leds_base_case |= PIANO_KEYS;
             leds_base_case |= (1 << E_SOURCE_BUTTON_KEYBOARD);
+            if (sequencer_notes_count)
+            {
+                i = 0;
+                while (i < sequencer_notes_count)
+                {
+                    if (sequencer_notes[i] / 12 == cur_octave)
+                        leds_base_case ^= 1 << (noteskeys[sequencer_notes[i] % 12]);
+                    else if (sequencer_notes[i] == 12 * (cur_octave + 1))
+                        leds_base_case ^= 1 << (E_SOURCE_KEY_15);
+                    ++i;
+                }
+            }
             display_LEDs();
             break;
     }

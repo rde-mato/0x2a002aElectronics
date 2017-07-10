@@ -1,6 +1,8 @@
 #ifndef MIDI_H
 #define	MIDI_H
 
+#define MAX_NOTES_PER_QTIME 32
+
 enum E_MIDI_STATUS
 {
     /* OR'd with channel number 0 indexed */

@@ -223,6 +223,25 @@ void    eeprom_init(void)
     CS_EEPROM = CS_LINE_UP;
 }
 
+void    eeprom_chip_erease(void)
+{
+    u8  read;
+
+    CS_EEPROM = CS_LINE_DOWN;
+    SPI1BUF = E_EEPROM_WREN;
+    while (SPI1STATbits.SPIBUSY);
+    read = SPI1BUF;
+    CS_EEPROM = CS_LINE_UP;
+
+
+    CS_EEPROM = CS_LINE_DOWN;
+    SPI1BUF = E_EEPROM_CE;
+    while (SPI1STATbits.SPIBUSY);
+    read = SPI1BUF;
+    CS_EEPROM = CS_LINE_UP;
+
+}
+
 /*
 void eeprom_write(u8 byte)
 {

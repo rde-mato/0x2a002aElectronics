@@ -8,9 +8,18 @@ extern u8          cur_note;
 extern u8          cur_velocity;
 
 const   u8  keysnotes[16] = {NO_NOTE,  1, 3, NO_NOTE, 6, 8, 10, NO_NOTE, 0, 2, 4, 5, 7, 9, 11, 12 };
+const   u8  noteskeys[13] = {8, 1, 9, 2, 10, 11, 4, 12, 5, 13, 6, 14, 15};
 const u8    *notesnames[13] = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "C" };
 
 s8      key_to_note(u8 key, u8 octave)
+{
+    key &= 0b1111;
+    if (keysnotes[key] == -1)
+        return (-1);
+    return (12 * octave + keysnotes[key]);
+}
+
+u8      note_to_key(u8 key, u8 octave)
 {
     key &= 0b1111;
     if (keysnotes[key] == -1)
