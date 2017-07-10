@@ -19,7 +19,7 @@ int main(void)
     LCD_init();
     MCP_ENCODERS_init_blocking();
     UART1_init();
-//    eeprom_chip_erease();
+    eeprom_chip_erase();
     eeprom_init();
     active_patterns_init();
 

@@ -296,8 +296,9 @@ void	button_tap_handler(u8 event_type)
     switch (event_type)
     {
         case E_KEY_PRESSED:
+            if (!tap_pressed)
+                bpm_new_tap();
             tap_pressed = 1;
-            bpm_new_tap();
             request_template(TEMPLATE_BPM);
             break;
         case E_KEY_RELEASED:

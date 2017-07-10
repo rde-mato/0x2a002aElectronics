@@ -121,14 +121,15 @@ void process_key_scan(void)
     }
     previous_key_scan = current_key_scan;
 
-	if (!previous_main_encoder && main_encoder)
-		event_handler(E_KEY_PRESSED, E_SOURCE_ENCODER_MAIN);
-	previous_main_encoder = main_encoder;
+    if (!previous_main_encoder && main_encoder)
+            event_handler(E_KEY_PRESSED, E_SOURCE_ENCODER_MAIN);
+    previous_main_encoder = main_encoder;
+    
+    HT16_read_keys_request = 0;
 }
 
 void key_scan(void)
 {
-    HT16_read_keys_request = 0;
     I2C1_read_callback(0xE0, 0x40, 6, &process_key_scan);
 }
 

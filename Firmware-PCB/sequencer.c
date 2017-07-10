@@ -26,7 +26,7 @@ void    generate_notes_list_for_qtime(u8 qt)
     note = 0;
     while (note < NOTES_PER_QTIME && sequencer_notes_count < MAX_NOTES_PER_QTIME)
     {
-        if ((n = cur_active_pattern[qt][note][0]) != 0)
+        if ((n = cur_active_pattern[qt][note][0]) != NO_NOTE)
         {
             sequencer_notes[sequencer_notes_count] = n;
             sequencer_velocities[sequencer_notes_count] = cur_active_pattern[qt][note][1];
@@ -47,7 +47,7 @@ void    generate_notes_list_for_qtime(u8 qt)
             note = 0;
             while (note < NOTES_PER_QTIME && sequencer_notes_count < MAX_NOTES_PER_QTIME)
             {
-                if ((n = active_patterns_array[instrument][qt][note][0]) != 0)
+                if ((n = active_patterns_array[instrument][qt][note][0]) != NO_NOTE)
                 {
                     sequencer_notes[sequencer_notes_count] = n;
                     sequencer_velocities[sequencer_notes_count] = active_patterns_array[instrument][qt][note][1];

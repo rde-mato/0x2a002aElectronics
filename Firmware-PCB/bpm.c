@@ -17,6 +17,7 @@ u8  tap_index = 0;
 void __ISR(_TIMER_3_VECTOR, IPL1AUTO) Timer3TapButton(void)
 {
     T3CONbits.ON = 0;
+    TIMER3_VALUE = 0;
     TIMER3_INT_FLAG_CLR;
     tap_index = 0;
 }

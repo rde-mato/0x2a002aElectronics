@@ -11,9 +11,6 @@ extern u8   active_instrument[PATTERNS_PER_INSTRUMENT][QTIME_PER_PATTERN][NOTES_
 
 u8          SPI_eeprom_write_request = 0;
 u8          SPI_eeprom_read_request = 0;
-//u8          EEPROM_requested_instrument = 0;
-//u8          EEPROM_requested_pattern = 0;
-
 u16         eeprom_address;
 u16         eeprom_cur_address;
 u32         eeprom_read_size;
@@ -223,7 +220,7 @@ void    eeprom_init(void)
     CS_EEPROM = CS_LINE_UP;
 }
 
-void    eeprom_chip_erease(void)
+void    eeprom_chip_erase(void)
 {
     u8  read;
 
