@@ -86,7 +86,7 @@ void    timer_2_init(void)
     TIMER2_STOP_AND_RESET;
     TIMER2_VALUE = 0;
     TIMER2_PERIOD = (FREQUENCY * 15) / (MIDI_PPQN * 256 /100 * INITIAL_BPM_x100);
-    TIMER2_PRESCALE = TIMER_PRESCALE_256;
+    TIMER2_PRESCALE = TIMER_B_PRESCALE_256;
 }
 
 void    int_init_timer2(void)

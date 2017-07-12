@@ -24,6 +24,7 @@ void GPIO_and_PPS_init(void)
 
 void TIMER_init(void)
 {
+    timer_1_init();
     timer_2_init();
     timer_3_init();
     timer_4_init();
