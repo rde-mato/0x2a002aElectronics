@@ -7,6 +7,7 @@ extern u8          cur_instrument;
 extern u8          cur_note;
 extern u8          cur_octave;
 extern u8          cur_active_pattern[QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
+extern u8          active_instrument[PATTERNS_PER_INSTRUMENT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 extern u8          qtime;
 extern u16         active_instruments_u16;
 extern u8          HT16_write_leds_request;
@@ -14,9 +15,10 @@ extern u8          sequencer_notes[MAX_NOTES_PER_QTIME];
 extern u8          sequencer_velocities[MAX_NOTES_PER_QTIME];
 extern u8          sequencer_notes_count;
 extern u8          noteskeys[13];
+extern u8          cur_pattern;
+extern u8          playing;
 u32                current_leds_on;
 u32                leds_base_case = 0;
-extern u8          playing;
 
 void    display_LEDs(void)
 {

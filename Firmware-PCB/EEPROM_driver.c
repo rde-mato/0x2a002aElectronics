@@ -23,6 +23,7 @@ u8          eeprom_buf[128];
 
 const   size_t pattern_size = QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE;
 const   size_t instrument_size = INSTRUMENTS_COUNT * QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE;
+
 void    update_after_instrument_change(void)
 {
     memcpy(cur_active_pattern, active_patterns_array[cur_instrument][cur_pattern], pattern_size);
@@ -80,8 +81,6 @@ void    update_after_pattern_change(void)
 
 void    save_cur_pattern_to_eeprom(void)
 {
-//    EEPROM_requested_instrument = instrument;
-//    EEPROM_requested_pattern = pattern;
     memcpy(active_instrument[cur_pattern], cur_active_pattern, pattern_size);
     memcpy(active_patterns_array[cur_instrument], cur_active_pattern, pattern_size);
     memcpy(eeprom_write_buf, cur_active_pattern, pattern_size);

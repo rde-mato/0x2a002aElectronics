@@ -9,7 +9,7 @@ u32     previous_key_scan = 0;
 
 u32     poll_count = 0;
 u32     buttons_timers[32] = {0};
-
+const u32   long_pressed_limit = FREQUENCY / 256;
 extern u8	I2C1_read_buf[];
 
 void    int_init_HT16_press(void)
@@ -109,7 +109,7 @@ void process_key_scan(void)
     if (!previous_main_encoder && main_encoder)
             event_handler(E_KEY_PRESSED, E_SOURCE_ENCODER_MAIN);
     previous_main_encoder = main_encoder;
-    
+
     if (!current_key_scan && !main_encoder)
     {
         TIMER5_OFF;
