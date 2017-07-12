@@ -65,7 +65,7 @@ void    bpm_new_tap_release(void)
 {
     u32     mean_tap;
 
-    if (tap_index == 3)
+    if (tap_index == 3 && T3CONbits.ON)
     {
         mean_tap = (tap_timers[0] + tap_timers[1] + tap_timers[2]) / 3;
         bpm_x100 = (70.3125 * FREQUENCY) / (tap_timers[0] + tap_timers[1] + tap_timers[2]);//(100 * 60 * FREQUENCY / 256) / mean_tap;

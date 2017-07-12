@@ -104,8 +104,7 @@ void __ISR(_TIMER_2_VECTOR, IPL7AUTO) Timer2QTime(void)
 
     if (++ppqn_count == MIDI_PPQN)
     {
-        if (current_mode == E_MODE_PATTERN)
-            display_LEDs_for_qtime();
+        display_LEDs();
         if (playing == MUSIC_PLAYING)
         {
 

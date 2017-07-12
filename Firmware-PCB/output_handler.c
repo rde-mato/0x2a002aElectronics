@@ -5,6 +5,7 @@
 extern u8          current_mode;
 extern u8          cur_instrument;
 extern u8          cur_note;
+extern u8          cur_pattern;
 extern u8          cur_octave;
 extern u8          cur_active_pattern[QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 extern u8          active_instrument[PATTERNS_PER_INSTRUMENT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
@@ -15,17 +16,50 @@ extern u8          sequencer_notes[MAX_NOTES_PER_QTIME];
 extern u8          sequencer_velocities[MAX_NOTES_PER_QTIME];
 extern u8          sequencer_notes_count;
 extern u8          noteskeys[13];
-extern u8          cur_pattern;
 extern u8          playing;
 u32                current_leds_on;
 u32                leds_base_case = 0;
 
 void    display_LEDs(void)
 {
-    u8 i;
-    u32 to_toggle;
+    u8          i;
+    u8          blinking = 0;
+    u32         to_display;
+    u32         to_toggle;
+    u8          to_blink;
+    static u8   blink = 0;
 
-    to_toggle = current_leds_on ^ leds_base_case;
+    to_display = leds_base_case;
+    switch (current_mode)
+    {
+        case E_MODE_INSTRU:
+            break;
+        case E_MODE_EDIT_INSTRU:
+            blinking = 1;
+            to_blink = cur_instrument;
+            break;
+        case E_MODE_PATTERN:
+            if (!(playing == MUSIC_PLAYING))
+            {
+                blinking = 1;
+                to_blink = qtime;
+            }
+            else
+                to_display ^= (1 << qtime);
+            break;
+        case E_MODE_EDIT_PATTERN:
+            blinking = 1;
+            to_blink = cur_pattern;
+            break;
+        case E_MODE_KEYBOARD:
+            break;
+        case E_MODE_EDIT_KEYBOARD:
+            break;
+    }
+    blink = !blink;
+    if (blinking && blink == 1)
+        to_display ^= (1 << to_blink);
+    to_toggle = current_leds_on ^ to_display;
     i = 0;
     while (i < 32)
     {
@@ -33,49 +67,7 @@ void    display_LEDs(void)
             led_toggle(i);
         ++i;
     }
-    current_leds_on = leds_base_case;
-}
-
-void    display_LEDs_for_qtime(void)
-{
-    u8 i;
-    u32 new_display;
-    u32 to_toggle;
-    static  u8  blink = 0;
-
-    new_display = leds_base_case;
-    if (playing == MUSIC_PLAYING || (blink = !blink) == 1)
-        new_display ^= (1 << qtime);
-    to_toggle = current_leds_on ^ new_display;
-    i = 0;
-    while (i < 32)
-    {
-        if (to_toggle & (1 << i))
-            led_toggle(i);
-        ++i;
-    }
-    current_leds_on = new_display;
-}
-
-void    display_LEDs_static_blink(u8 led)
-{
-    u8 i;
-    u32 new_display;
-    u32 to_toggle;
-    static  u8  blink = 0;
-
-    new_display = leds_base_case;
-    if ((blink = !blink) == 1)
-        new_display ^= (1 << led);
-    to_toggle = current_leds_on ^ new_display;
-    i = 0;
-    while (i < 32)
-    {
-        if (to_toggle & (1 << i))
-            led_toggle(i);
-        ++i;
-    }
-    current_leds_on = new_display;
+    current_leds_on = to_display;
 }
 
 void    update_leds_base_case(void)
@@ -121,7 +113,7 @@ void    update_leds_base_case(void)
                 qt++;
             }
             leds_base_case |= (1 << E_SOURCE_BUTTON_PATTERN);
-            display_LEDs_for_qtime();
+            display_LEDs();
             break;
         case E_MODE_EDIT_PATTERN:
             p = 0;
@@ -138,12 +130,6 @@ void    update_leds_base_case(void)
             }
             leds_base_case |= (1 << E_SOURCE_BUTTON_EDIT);
             leds_base_case |= (1 << E_SOURCE_BUTTON_PATTERN);
-            display_LEDs_static_blink(cur_pattern);
-            break;
-        case E_MODE_EDIT_KEYBOARD:
-            leds_base_case |= PIANO_KEYS;
-            leds_base_case |= (1 << E_SOURCE_BUTTON_KEYBOARD);
-            leds_base_case |= (1 << E_SOURCE_BUTTON_EDIT);
             display_LEDs();
             break;
         case E_MODE_KEYBOARD:
@@ -161,6 +147,12 @@ void    update_leds_base_case(void)
                     ++i;
                 }
             }
+            display_LEDs();
+            break;
+        case E_MODE_EDIT_KEYBOARD:
+            leds_base_case |= PIANO_KEYS;
+            leds_base_case |= (1 << E_SOURCE_BUTTON_KEYBOARD);
+            leds_base_case |= (1 << E_SOURCE_BUTTON_EDIT);
             display_LEDs();
             break;
     }
