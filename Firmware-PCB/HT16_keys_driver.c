@@ -83,7 +83,7 @@ void process_key_scan(void)
         i = 0;
         while (i < 32)
         {
-            if (buttons_timers[i] != LONG_PRESS_DONE)
+            if (buttons_timers[i] == LONG_PRESS_DONE)
                 ;
             else if ((unchanged_pressed_buttons & (1 << i)))
             {

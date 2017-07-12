@@ -3,8 +3,6 @@
 #include <stdlib.h>
 #include "0x2a002a.h"
 
-//#define BPM_TO_QBEAT_PR(bpm) ((FREQUENCY * 15) / (256 * bpm))
-
 u32 bpm_x100 = INITIAL_BPM_x100;
 u16 __g_qbeat_pr = 0;
 u16 tap_button_old = 0;
@@ -37,33 +35,12 @@ void    timer_3_init(void)
     TIMER3_PERIOD = 0xFFFF;
 }
 
-//void set_qbeat_pr(u16 pr)
-//{
-//    __g_qbeat_pr = pr;
-//    TIMER2_PERIOD = pr;
-//    TIMER2_VALUE = 0; //XXX
-//}
-
-//void set_bpm(u16 bpm)
-//{
-//    __g_qbeat_pr = BPM_TO_QBEAT_PR(bpm);
-//    TIMER2_PERIOD = __g_qbeat_pr / MIDI_PPQN;
-//    TIMER2_VALUE = 0;
-//}
-
 void set_bpm(void)
 {
     TIMER2_PERIOD = (FREQUENCY * 15) / (MIDI_PPQN * 256 / 100 * bpm_x100);
     if (TIMER2_VALUE > TIMER2_PERIOD - 2000)
         TIMER2_VALUE = 0;
 }
-
-//void set_period(u32 pr)
-//{
-//    TIMER2_PERIOD = (FREQUENCY * 15) / (MIDI_PPQN * 256 / 100 * bpm_x100);
-//    if (TIMER2_VALUE > TIMER2_PERIOD - 2000)
-//        TIMER2_VALUE = 0;
-//}
 
 void change_bpm(s8 incr, u8 rounded)
 {
@@ -77,8 +54,10 @@ void change_bpm(s8 incr, u8 rounded)
 
 void    bpm_new_tap(void)
 {
-    T3CONbits.ON = 1;
-    tap_timers[tap_index++] = TIMER3_VALUE;
+    if (T3CONbits.ON)
+        tap_timers[tap_index++] = TIMER3_VALUE;
+    else
+        T3CONbits.ON = 1;
     TIMER3_VALUE = 0;
 }
 

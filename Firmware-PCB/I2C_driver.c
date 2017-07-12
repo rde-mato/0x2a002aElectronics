@@ -253,6 +253,7 @@ void    I2C1_manager(void)
         return ;
     if (HT16_write_leds_request)
     {
+        HT16_write_leds_request = 0;
         led_refresh();
     }
     else if (HT16_read_keys_request)

@@ -40,5 +40,5 @@ void led_refresh(void)
         leds = leds >> 8;
         i++;
     }
-    I2C1_write_callback(0xE0, 0x08, buffer, 8, &clear_led_request);
+    I2C1_write_callback(0xE0, 0x08, buffer, 8, NULL);
 }

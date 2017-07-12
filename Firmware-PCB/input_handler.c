@@ -155,8 +155,9 @@ void	main_encoder_handler(u8 event_type)
 		case E_ENCODER_TURNED_RIGHT:
                     if(tap_pressed)
                     {
+                        T3CONbits.ON = 0;
                         tap_index = 0;
-                        change_bpm(10, 0);
+                        change_bpm(100, 1);
                         request_template(TEMPLATE_BPM);
                     }
                     else if (edit_pressed)
@@ -171,8 +172,9 @@ void	main_encoder_handler(u8 event_type)
 		case E_ENCODER_TURNED_LEFT:
                     if(tap_pressed)
                     {
+                        T3CONbits.ON = 0;
                         tap_index = 0;
-                        change_bpm(-10, 0);
+                        change_bpm(-100, 1);
                         request_template(TEMPLATE_BPM);
                     }
                     else if (edit_pressed)
