@@ -36,4 +36,3 @@ enum E_I2C1_STATE {
 };
 
 #endif	/* I2C_H */
-

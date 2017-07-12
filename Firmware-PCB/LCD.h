@@ -37,4 +37,3 @@ enum E_LCD_TEMPLATES
 };
 
 #endif	/* LCD_H */
-

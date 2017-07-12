@@ -87,8 +87,26 @@ void	keys_handler(u8 event_type, u8 event_source)
             }
             break ;
         }
+        case E_MODE_EDIT_PATTERN:
+        {
+            switch (event_type)
+            {
+                case E_KEY_PRESSED:
+                    cur_pattern = event_source;
+                    update_after_pattern_change();
+                    update_leds_base_case();
+                    request_template(TEMPLATE_PATTERN);
+                    break;
+                case E_KEY_RELEASED:
+                    break;
+                case E_KEY_LONG_PRESSED:
+                    break;
+            }
+            break ;
+        }
     }
 }
+
 
 void	encoders_handler(u8 event_type, u8 event_source)
 {
@@ -264,9 +282,12 @@ void	button_pattern_handler(u8 event_type)
 	switch (event_type)
 	{
 		case E_KEY_PRESSED:
-                    current_mode = E_MODE_PATTERN;
+                    if (edit_pressed)
+                        current_mode = E_MODE_EDIT_PATTERN;
+                    else
+                        current_mode = E_MODE_PATTERN;
                     update_leds_base_case();
-			break;
+                    break;
 		case E_KEY_RELEASED:
 			break;
 		case E_KEY_LONG_PRESSED:

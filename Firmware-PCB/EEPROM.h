@@ -19,4 +19,3 @@ enum E_EEPROM_INSTRUCTIONS {
 };
 
 #endif	/* EEPROM_H */
-

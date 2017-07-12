@@ -7,10 +7,10 @@ u8      HT16_read_keys_request = 0;
 u32     current_key_scan = 0;
 u32     previous_key_scan = 0;
 
+u32     poll_count = 0;
 u32     buttons_timers[32] = {0};
 
 extern u8	I2C1_read_buf[];
-const  u32      long_pressed_limit = FREQUENCY / 256;
 
 void    int_init_HT16_press(void)
 {

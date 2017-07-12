@@ -1,4 +1,3 @@
-
 #include <xc.h>
 #include <sys/attribs.h>
 #include "0x2a002a.h"
@@ -33,7 +32,48 @@ void    display_LEDs(void)
         ++i;
     }
     current_leds_on = leds_base_case;
+}
 
+void    display_LEDs_for_qtime(void)
+{
+    u8 i;
+    u32 new_display;
+    u32 to_toggle;
+    static  u8  blink = 0;
+
+    new_display = leds_base_case;
+    if (playing == MUSIC_PLAYING || (blink = !blink) == 1)
+        new_display ^= (1 << qtime);
+    to_toggle = current_leds_on ^ new_display;
+    i = 0;
+    while (i < 32)
+    {
+        if (to_toggle & (1 << i))
+            led_toggle(i);
+        ++i;
+    }
+    current_leds_on = new_display;
+}
+
+void    display_LEDs_static_blink(u8 led)
+{
+    u8 i;
+    u32 new_display;
+    u32 to_toggle;
+    static  u8  blink = 0;
+
+    new_display = leds_base_case;
+    if ((blink = !blink) == 1)
+        new_display ^= (1 << led);
+    to_toggle = current_leds_on ^ new_display;
+    i = 0;
+    while (i < 32)
+    {
+        if (to_toggle & (1 << i))
+            led_toggle(i);
+        ++i;
+    }
+    current_leds_on = new_display;
 }
 
 void    update_leds_base_case(void)
@@ -41,6 +81,7 @@ void    update_leds_base_case(void)
     u8  qt = 0;
     u8  n;
     u8  i;
+    u8  p;
 
     leds_base_case = 0;
     if (playing == MUSIC_PLAYING)
@@ -80,6 +121,23 @@ void    update_leds_base_case(void)
             leds_base_case |= (1 << E_SOURCE_BUTTON_PATTERN);
             display_LEDs_for_qtime();
             break;
+        case E_MODE_EDIT_PATTERN:
+            p = 0;
+            while (p < PATTERNS_PER_INSTRUMENT)
+            {
+                qt = 0;
+                while (qt < QTIME_PER_PATTERN)
+                    if (active_instrument[p][qt++][0][0] != NO_NOTE)
+                    {
+                        leds_base_case |= (1 << p);
+                        break ;
+                    }
+                ++p;
+            }
+            leds_base_case |= (1 << E_SOURCE_BUTTON_EDIT);
+            leds_base_case |= (1 << E_SOURCE_BUTTON_PATTERN);
+            display_LEDs_static_blink(cur_pattern);
+            break;
         case E_MODE_EDIT_KEYBOARD:
             leds_base_case |= PIANO_KEYS;
             leds_base_case |= (1 << E_SOURCE_BUTTON_KEYBOARD);
@@ -105,43 +163,4 @@ void    update_leds_base_case(void)
             break;
     }
 
-}
-
-void    display_LEDs_for_qtime(void)
-{
-    u8 i;
-    u32 new_display;
-    u32 to_toggle;
-    static  u8  blink = 0;
-
-    if (current_mode == E_MODE_PATTERN)
-    {
-        new_display = leds_base_case;
-        if (playing == MUSIC_PLAYING || (blink = !blink) == 1)
-            new_display ^= (1 << qtime);
-        to_toggle = current_leds_on ^ new_display;
-        i = 0;
-        while (i < 32)
-        {
-            if (to_toggle & (1 << i))
-                led_toggle(i);
-            ++i;
-        }
-    }
-    if (current_mode == E_MODE_KEYBOARD)
-    {
-        update_leds_base_case();
-        new_display = leds_base_case;
-        if (playing == MUSIC_PLAYING || (blink = !blink) == 1)
-            new_display ^= (1 << qtime);
-        to_toggle = current_leds_on ^ new_display;
-        i = 0;
-        while (i < 32)
-        {
-            if (to_toggle & (1 << i))
-                led_toggle(i);
-            ++i;
-        }
-    }
-    current_leds_on = new_display;
 }

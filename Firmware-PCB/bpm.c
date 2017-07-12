@@ -3,14 +3,14 @@
 #include <stdlib.h>
 #include "0x2a002a.h"
 
+//#define BPM_TO_QBEAT_PR(bpm) ((FREQUENCY * 15) / (256 * bpm))
+
 u32 bpm_x100 = INITIAL_BPM_x100;
 u16 __g_qbeat_pr = 0;
 u16 tap_button_old = 0;
 u16 tap_button_active = 0;
 u32 tap_timers[3] = { 0 };
 u8  tap_index = 0;
-
-
 
 void __ISR(_TIMER_3_VECTOR, IPL1AUTO) Timer3TapButton(void)
 {
@@ -72,7 +72,8 @@ void    bpm_new_tap_release(void)
         tap_timers[0] = tap_timers[1];
         tap_timers[1] = tap_timers[2];
         tap_index = 2;
-        TIMER2_PERIOD = mean_tap / (4 * MIDI_PPQN);
-        TIMER2_VALUE = 0;
+//        TIMER2_PERIOD = mean_tap / (4 * MIDI_PPQN);
+//        TIMER2_VALUE = 0;
+        set_bpm();
     }
 }

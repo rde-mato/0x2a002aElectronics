@@ -13,4 +13,3 @@
 #define UART1_TX_INT_FLAG       IFS1bits.U1TXIF
 
 #endif	/* UART_H */
-

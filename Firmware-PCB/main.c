@@ -29,6 +29,10 @@ int main(void)
     //		ret2 = SD_card_write_block(block);
     //		ret3 = SD_card_read_block(block);
 
+
+
+
+
     INT_init();
     HT16_init();
     active_instrument_init();

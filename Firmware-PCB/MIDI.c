@@ -1,5 +1,5 @@
 #include "0x2a002a.h"
-;
+
 u8  running_status;
 
 /*

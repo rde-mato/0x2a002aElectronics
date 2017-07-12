@@ -26,7 +26,9 @@ typedef unsigned long           u32;
 ////#define GET_BPM() ((((float)FREQUENCY / (float)__g_qbeat_pr) * 15) / 256)
 
 #define FREQUENCY		(8000000ul)
-#define ONE_MILLISECOND         8000
+#define ONE_MILLISECOND         FREQUENCY / 1000
+#define BUTTON_POLL_DELAY_MS	50
+#define LONG_PRESS_LIMIT	100
 #define SCREEN_DURATION_MS	1000
 #define INITIAL_BPM_x100        14200
 
@@ -75,24 +77,14 @@ typedef unsigned long           u32;
 #define MCP_ENC_B_ANALOG	ANSELBbits.ANSB1
 
 //TIMERS
-#define TIMER_A_PRESCALE_1        0b00
-#define TIMER_A_PRESCALE_8        0b01
-#define TIMER_A_PRESCALE_64       0b10
-#define TIMER_A_PRESCALE_256      0b11
-#define TIMER_B_PRESCALE_1        0b000
-#define TIMER_B_PRESCALE_2        0b001
-#define TIMER_B_PRESCALE_4        0b010
-#define TIMER_B_PRESCALE_8        0b011
-#define TIMER_B_PRESCALE_16       0b100
-#define TIMER_B_PRESCALE_32       0b101
-#define TIMER_B_PRESCALE_64       0b110
-#define TIMER_B_PRESCALE_256      0b111
-
-// timer 1 used for long press
-#define TIMER1_STOP_AND_RESET	T1CON = 0
-#define TIMER1_VALUE		TMR1
-#define TIMER1_PRESCALE         T1CONbits.TCKPS
-#define TIMER1_ON               T1CONbits.ON = 1
+#define TIMER_PRESCALE_1        0b000
+#define TIMER_PRESCALE_2        0b001
+#define TIMER_PRESCALE_4        0b010
+#define TIMER_PRESCALE_8        0b011
+#define TIMER_PRESCALE_16       0b100
+#define TIMER_PRESCALE_32       0b101
+#define TIMER_PRESCALE_64       0b110
+#define TIMER_PRESCALE_256	0b111
 
 // timer 2 used for pattern management and blinking during pause
 #define TIMER2_STOP_AND_RESET	T2CON = 0
@@ -102,7 +94,7 @@ typedef unsigned long           u32;
 #define TIMER2_INT_FLAG_CLR     IFS0CLR = (1 << 9)
 #define TIMER2_INT_PRIORITY     IPC2bits.T2IP
 #define TIMER2_INT_ENABLE	IEC0bits.T2IE
-#define TIMER2_ON              T2CONbits.ON = 1
+#define TIMER_2_ON              T2CONbits.ON = 1
 
 // timer 3 used for bpm button
 #define TIMER3_STOP_AND_RESET   T3CON = 0
@@ -130,8 +122,6 @@ typedef unsigned long           u32;
 #define TIMER5_INT_FLAG_CLR	IFS0CLR = (1 << 24)
 #define TIMER5_INT_PRIORITY	IPC5bits.T5IP
 #define TIMER5_INT_ENABLE	IEC0bits.T5IE
-#define TIMER5_ON               T5CONbits.ON = 1
-#define TIMER5_OFF              T5CONbits.ON = 0
 
 enum E_NOTE_ATTRS
 {

@@ -50,4 +50,3 @@ enum E_SPI1_SLAVE {
 };
 
 #endif	/* SPI_H */
-

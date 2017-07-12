@@ -298,4 +298,3 @@ enum E_MIDI_CHANNEL_MODE_MSG            // ARGUMENT
 };
 
 #endif	/* MIDI_H */
-

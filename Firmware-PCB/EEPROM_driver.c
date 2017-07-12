@@ -23,6 +23,10 @@ u8          eeprom_buf[128];
 
 const   size_t pattern_size = QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE;
 const   size_t instrument_size = INSTRUMENTS_COUNT * QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE;
+void    update_after_instrument_change(void)
+{
+    memcpy(cur_active_pattern, active_patterns_array[cur_instrument][cur_pattern], pattern_size);
+}
 
 void    active_patterns_init(void)
 {
@@ -55,7 +59,10 @@ void    active_patterns_init(void)
             {
                 SPI1BUF = 0xFF;
                 while (SPI1STATbits.SPIBUSY);
-                active_patterns_array[i][qt][n][ATTRIBUTES_PER_NOTE] = SPI1BUF;
+                active_patterns_array[i][qt][n][0] = SPI1BUF;
+                SPI1BUF = 0xFF;
+                while (SPI1STATbits.SPIBUSY);
+                active_patterns_array[i][qt][n][1] = SPI1BUF;
                 ++n;
             }
             ++qt;
@@ -63,12 +70,12 @@ void    active_patterns_init(void)
         ++i;
         CS_EEPROM = CS_LINE_UP;
     }
-    update_active_pattern();
+    update_after_instrument_change();
 }
 
-void    update_active_pattern(void)
+void    update_after_pattern_change(void)
 {
-    memcpy(cur_active_pattern, active_patterns_array[cur_instrument][cur_pattern], pattern_size);
+    memcpy(cur_active_pattern, active_instrument[cur_pattern], pattern_size);
 }
 
 void    save_cur_pattern_to_eeprom(void)
@@ -76,6 +83,7 @@ void    save_cur_pattern_to_eeprom(void)
 //    EEPROM_requested_instrument = instrument;
 //    EEPROM_requested_pattern = pattern;
     memcpy(active_instrument[cur_pattern], cur_active_pattern, pattern_size);
+    memcpy(active_patterns_array[cur_instrument], cur_active_pattern, pattern_size);
     memcpy(eeprom_write_buf, cur_active_pattern, pattern_size);
     eeprom_address = (PATTERNS_PER_INSTRUMENT * cur_instrument + cur_pattern) * pattern_size;
     eeprom_write_size = pattern_size;
@@ -100,9 +108,21 @@ void	eeprom_state_machine_write(void)
 
     switch (SPI1_state)
     {
+        case E_SPI1_EEPROM_WRITE_ENABLE:
+            read8 = SPI1BUF;
+            CS_EEPROM = CS_LINE_DOWN;
+            SPI1BUF = E_EEPROM_WREN;
+            SPI1_state = E_SPI1_EEPROM_WRITE_INSTRUCTION;
+            SPI1_TRANSMIT_ENABLE = INT_ENABLED;
+            break ;
+
         case E_SPI1_EEPROM_WRITE_INSTRUCTION:
             read8 = SPI1BUF;
             eeprom_cur_address = eeprom_address;
+            CS_EEPROM = CS_LINE_UP;
+            asm("nop");
+            asm("nop");
+            asm("nop");
             CS_EEPROM = CS_LINE_DOWN;
             SPI1_state = E_SPI1_EEPROM_WRITE_ADDRESS_FIRST_BYTE;
             SPI1BUF = E_EEPROM_WRITE;
@@ -125,22 +145,35 @@ void	eeprom_state_machine_write(void)
 
         case E_SPI1_EEPROM_WRITE_DATA:
             read8 = SPI1BUF;
-            if (eeprom_write_index++ >= eeprom_write_size)
+            if ((eeprom_cur_address++ & 127) == 127 && eeprom_write_index < eeprom_write_size - 1)
+            {
+                SPI1BUF = eeprom_write_buf[eeprom_write_index++];
+                eeprom_address = eeprom_cur_address;
+                SPI1_state = E_SPI1_EEPROM_WRITE_ENABLE;
+                SPI1_TRANSMIT_ENABLE = INT_ENABLED;
+                CS_EEPROM = CS_LINE_UP;
+                asm("nop");
+                asm("nop");
+                asm("nop");
+                break ;
+            }
+            else if (eeprom_write_index >= eeprom_write_size - 1)
+            {
                 SPI1_state = E_SPI1_EEPROM_WRITE_DONE;
+                SPI1BUF = eeprom_write_buf[eeprom_write_index++];
+                SPI1_TRANSMIT_ENABLE = INT_ENABLED;
+                break ;
+            }
             else
             {
-                if ((++eeprom_cur_address & 127) == 0)
-                {
-                    CS_EEPROM = CS_LINE_UP;
-                    SPI1_state = E_SPI1_EEPROM_WRITE_INSTRUCTION;
-                }
-                SPI1BUF = eeprom_write_buf[eeprom_write_index];
-//                eeprom_cur_address++;
+                SPI1BUF = eeprom_write_buf[eeprom_write_index++];
                 SPI1_TRANSMIT_ENABLE = INT_ENABLED;
                 break ;
             }
 
+
         case E_SPI1_EEPROM_WRITE_DONE:
+            read8 = SPI1BUF;
             SPI1_state = E_SPI1_DONE;
             eeprom_write_size = 0;
             eeprom_write_index = 0;
@@ -194,7 +227,7 @@ void	eeprom_state_machine_read(void)
             SPI1_state = E_SPI1_DONE;
             eeprom_read_index = 0;
             SPI_eeprom_read_request = 0;
-            update_active_pattern();
+            update_after_instrument_change();
             break;
     }
 }
@@ -221,7 +254,7 @@ void    eeprom_init(void)
 }
 
 void    eeprom_chip_erase(void)
-{
+ {
     u8  read;
 
     CS_EEPROM = CS_LINE_DOWN;
@@ -240,140 +273,139 @@ void    eeprom_chip_erase(void)
 }
 
 /*
-void eeprom_write(u8 byte)
+void    eeprom_state_machine_write(void)
 {
-	u16 read;
+    u16         eeprom_read_byte;
+    static u8   eeprom_buf_i = 0;
 
-	CS_EEPROM = 0;
-
-	//write enable
-	SPI1BUF = 0x06;
-	while (SPI1STATbits.SPIBUSY);
-	eeprom_read_byte = SPI1BUF;
-
-	CS_EEPROM = 1;
-
-	//wait for write enable ok
-	//read_status_register RDSR : 0x05
-	SPI1CONbits.MODE16 = 1;
-	SPI1BUF = 0x0500;
-	while (SPI1STATbits.SPIBUSY);
-	eeprom_read_byte = SPI1BUF;
-	SPI1CONbits.MODE16 = 0;
-
-
-	//write instruction
-	CS_EEPROM = 0;
-
-	SPI1BUF = 0x02;
-	while (SPI1STATbits.SPIBUSY);
-	eeprom_read_byte = SPI1BUF;
-
-	//write address
-	SPI1CONbits.MODE16 = 1;
-	SPI1BUF = 0x0000;
-	while (SPI1STATbits.SPIBUSY);
-	read = SPI1BUF;
-	SPI1CONbits.MODE16 = 0;
-
-	//write data
-
-	SPI1BUF = byte;
-	while (SPI1STATbits.SPIBUSY);
-	read = SPI1BUF;
-
-	CS_EEPROM = 1;
-}
-
-void eeprom_read(u16 add)
-{
-	u16 read;
-
-	CS_EEPROM = 0;
-
-	SPI1BUF = 0x03;
-	while (SPI1STATbits.SPIBUSY);
-	eeprom_read_byte = SPI1BUF;
-
-	SPI1CONbits.MODE16 = 1;
-	SPI1BUF = add;
-	while (SPI1STATbits.SPIBUSY);
-	read = SPI1BUF;
-	SPI1CONbits.MODE16 = 0;
-
-	SPI1BUF = 0x00;
-	while (SPI1STATbits.SPIBUSY);
-	eeprom_read_byte = SPI1BUF;
-
-	CS_EEPROM = 1;
+    switch (SPI1_state)
+    {
+        case E_SPI1_EEPROM_WRITE_ENABLE:
+            eeprom_buf_i = 0;
+            CS_EEPROM = 0;
+            SPI1BUF = EEPROM_WREN; // Write enable latch
+            SPI1_state = E_SPI1_EEPROM_WRITE_ENABLE_OK;
+            SPI1_RECEIVE_ENABLE = INT_ENABLED;
+            SPI1_TRANSFER_ENABLE = INT_ENABLED;
+            break;
+        case E_SPI1_EEPROM_WRITE_ENABLE_OK:
+            if (SPI1STATbits.SPIBUSY)
+                break;
+            eeprom_read_byte = SPI1BUF;
+            CS_EEPROM = 1;
+            SPI1_state = E_SPI1_EEPROM_WAIT_WRITE_STAT_OK;
+            SPI1CONbits.MODE16 = 1;
+            SPI1_RECEIVE_ENABLE = INT_ENABLED;
+            SPI1_TRANSFER_ENABLE = INT_ENABLED;
+            break;
+        case E_SPI1_EEPROM_WAIT_WRITE_STAT_OK:
+            CS_EEPROM = 0;
+            SPI1BUF = (0xffff & EEPROM_RDSR) << 8;// read status byte + 1 byte to read back
+            SPI1_state = E_SPI1_EEPROM_STILL_WAIT_WRITE_STAT_OK;
+            SPI1_RECEIVE_ENABLE = INT_ENABLED;
+            SPI1_TRANSFER_ENABLE = INT_ENABLED;
+            break;
+        case E_SPI1_EEPROM_STILL_WAIT_WRITE_STAT_OK:
+            eeprom_read_byte = SPI1BUF;
+            if (eeprom_read_byte & EEPROM_RDSR_WEL) // Check in STATUS register if Write Enable Latch is ok
+                SPI1_state = E_SPI1_EEPROM_WRITE_MODE;
+            else
+                SPI1_state = E_SPI1_EEPROM_WAIT_WRITE_STAT_OK;
+            CS_EEPROM = 1;
+            SPI1_RECEIVE_ENABLE = INT_ENABLED;
+            SPI1_TRANSFER_ENABLE = INT_ENABLED;
+            break;
+        case E_SPI1_EEPROM_WRITE_MODE:
+            if (SPI1STATbits.SPIBUSY)
+                break;
+            SPI1CONbits.MODE16 = 0;
+            CS_EEPROM = 0;
+            SPI1BUF = EEPROM_WRITE; // Write instruction
+            SPI1_state = E_SPI1_EEPROM_WRITE_ADDRESS;
+            SPI1_RECEIVE_ENABLE = INT_ENABLED;
+            SPI1_TRANSFER_ENABLE = INT_ENABLED;
+            break;
+        case E_SPI1_EEPROM_WRITE_ADDRESS:
+            if (SPI1STATbits.SPIBUSY)
+                break;
+            eeprom_read_byte = SPI1BUF;
+            SPI1CONbits.MODE16 = 1;
+            SPI1BUF = eeprom_address; // Send 16 bit address
+            SPI1_state = E_SPI1_EEPROM_WRITE_DATA;
+            SPI1_RECEIVE_ENABLE = INT_ENABLED;
+            SPI1_TRANSFER_ENABLE = INT_ENABLED;
+            break;
+        case E_SPI1_EEPROM_WRITE_DATA:
+            if (SPI1STATbits.SPIBUSY)
+                break;
+            eeprom_read_byte = SPI1BUF;
+            SPI1CONbits.MODE16 = 0;
+            SPI1BUF = eeprom_buf[eeprom_buf_i++];
+            if (eeprom_buf_i == eeprom_buf_size)
+                SPI1_state = E_SPI1_EEPROM_WRITE_END;
+            if ((++eeprom_address & 0xff) == 0)
+                SPI1_state = E_SPI1_EEPROM_WRITE_NEXT_PAGE;
+            SPI1_RECEIVE_ENABLE = INT_ENABLED;
+            SPI1_TRANSFER_ENABLE = INT_ENABLED;
+            break;
+        case E_SPI1_EEPROM_WRITE_NEXT_PAGE:
+            if (SPI1STATbits.SPIBUSY)
+                break;
+            eeprom_read_byte = SPI1BUF;
+            CS_EEPROM = 1;
+            SPI1_state = E_SPI1_EEPROM_WRITE_MODE;
+            SPI1_RECEIVE_ENABLE = INT_ENABLED;
+            SPI1_TRANSFER_ENABLE = INT_ENABLED;
+            break;
+        case E_SPI1_EEPROM_WRITE_END:
+            if (SPI1STATbits.SPIBUSY)
+                break;
+            eeprom_read_byte = SPI1BUF;
+            CS_EEPROM = 1;
+            SPI1_state = E_SPI1_EEPROM_WRITE_DISABLE;
+            SPI1_RECEIVE_ENABLE = INT_ENABLED;
+            SPI1_TRANSFER_ENABLE = INT_ENABLED;
+            break;
+        case E_SPI1_EEPROM_WRITE_DISABLE:
+            CS_EEPROM = 0;
+            SPI1_state = E_SPI1_EEPROM_WRITE_DISABLE_OK;
+            SPI1BUF = EEPROM_WRDI;
+            SPI1_RECEIVE_ENABLE = INT_ENABLED;
+            SPI1_TRANSFER_ENABLE = INT_ENABLED;
+            break;
+        case E_SPI1_EEPROM_WRITE_DISABLE_OK:
+            if (SPI1STATbits.SPIBUSY)
+                break;
+            eeprom_read_byte = SPI1BUF;
+            CS_EEPROM = 1;
+            SPI1_state = E_SPI1_EEPROM_WAIT_WRDI_OK;
+            SPI1CONbits.MODE16 = 1;
+            SPI1_RECEIVE_ENABLE = INT_ENABLED;
+            SPI1_TRANSFER_ENABLE = INT_ENABLED;
+            break;
+        case E_SPI1_EEPROM_WAIT_WRDI_OK:
+            CS_EEPROM = 0;
+            SPI1BUF = (0xffff & EEPROM_RDSR) << 8;// read status byte + 1 byte to read back
+            SPI1_state = E_SPI1_EEPROM_STILL_WAIT_WRDI_OK;
+            SPI1_RECEIVE_ENABLE = INT_ENABLED;
+            SPI1_TRANSFER_ENABLE = INT_ENABLED;
+            break;
+        case E_SPI1_EEPROM_STILL_WAIT_WRDI_OK:
+            eeprom_read_byte = SPI1BUF;
+            if (!(eeprom_read_byte & EEPROM_RDSR_WEL)) // Check in STATUS register if Write Enable Latch is off
+                SPI1_state = E_SPI1_EEPROM_WRITE_DONE;
+            else
+                SPI1_state = E_SPI1_EEPROM_WAIT_WRDI_OK;
+            CS_EEPROM = 1;
+            SPI1_RECEIVE_ENABLE = INT_ENABLED;
+            SPI1_TRANSFER_ENABLE = INT_ENABLED;
+            break;
+        case E_SPI1_EEPROM_WRITE_DONE:
+            SPI1CONbits.MODE16 = 0;
+            SPI1_state = E_SPI1_DONE;
+            eeprom_buf_i = 0;
+            SPI_eeprom_write_request = 0;
+            break;
+    }
 }
 */
-
-//void    eeprom_write(u8 *src, u8 size, u16 address)
-//{
-//    u8 i;
-//
-//    i = 0;
-//    while (i < size)
-//    {
-//        eeprom_buf[i++] = *src++;
-//    }
-//    eeprom_buf_size = size;
-//    eeprom_address = address;
-//    SPI_eeprom_write_request = 1;
-//}
-//
-//void    eeprom_buf_bzero(void)
-//{
-//    u8  size;
-//
-//    size = 128;
-//    while (size)
-//    {
-//        eeprom_buf[--size] = 0;
-//    }
-//}
-//
-//void    eeprom_read(u8 size, u16 address)
-//{
-//    eeprom_buf_bzero();
-//    eeprom_address = address;
-//    eeprom_buf_size = size;
-//    SPI_eeprom_read_request = 1;
-//}
-//
-//void    eeprom_read_buf(u8 *dest, u8 size)
-//{
-//    u8  i;
-//
-//    i = 0;
-//    while (i < size)
-//    {
-//        dest[i] = eeprom_buf[i];
-//        ++i;
-//    }
-//}
-
-
-//void eeprom_read(u16 add)
-//{
-//	u16 read;
-//
-//	CS_EEPROM = 0;
-//
-//	SPI1BUF = 0x03;
-//	while (SPI1STATbits.SPIBUSY);
-//	eeprom_read_byte = SPI1BUF;
-//
-//	SPI1CONbits.MODE16 = 1;
-//	SPI1BUF = add;
-//	while (SPI1STATbits.SPIBUSY);
-//	read = SPI1BUF;
-//	SPI1CONbits.MODE16 = 0;
-//
-//	SPI1BUF = 0x00;
-//	while (SPI1STATbits.SPIBUSY);
-//	eeprom_read_byte = SPI1BUF;
-//
-//	CS_EEPROM = 1;
-//}

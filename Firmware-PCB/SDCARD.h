@@ -22,4 +22,3 @@ enum E_SD_CARD
 };
 
 #endif	/* SDCARD_H */
-

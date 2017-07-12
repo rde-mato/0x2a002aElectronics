@@ -16,8 +16,6 @@ extern u8       encoders_scale[];
 extern const u8 *notesnames[];
 extern u8	lcd_chars[8][21];
 u8              cur_template = TEMPLATE_DEFAULT;
-
-
 void    request_template(u8 template)
 {
     cur_template = template;
@@ -129,6 +127,11 @@ void    display_current_template(void)
                 snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "INSTRUMENT", 0);
                 snprintf(lines[3], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
                 snprintf(lines[4], CHARS_PER_LINE + 1, "%10d", cur_instrument + 1);
+                break ;
+            case TEMPLATE_PATTERN:
+                snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "PATTERN", 0);
+                snprintf(lines[3], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
+                snprintf(lines[4], CHARS_PER_LINE + 1, "%10d", cur_pattern + 1);
                 break ;
             case TEMPLATE_PATTERN_RECORDED:
                 snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "PATTERN RECORDED", 0);
