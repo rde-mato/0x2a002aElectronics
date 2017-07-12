@@ -38,8 +38,7 @@ void    timer_3_init(void)
 void set_bpm(void)
 {
     TIMER2_PERIOD = (FREQUENCY * 15) / (MIDI_PPQN * 256 / 100 * bpm_x100);
-    if (TIMER2_VALUE > TIMER2_PERIOD - 2000)
-        TIMER2_VALUE = 0;
+    TIMER2_VALUE = 0;
 }
 
 void change_bpm(s8 incr, u8 rounded)
