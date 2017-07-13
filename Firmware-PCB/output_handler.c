@@ -17,6 +17,7 @@ extern u8          sequencer_velocities[MAX_NOTES_PER_QTIME];
 extern u8          sequencer_notes_count;
 extern u8          noteskeys[13];
 extern u8          playing;
+extern u8          cue_pressed;
 u32                current_leds_on;
 u32                leds_base_case = 0;
 
@@ -33,6 +34,8 @@ void    display_LEDs(void)
     switch (current_mode)
     {
         case E_MODE_INSTRU:
+            blinking = 1;
+            to_blink = cur_instrument;
             break;
         case E_MODE_EDIT_INSTRU:
             blinking = 1;
@@ -80,6 +83,8 @@ void    update_leds_base_case(void)
     leds_base_case = 0;
     if (playing == MUSIC_PLAYING)
         leds_base_case |= (1 << E_SOURCE_BUTTON_PLAY_PAUSE);
+    if (cue_pressed)
+        leds_base_case |= (1 << E_SOURCE_BUTTON_CUE);
     leds_base_case |= (1 << cur_octave + E_SOURCE_ENCODER_0);
     switch (current_mode)
     {
@@ -101,6 +106,7 @@ void    update_leds_base_case(void)
                 qt++;
             }
             leds_base_case |= (1 << E_SOURCE_BUTTON_INSTRUMENT);
+            leds_base_case |= (1 << E_SOURCE_BUTTON_EDIT);
             display_LEDs();
             break;
         case E_MODE_PATTERN:

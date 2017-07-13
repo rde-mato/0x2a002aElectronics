@@ -11,11 +11,12 @@ extern u32  leds_base_case;
 extern u32  bpm_x100;
 u8          edit_pressed = 0;
 u8          tap_pressed = 0;
+u8          cue_pressed = 0;
 
 u8          cur_active_pattern[QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE] = { NO_NOTE };
 u8          active_patterns_array[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 u8          active_instrument[PATTERNS_PER_INSTRUMENT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
-u16         active_instruments_u16 = 0b01010111;
+u16         active_instruments_u16 = 1;
 u8          active_pattern_per_instrument[INSTRUMENTS_COUNT] = { 0 };
 u8          encoders_values[8] = { 0x0F };
 u8          encoders_scale[8] = { 16 };
@@ -50,6 +51,25 @@ void	keys_handler(u8 event_type, u8 event_source)
             }
             break ;
         }
+        case E_MODE_EDIT_PATTERN:
+        {
+            switch (event_type)
+            {
+                case E_KEY_PRESSED:
+                    cur_pattern = event_source;
+                    update_after_pattern_change();
+                    update_leds_base_case();
+                    request_template(TEMPLATE_PATTERN);
+                    current_mode = E_MODE_PATTERN;
+                    update_leds_base_case();
+                    break;
+                case E_KEY_RELEASED:
+                    break;
+                case E_KEY_LONG_PRESSED:
+                    break;
+            }
+            break ;
+        }
         case E_MODE_KEYBOARD:
         {
             switch (event_type)
@@ -70,6 +90,21 @@ void	keys_handler(u8 event_type, u8 event_source)
             }
             break ;
         }
+        case E_MODE_INSTRU:
+        {
+            switch (event_type)
+            {
+                    case E_KEY_PRESSED:
+                        active_instruments_u16 ^= (1 << event_source);
+                        update_leds_base_case();
+                        break;
+                    case E_KEY_RELEASED:
+                        break;
+                    case E_KEY_LONG_PRESSED:
+                        break;
+            }
+            break ;
+        }
         case E_MODE_EDIT_INSTRU:
         {
             switch (event_type)
@@ -79,28 +114,13 @@ void	keys_handler(u8 event_type, u8 event_source)
                         cur_pattern = active_pattern_per_instrument[cur_instrument];
                         load_cur_instrument_from_eeprom();
                         request_template(TEMPLATE_INSTRUMENT);
+                        current_mode = E_MODE_PATTERN;
+                        update_leds_base_case();
                         break;
                     case E_KEY_RELEASED:
                         break;
                     case E_KEY_LONG_PRESSED:
                         break;
-            }
-            break ;
-        }
-        case E_MODE_EDIT_PATTERN:
-        {
-            switch (event_type)
-            {
-                case E_KEY_PRESSED:
-                    cur_pattern = event_source;
-                    update_after_pattern_change();
-                    update_leds_base_case();
-                    request_template(TEMPLATE_PATTERN);
-                    break;
-                case E_KEY_RELEASED:
-                    break;
-                case E_KEY_LONG_PRESSED:
-                    break;
             }
             break ;
         }
@@ -239,23 +259,18 @@ void	button_cue_handler(u8 event_type)
 {
 	switch (event_type)
 	{
-		case E_KEY_PRESSED:
-//                    led_set(E_SOURCE_BUTTON_CUE);
-//                    led_toggle((qtime - 1) & 15);
-//                    TIMER2_VALUE = 0;
-//                    qtime = 0;
-                    /*******/
-//			eeprom_buf_size = 8;
-//			lcd_bzero(eeprom_buf, 8);
-//			eeprom_address = 0;
-//            eeprom_read(8, 128);
-			break;
-		case E_KEY_RELEASED:
-//                    led_toggle(qtime - 1);
-                    led_clr(E_SOURCE_BUTTON_CUE);
-			break;
-		case E_KEY_LONG_PRESSED:
-			break;
+            case E_KEY_PRESSED:
+                TIMER2_VALUE = 0;
+                qtime = 0;
+                cue_pressed = 1;
+                update_leds_base_case();
+                break;
+            case E_KEY_RELEASED:
+                cue_pressed = 0;
+                update_leds_base_case();
+                break;
+            case E_KEY_LONG_PRESSED:
+                break;
 	}
 }
 
