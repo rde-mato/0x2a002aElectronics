@@ -35,6 +35,7 @@
         <itemPath>EEPROM_driver.c</itemPath>
         <itemPath>SDCARD_driver.c</itemPath>
         <itemPath>encoders_driver.c</itemPath>
+        <itemPath>timers_driver.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="logic" projectFiles="true">
         <itemPath>bpm.c</itemPath>

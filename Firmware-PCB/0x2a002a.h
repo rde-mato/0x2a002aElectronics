@@ -19,6 +19,7 @@ typedef signed long             s32;
 typedef unsigned char           u8;
 typedef unsigned short          u16;
 typedef unsigned long           u32;
+typedef void                    (* generic_callback)(void);
 
 //extern u16                      __g_qbeat_pr;
 
@@ -114,7 +115,8 @@ typedef unsigned long           u32;
 #define TIMER3_INT_PRIORITY     IPC3bits.T3IP
 #define TIMER3_INT_ENABLE       IEC0bits.T3IE
 
-// timer 4 used for duration of templates
+// timer 4 used for callback timer : duration of templates, EEPROM write etc
+#define TIMER4_BUF_SIZE         10
 #define TIMER4_STOP_AND_RESET	T4CON = 0
 #define TIMER4_VALUE		TMR4
 #define TIMER4_PERIOD		PR4
@@ -122,6 +124,9 @@ typedef unsigned long           u32;
 #define TIMER4_INT_FLAG_CLR	IFS0CLR = (1 << 19)
 #define TIMER4_INT_PRIORITY	IPC4bits.T4IP
 #define TIMER4_INT_ENABLE	IEC0bits.T4IE
+#define TIMER4_IS_ON            T4CONbits.ON == 1
+#define TIMER4_ON               T4CONbits.ON = 1
+#define TIMER4_OFF              T4CONbits.ON = 0
 
 // timer 5 used for key press management
 #define TIMER5_STOP_AND_RESET	T5CON = 0
@@ -204,5 +209,4 @@ enum E_MODES
     E_MODE_MENU
 };
 
-u8  haha[128];
 #endif	/* OX2A002A_H */
