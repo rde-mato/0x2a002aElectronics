@@ -2,6 +2,8 @@
 
 u8  running_status;
 
+/* ***************************** CHANNEL VOICE ****************************** */
+
 /*
 ** Sets MIDI Note Off.
 ** channel: 0-15 MIDI Channel Number
@@ -104,6 +106,15 @@ void midi_pitch_bend_change(u8 channel)
 {
 }
 
+/* ***************************** CHANNEL MODE ******************************* */
+
+/* ******************************** SYSTEM ********************************** */
+
+// SysExs will be completed when we need them.
+
+void midi_sys_common()
+{
+}
 
 //void    midi_gm_on(void)
 //{

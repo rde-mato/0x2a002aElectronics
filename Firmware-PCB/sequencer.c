@@ -102,6 +102,7 @@ void __ISR(_TIMER_2_VECTOR, IPL7AUTO) Timer2QTime(void)
 
     TIMER2_INT_FLAG_CLR;
 
+//    UART1_send(TIMING_CLOCK);
     if (++ppqn_count == MIDI_PPQN)
     {
         display_LEDs();
@@ -117,5 +118,4 @@ void __ISR(_TIMER_2_VECTOR, IPL7AUTO) Timer2QTime(void)
         ppqn_count = 0;
 
     }
-//    UART1_send(TIMING_CLOCK);
 }

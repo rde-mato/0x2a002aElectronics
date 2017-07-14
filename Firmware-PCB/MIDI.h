@@ -21,9 +21,7 @@ enum E_MIDI_STATUS
 
 
     /* System Messages */   /* OR'd with */ /* data bytes */   /* description */
-    E_MS_SYSTEM = 0xF0,     //  0b0000      ID(0 - 127) + ...  System Exclusive
-    //////////////////,     //  0b0sss     ?(1 - 7) + x(0 - 2)   System Common
-    //////////////////,     //  0b1ttt         ?(0 - 7)        System Real Time
+    E_MS_SYSTEM = 0xF0,     //          refer to E_MIDI_SYSTEM enum.
 };;
 
 // General MIDI 1 instruments only.
@@ -297,4 +295,25 @@ enum E_MIDI_CHANNEL_MODE_MSG            // ARGUMENT
     MCMM_MONO_MODE_OFF = 0x7F,          // 00 ?? ^
 };
 
+enum E_MIDI_SYSTEM
+{
+    /* System Exclusive Messages */ /* data bytes */
+    E_MSYS_EXCLUSIVE = 0x00,        // arbitrary
+    E_MSYS_EOX = 0x07,              // none
+
+    /* System Common Messages */    /* data bytes*/
+
+    E_MSYS_TIME_CODE_QFRAME = 0x01, //
+    E_MSYS_SONG_POS_POINTER = 0x02, //
+    E_MSYS_SONG_SELECT = 0x03,      //
+    E_MSYS_TUNE_REQUEST = 0x06,     //
+
+    /* System Real Time Messages */ /* data bytes */
+    E_MSYS_CLOCK = 0x08,            // none
+    E_MSYS_START = 0x0A,            // none
+    E_MSYS_CONTINUE = 0x0B,         // none
+    E_MSYS_STOP = 0x0C,             // none
+    E_MSYS_ACTIVE_SENSING = 0x0E,   // none
+    E_MSYS_SYS_RESET = 0x0F,        // none
+};
 #endif	/* MIDI_H */
