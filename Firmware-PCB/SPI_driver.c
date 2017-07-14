@@ -93,7 +93,7 @@ void    SPI1_manager(void)
     else if (SPI_eeprom_write_request)
     {
         SPI1_slave = E_SPI1_CS_EEPROM;
-        SPI1_state = E_SPI1_EEPROM_WRITE_ENABLE;
+        SPI1_state = E_SPI1_EEPROM_CHECK_BUSY;
         SPI1_TRANSMIT_ENABLE = INT_ENABLED;
     }
     else if (SPI_eeprom_read_request)

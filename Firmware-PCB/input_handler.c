@@ -58,7 +58,6 @@ void	keys_handler(u8 event_type, u8 event_source)
                 case E_KEY_PRESSED:
                     cur_pattern = event_source;
                     update_after_pattern_change();
-                    update_leds_base_case();
                     request_template(TEMPLATE_PATTERN);
                     current_mode = E_MODE_PATTERN;
                     update_leds_base_case();
@@ -113,9 +112,6 @@ void	keys_handler(u8 event_type, u8 event_source)
                         cur_instrument = event_source;
                         cur_pattern = active_pattern_per_instrument[cur_instrument];
                         load_cur_instrument_from_eeprom();
-                        request_template(TEMPLATE_INSTRUMENT);
-                        current_mode = E_MODE_PATTERN;
-                        update_leds_base_case();
                         break;
                     case E_KEY_RELEASED:
                         break;

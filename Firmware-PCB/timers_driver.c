@@ -39,9 +39,10 @@ void    timer_4_init(void)
 
 void __ISR(_TIMER_4_VECTOR, IPL1AUTO) Timer4Handler(void)
 {
+    generic_callback cb = timer4_callbacks[timer4_index];
+
     TIMER4_INT_FLAG_CLR;
-    (*timer4_callbacks[timer4_index++])();
-    if (timer4_index == timer4_count)
+    if (++timer4_index == timer4_count)
     {
         TIMER4_OFF;
         timer4_index = 0;
@@ -52,6 +53,7 @@ void __ISR(_TIMER_4_VECTOR, IPL1AUTO) Timer4Handler(void)
         TIMER4_PERIOD = timer4_periods[timer4_index];
         TIMER4_VALUE = 0;
     }
+    (*cb)();
 }
 
 void    timer4_push(u16 period_ms, generic_callback cb)
@@ -60,8 +62,10 @@ void    timer4_push(u16 period_ms, generic_callback cb)
         timer4_restart(ONE_MILLISECOND * period_ms / timer4_prescale - 1);
     else
     {
+        TIMER4_INT_ENABLE = 0;
         timer4_callbacks[timer4_count] = cb;
         timer4_periods[timer4_count++] = ONE_MILLISECOND * period_ms / timer4_prescale - 1;
+        TIMER4_INT_ENABLE = 1;
         if (timer4_count == 1)
             timer4_start();
     }

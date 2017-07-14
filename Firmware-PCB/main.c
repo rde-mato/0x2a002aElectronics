@@ -20,8 +20,7 @@ int main(void)
     MCP_ENCODERS_init_blocking();
     UART1_init();
 //    eeprom_chip_erase();
-    eeprom_init();
-    active_patterns_init();
+    initial_eeprom_download();
 
 
     //		SD_card_init();
@@ -29,19 +28,9 @@ int main(void)
     //		ret2 = SD_card_write_block(block);
     //		ret3 = SD_card_read_block(block);
 
-
-
-
-
     INT_init();
     HT16_init();
-    active_instrument_init();
-
-    request_template(TEMPLATE_DEFAULT);
-
     IFS0bits.INT1IF = 1; // a garder pour reset les encoders
-
-    update_leds_base_case();
     TIMER2_ON;
 
     while (42)
