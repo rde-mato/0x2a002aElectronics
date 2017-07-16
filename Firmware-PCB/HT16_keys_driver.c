@@ -53,6 +53,7 @@ void process_key_scan(void)
     main_encoder = I2C1_read_buf[5] & 0b1;
     last_poll_interval = TIMER1_VALUE;
     TIMER1_VALUE = 0;
+    
     changed_buttons = current_key_scan ^ previous_key_scan;
     unchanged_pressed_buttons = current_key_scan & previous_key_scan;
     newly_pressed_buttons = current_key_scan & ~previous_key_scan;
@@ -107,7 +108,10 @@ void process_key_scan(void)
     previous_key_scan = current_key_scan;
 
     if (!previous_main_encoder && main_encoder)
+    {
             event_handler(E_KEY_PRESSED, E_SOURCE_ENCODER_MAIN);
+            led_toggle(0);
+    }
     previous_main_encoder = main_encoder;
 
     if (!current_key_scan && !main_encoder)

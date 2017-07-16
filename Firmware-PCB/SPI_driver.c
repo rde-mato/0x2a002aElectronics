@@ -84,6 +84,7 @@ void    SPI1_manager(void)
     }
     else if (LCD_dirty)
     {
+        LCD_dirty = 0;
         display_current_template();
 
         SPI1_slave = E_SPI1_CS_MCP_LCD;

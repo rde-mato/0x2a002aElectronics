@@ -25,10 +25,14 @@ u8          cur_instrument = 0;
 u8          cur_pattern = 0;
 u8          cur_note = 36;
 u8          current_mode = E_MODE_PATTERN;
+u8          default_template = TEMPLATE_DEFAULT;
 u8          cur_octave = 3;
 u8          cur_velocity = 0x40;
 u8          cur_encoder;
 u8          playing = MUSIC_PAUSE;
+u8          menu_current_level = 0;
+u8          menu_level_1 = 0;
+u8          menu_item_highlighted;
 
 void	keys_handler(u8 event_type, u8 event_source)
 {
@@ -172,102 +176,135 @@ void	encoders_handler(u8 event_type, u8 event_source)
 }
 void	main_encoder_handler(u8 event_type)
 {
-    static u8 truc = 0;
-	if (current_mode != E_MODE_MENU)
-	{
-		switch (event_type)
-		{
-		case E_KEY_PRESSED:
-			current_mode == E_MODE_MENU;
-                        midi_control_change(00, truc++, 40);
-                        request_template(TEMPLATE_MAIN_MENU_START);
-                    break;
-		case E_KEY_RELEASED:
-                    break;
-		case E_KEY_LONG_PRESSED:
-                    break;
-		case E_ENCODER_TURNED_RIGHT:
-                    if(tap_pressed)
-                    {
-                        T3CONbits.ON = 0;
-                        tap_index = 0;
-                        change_bpm(100, 1);
-                        request_template(TEMPLATE_BPM);
-                    }
-                    else if (edit_pressed)
-                    {
-                        cur_velocity++;
-                        request_template(TEMPLATE_VELOCITY);
-                    }
+//    static u8 truc = 0;
+
+    switch (event_type)
+        {
+        case E_KEY_PRESSED:
+            if (default_template == TEMPLATE_DEFAULT)
+            {
+                default_template = TEMPLATE_MAIN_MENU;
+                menu_item_highlighted = 0;
+                request_template(TEMPLATE_MAIN_MENU);
+
+            }
+            else if (default_template == TEMPLATE_MAIN_MENU)
+            {
+                if (menu_item_highlighted == E_MENU_ITEMS_EXIT)
+                {
+                    default_template = TEMPLATE_DEFAULT;
+                    request_template(TEMPLATE_DEFAULT);
+                }
+                else if (menu_item_highlighted == E_MENU_ITEMS_LOAD_TO_SD)
+                {
+
+                }
+                else if (menu_item_highlighted == E_MENU_ITEMS_LOAD_FROM_SD)
+                {
+
+                }
+            }
+            break;
+        case E_ENCODER_TURNED_RIGHT:
+            if(tap_pressed)
+            {
+                T3CONbits.ON = 0;
+                tap_index = 0;
+                change_bpm(100, 1);
+                request_template(TEMPLATE_BPM);
+            }
+            else if (edit_pressed)
+            {
+                cur_velocity++;
+                request_template(TEMPLATE_VELOCITY);
+            }
+            else
+            {
+                if (default_template == TEMPLATE_MAIN_MENU)
+                {
+                    if (menu_item_highlighted == E_MENU_ITEMS_EXIT)
+                        menu_item_highlighted = 0;
                     else
-                    {
-                    }
-                    break;
-		case E_ENCODER_TURNED_LEFT:
-                    if(tap_pressed)
-                    {
-                        T3CONbits.ON = 0;
-                        tap_index = 0;
-                        change_bpm(-100, 1);
-                        request_template(TEMPLATE_BPM);
-                    }
-                    else if (edit_pressed)
-                    {
-                        cur_velocity--;
-                        request_template(TEMPLATE_VELOCITY);
-                    }
+                        menu_item_highlighted++;
+                    request_template(TEMPLATE_MAIN_MENU);
+                }
+                else
+                {
+                }
+            }
+            break;
+        case E_ENCODER_TURNED_LEFT:
+            if(tap_pressed)
+            {
+                T3CONbits.ON = 0;
+                tap_index = 0;
+                change_bpm(-100, 1);
+                request_template(TEMPLATE_BPM);
+            }
+            else if (edit_pressed)
+            {
+                cur_velocity--;
+                request_template(TEMPLATE_VELOCITY);
+            }
+            else
+            {
+                if (default_template == TEMPLATE_MAIN_MENU)
+                {
+                    if (menu_item_highlighted > 0)
+                        menu_item_highlighted--;
                     else
-                    {
-                    }
-                    break;
-		}
-	}
-	else
-	{
-	}
+                        menu_item_highlighted = E_MENU_ITEMS_EXIT;
+                    request_template(TEMPLATE_MAIN_MENU);
+                }
+                else
+                {
+                }
+            }
+            break;
+        }
 }
 
 void	button_play_handler(u8 event_type)
 {
-	switch (event_type)
-	{
-		case E_KEY_PRESSED:
-                    playing = !playing;
-                    update_leds_base_case();
-                    /*********/
+    switch (event_type)
+    {
+        case E_KEY_PRESSED:
+            playing = !playing;
+            update_leds_base_case();
+            /*********/
 
 //                    led_toggle(E_SOURCE_BUTTON_PLAY_PAUSE);
 //			eeprom_buf_size = 8;
 //			eeprom_address = 0;
 //			lcd_strncpy(eeprom_buf, "abcd 345", 8);
 //			SPI_eeprom_write_request = 1;
-                    
+
 //            eeprom_write("abcd 345", 8, 128);
-			break;
-		case E_KEY_RELEASED:
-			break;
-		case E_KEY_LONG_PRESSED:
-			break;
-	}
+                break;
+        case E_KEY_RELEASED:
+                break;
+        case E_KEY_LONG_PRESSED:
+                break;
+    }
 }
 
 void	button_cue_handler(u8 event_type)
 {
-	switch (event_type)
-	{
-            case E_KEY_PRESSED:
-                TIMER2_VALUE = 0;
-                qtime = 0;
-                cue_pressed = 1;
-                update_leds_base_case();
-                break;
-            case E_KEY_RELEASED:
-                cue_pressed = 0;
-                update_leds_base_case();
-                break;
-            case E_KEY_LONG_PRESSED:
-                break;
-	}
+    switch (event_type)
+    {
+        case E_KEY_PRESSED:
+            TIMER2_VALUE = 0;
+            qtime = 0;
+            cue_pressed = 1;
+            update_leds_base_case();
+            break;
+        case E_KEY_RELEASED:
+            cue_pressed = 0;
+            update_leds_base_case();
+            break;
+        case E_KEY_LONG_PRESSED:
+            break;
+    }
 }
 
 void	button_instrument_handler(u8 event_type)

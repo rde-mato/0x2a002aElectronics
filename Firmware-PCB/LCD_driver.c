@@ -428,7 +428,6 @@ void    SPI1_LCD_state_machine(void)
             CS_MCP_LCD = 0x1;
             SPI_LCD_index = 0;
             SPI_LCD_count = 0;
-            LCD_dirty = 0;
             break;
         }
 }

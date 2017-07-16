@@ -29,7 +29,7 @@ typedef void                    (* generic_callback)(void);
 #define FREQUENCY		(8000000ul)
 #define ONE_MILLISECOND         FREQUENCY / 1000
 #define BUTTON_POLL_DELAY_MS	50
-#define BUTTON_POLLS_PER_SECOND	20
+#define BUTTON_POLLS_PER_SECOND	10
 #define SCREEN_DURATION_MS	1000
 #define INITIAL_BPM_x100        14200
 
@@ -205,8 +205,7 @@ enum E_MODES
     E_MODE_EDIT_INSTRU,
     E_MODE_INSTRU,
     E_MODE_EDIT_KEYBOARD,
-    E_MODE_KEYBOARD,
-    E_MODE_MENU
+    E_MODE_KEYBOARD
 };
 
 #endif	/* OX2A002A_H */

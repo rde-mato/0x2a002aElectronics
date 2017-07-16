@@ -6,6 +6,8 @@
 extern u32      bpm_x100;
 extern u8	cur_instrument;
 extern u8	cur_pattern;
+extern u8       default_template;
+extern u8       menu_item_highlighted;
 extern u8	cur_note;
 extern u8	cur_octave;
 extern u8	cur_velocity;
@@ -20,7 +22,7 @@ u8              cur_template = TEMPLATE_DEFAULT;
 
 void    LCD_back_to_default(void)
 {
-        request_template(TEMPLATE_DEFAULT);
+        request_template(default_template);
 }
 
 void    request_template(u8 template)
@@ -90,7 +92,12 @@ void    display_current_template(void)
                 snprintf(lines[3], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
                 snprintf(lines[4], CHARS_PER_LINE + 1, "%10d", encoders_values[cur_encoder] / 2);
                 break;
-            case TEMPLATE_MAIN_MENU_START:
+            case TEMPLATE_MAIN_MENU:
+                snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "MAIN MENU", 0);
+                snprintf(lines[0], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
+                snprintf(lines[2], CHARS_PER_LINE + 1, "%c %s", (menu_item_highlighted == E_MENU_ITEMS_LOAD_FROM_SD) ? '>': ' ', "Load from SD card");
+                snprintf(lines[3], CHARS_PER_LINE + 1, "%c %s", (menu_item_highlighted == E_MENU_ITEMS_LOAD_TO_SD) ? '>': ' ', "Load to SD card");
+                snprintf(lines[4], CHARS_PER_LINE + 1, "%c %s", (menu_item_highlighted == E_MENU_ITEMS_EXIT) ? '>': ' ', "Exit");
                 break;
             case TEMPLATE_NOTE:
                 snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "NOTE", 0);
