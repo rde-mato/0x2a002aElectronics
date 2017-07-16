@@ -36,14 +36,15 @@ void __ISR(_TIMER_5_VECTOR, IPL3AUTO) Timer5Handler(void)
 
 void process_key_scan(void)
 {
-    u32 		changed_buttons;
-    u32 		unchanged_pressed_buttons;
-    u32 		last_poll_interval;
-    u32 		newly_pressed_buttons;
-    u32 		newly_released_buttons;
-    u8  		main_encoder;
-	static u8	previous_main_encoder = 0;
-    u8  		i;
+    static u8   previous_main_encoder = 0;
+    u32 	changed_buttons;
+    u32 	unchanged_pressed_buttons;
+    u32 	last_poll_interval;
+    u32 	newly_pressed_buttons;
+    u32 	newly_released_buttons;
+    u8  	main_encoder;
+    u8          unchanged_pressed_count;
+    u8  	i;
 
     current_key_scan = (I2C1_read_buf[0] << 0 )
                         | ((I2C1_read_buf[1] & 0b1111) << 8)
@@ -62,12 +63,17 @@ void process_key_scan(void)
     if (newly_pressed_buttons)
     {
         i = 0;
+        unchanged_pressed_count = 0;
         while (i < 32)
         {
             if (newly_pressed_buttons & (1 << i))
                 event_handler(E_KEY_PRESSED, i);
+            if (unchanged_pressed_buttons & (1 << i))
+                unchanged_pressed_count++;
             ++i;
         }
+        if (unchanged_pressed_count == 1)
+                event_handler(E_KEY_COMBINATION_PRESSED, current_key_scan);
     }
     if (newly_released_buttons)
     {

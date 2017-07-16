@@ -64,7 +64,7 @@ void    pop_note(u8 qtime)
 }
 
 
-void    add_note(u8 qt)
+void    add_note(u8 qt, u8 force)
 {
     u8  i = 0;
 
@@ -72,7 +72,7 @@ void    add_note(u8 qt)
     {
         if (cur_active_pattern[qt][i][E_NOTE_VALUE] == cur_note)
         {
-            if (cur_active_pattern[qt][i][E_NOTE_VELOCITY] == cur_velocity)
+            if (cur_active_pattern[qt][i][E_NOTE_VELOCITY] == cur_velocity && !force)
                 pop_note(qt);
             else
                 cur_active_pattern[qt][i][E_NOTE_VELOCITY] = cur_velocity;
@@ -82,4 +82,19 @@ void    add_note(u8 qt)
     }
     if (i == NOTES_PER_QTIME)
         push_note(qt, cur_note, cur_velocity);
+}
+
+void    remove_note(u8 qt)
+{
+    u8  i = 0;
+
+    while (i < NOTES_PER_QTIME)
+    {
+        if (cur_active_pattern[qt][i][E_NOTE_VALUE] == cur_note)
+        {
+            pop_note(qt);
+            break;
+        }
+        i++;
+    }
 }

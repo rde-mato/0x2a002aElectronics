@@ -9,6 +9,8 @@ extern u8   current_template;
 extern u8   tap_index;
 extern u32  leds_base_case;
 extern u32  bpm_x100;
+extern u32  current_leds_on;
+extern u32  current_key_scan;
 u8          edit_pressed = 0;
 u8          tap_pressed = 0;
 u8          cue_pressed = 0;
@@ -45,7 +47,7 @@ void	keys_handler(u8 event_type, u8 event_source)
             switch (event_type)
             {
                 case E_KEY_PRESSED:
-                    add_note(event_source);
+                    add_note(event_source, 0);
                     update_leds_base_case();
                     break;
                 case E_KEY_RELEASED:
@@ -280,15 +282,6 @@ void	button_play_handler(u8 event_type)
         case E_KEY_PRESSED:
             playing = !playing;
             update_leds_base_case();
-            /*********/
-
-//                    led_toggle(E_SOURCE_BUTTON_PLAY_PAUSE);
-//			eeprom_buf_size = 8;
-//			eeprom_address = 0;
-//			lcd_strncpy(eeprom_buf, "abcd 345", 8);
-//			SPI_eeprom_write_request = 1;
-
-//            eeprom_write("abcd 345", 8, 128);
                 break;
         case E_KEY_RELEASED:
                 break;
@@ -364,7 +357,6 @@ void	button_keyboard_handler(u8 event_type)
                     update_leds_base_case();
                     break;
 		case E_KEY_RELEASED:
-//                    display_keyboard();
                     break;
 		case E_KEY_LONG_PRESSED:
                     break;
@@ -398,12 +390,6 @@ void	button_rec_handler(u8 event_type)
 		case E_KEY_PRESSED:
                     if(edit_pressed)
                         save_cur_pattern_to_eeprom();
-
-//            eeprom_read_buf(haha, 8);
-//            LCD_putnstr(0, 0, haha, 8);
-
-//			LCD_putnstr(0, 0, eeprom_buf, 8);
-//			LCD_print_changed_chars();
 			break;
 		case E_KEY_RELEASED:
 			break;
@@ -418,40 +404,101 @@ void	button_edit_handler(u8 event_type)
 	{
 		case E_KEY_PRESSED:
 			edit_pressed = 1;
-//                        led_set(E_SOURCE_BUTTON_EDIT);
 			break;
 		case E_KEY_RELEASED:
 			edit_pressed = 0;
-//                        led_clr(E_SOURCE_BUTTON_EDIT);
 			break;
 		case E_KEY_LONG_PRESSED:
 			break;
 	}
 }
 
+void    combination_handler(u32 source)
+{
+    u8  start;
+    u8  finish;
+    u8  i;
+    u8  all_notes_on;
+
+    switch (current_mode)
+    {
+        case E_MODE_PATTERN:
+            i = 0;
+            while (i < 32 && !(source & (1 << i)))
+                i++;
+            start = i++;
+            while (i < 32 && !(source & (1 << i)))
+                i++;
+            finish = i;
+
+//            if (i == source)
+//            {
+//                while (++i < 32 && !(current_key_scan & (1 << i)))
+//                    ;
+//                start = source;
+//                finish = i - 1;
+//            }
+//            else
+//            {
+//                start = i + 1;
+//                finish = source;
+//            }
+            if (start >= E_SOURCE_KEY_0 && finish <= E_SOURCE_KEY_15)
+            {
+                all_notes_on = 1;
+                i = start + 1;
+                while (all_notes_on && i < finish)
+                {
+                    if (!(current_leds_on & (1 << i++)))
+                        all_notes_on = 0;
+                }
+                all_notes_on &= !(current_leds_on & (1 << start));
+                all_notes_on &= !(current_leds_on & (1 << finish));
+                i = start;
+                if (all_notes_on)
+                {
+                    while (i <= finish)
+                        remove_note(i++);
+                    remove_note(source);
+                }
+                else
+                {
+                    while (i <= finish)
+                        add_note(i++, 1);
+                    add_note(source, 1);
+                }
+                update_leds_base_case();
+            }
+
+            break ;
+     }
+}
+
 
 void	event_handler(u8 event_type, u32 event_source)
 {
-	if (event_source >= E_SOURCE_KEY_0 && event_source <= E_SOURCE_KEY_15)
-		keys_handler(event_type, event_source);
-	else if (event_source >= E_SOURCE_ENCODER_0 && event_source <= E_SOURCE_ENCODER_7)
-		encoders_handler(event_type, event_source);
-	else if (event_source == E_SOURCE_ENCODER_MAIN)
-		main_encoder_handler(event_type);
-	else if (event_source == E_SOURCE_BUTTON_PLAY_PAUSE)
-		button_play_handler(event_type);
-	else if (event_source == E_SOURCE_BUTTON_CUE)
-		button_cue_handler(event_type);
-	else if (event_source == E_SOURCE_BUTTON_INSTRUMENT)
-		button_instrument_handler(event_type);
-	else if (event_source == E_SOURCE_BUTTON_PATTERN)
-		button_pattern_handler(event_type);
-	else if (event_source == E_SOURCE_BUTTON_KEYBOARD)
-		button_keyboard_handler(event_type);
-	else if (event_source == E_SOURCE_BUTTON_TAP)
-		button_tap_handler(event_type);
-	else if (event_source == E_SOURCE_BUTTON_REC)
-		button_rec_handler(event_type);
-	else if (event_source == E_SOURCE_BUTTON_EDIT)
-		button_edit_handler(event_type);
+    if (event_type == E_KEY_COMBINATION_PRESSED)
+        combination_handler(event_source);
+    else if (event_source >= E_SOURCE_KEY_0 && event_source <= E_SOURCE_KEY_15)
+            keys_handler(event_type, event_source);
+    else if (event_source >= E_SOURCE_ENCODER_0 && event_source <= E_SOURCE_ENCODER_7)
+            encoders_handler(event_type, event_source);
+    else if (event_source == E_SOURCE_ENCODER_MAIN)
+            main_encoder_handler(event_type);
+    else if (event_source == E_SOURCE_BUTTON_PLAY_PAUSE)
+            button_play_handler(event_type);
+    else if (event_source == E_SOURCE_BUTTON_CUE)
+            button_cue_handler(event_type);
+    else if (event_source == E_SOURCE_BUTTON_INSTRUMENT)
+            button_instrument_handler(event_type);
+    else if (event_source == E_SOURCE_BUTTON_PATTERN)
+            button_pattern_handler(event_type);
+    else if (event_source == E_SOURCE_BUTTON_KEYBOARD)
+            button_keyboard_handler(event_type);
+    else if (event_source == E_SOURCE_BUTTON_TAP)
+            button_tap_handler(event_type);
+    else if (event_source == E_SOURCE_BUTTON_REC)
+            button_rec_handler(event_type);
+    else if (event_source == E_SOURCE_BUTTON_EDIT)
+            button_edit_handler(event_type);
 }
