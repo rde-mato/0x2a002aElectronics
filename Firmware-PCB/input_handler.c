@@ -449,23 +449,21 @@ void    combination_handler(u32 source)
                 i = start + 1;
                 while (all_notes_on && i < finish)
                 {
-                    if (!(current_leds_on & (1 << i++)))
+                    if (!(leds_base_case & (1 << i++)))
                         all_notes_on = 0;
                 }
-                all_notes_on &= !(current_leds_on & (1 << start));
-                all_notes_on &= !(current_leds_on & (1 << finish));
+                all_notes_on &= !(leds_base_case & (1 << start));
+                all_notes_on &= !(leds_base_case & (1 << finish));
                 i = start;
                 if (all_notes_on)
                 {
                     while (i <= finish)
                         remove_note(i++);
-                    remove_note(source);
                 }
                 else
                 {
                     while (i <= finish)
                         add_note(i++, 1);
-                    add_note(source, 1);
                 }
                 update_leds_base_case();
             }
