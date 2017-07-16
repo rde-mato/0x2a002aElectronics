@@ -177,6 +177,7 @@ void	encoders_handler(u8 event_type, u8 event_source)
 void	main_encoder_handler(u8 event_type)
 {
 //    static u8 truc = 0;
+    static u8   prev_turn_direction = E_ENCODER_NO_DIRECTION;
 
     switch (event_type)
         {
@@ -197,11 +198,19 @@ void	main_encoder_handler(u8 event_type)
                 }
                 else if (menu_item_highlighted == E_MENU_ITEMS_LOAD_TO_SD)
                 {
-
+                    playing = MUSIC_PAUSE;
+                    request_template(TEMPLATE_LOADING_STARTED);
+                    copy_EEPROM_to_SD();
+                    default_template = TEMPLATE_DEFAULT;
+                    request_template(TEMPLATE_LOADING_SUCCESSFUL);
                 }
                 else if (menu_item_highlighted == E_MENU_ITEMS_LOAD_FROM_SD)
                 {
-
+                    playing = MUSIC_PAUSE;
+                    request_template(TEMPLATE_LOADING_STARTED);
+                    copy_SD_to_EEPROM();
+                    default_template = TEMPLATE_DEFAULT;
+                    request_template(TEMPLATE_LOADING_SUCCESSFUL);
                 }
             }
             break;
@@ -220,16 +229,16 @@ void	main_encoder_handler(u8 event_type)
             }
             else
             {
-                if (default_template == TEMPLATE_MAIN_MENU)
+                if (prev_turn_direction != E_ENCODER_TURNED_RIGHT)
+                    prev_turn_direction = E_ENCODER_TURNED_RIGHT;
+                else if (default_template == TEMPLATE_MAIN_MENU)
                 {
                     if (menu_item_highlighted == E_MENU_ITEMS_EXIT)
                         menu_item_highlighted = 0;
                     else
                         menu_item_highlighted++;
+                    prev_turn_direction = E_ENCODER_NO_DIRECTION;
                     request_template(TEMPLATE_MAIN_MENU);
-                }
-                else
-                {
                 }
             }
             break;
@@ -248,16 +257,16 @@ void	main_encoder_handler(u8 event_type)
             }
             else
             {
-                if (default_template == TEMPLATE_MAIN_MENU)
+                if (prev_turn_direction != E_ENCODER_TURNED_LEFT)
+                    prev_turn_direction = E_ENCODER_TURNED_LEFT;
+                else if (default_template == TEMPLATE_MAIN_MENU)
                 {
                     if (menu_item_highlighted > 0)
                         menu_item_highlighted--;
                     else
                         menu_item_highlighted = E_MENU_ITEMS_EXIT;
+                    prev_turn_direction = E_ENCODER_NO_DIRECTION;
                     request_template(TEMPLATE_MAIN_MENU);
-                }
-                else
-                {
                 }
             }
             break;

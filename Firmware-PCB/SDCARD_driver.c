@@ -7,7 +7,9 @@ u8  SD_error = 0;
 u8  SD_type = SD_SDSC;
 
 u8  SD_read_buf[SD_BLOCK_SIZE] = {0};
-u8  SD_write_buf[SD_BLOCK_SIZE] = "coucou c'est moi";
+u8  SD_write_buf[SD_BLOCK_SIZE] = "salut ma couille";
+
+const   size_t eeprom_size = INSTRUMENTS_COUNT * PATTERNS_PER_INSTRUMENT * QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE;
 
 void    send_lots_clk(void)
 {
@@ -23,48 +25,6 @@ void    send_lots_clk(void)
     }
     SPI1CONbits.MODE32 = 0;
 }
-
-//u8  sd_command(u8 cmd, u32 arg, u8 crc, u8 restype)
-//{
-//    u8  read8;
-//    u32 read32;
-//    u8  ret;
-//
-//    SS_MCP_ENCODERS = 0x0;
-//    SPI1BUF = 0x40 | cmd;
-//    while (SPI1STATbits.SPIBUSY) ;
-//    read8 = SPI1BUF;
-//
-//    SPI1CONbits.MODE32 = 1;
-//
-//    SPI1BUF = arg;
-//    while (SPI1STATbits.SPIBUSY) ;
-//    read32 = SPI1BUF;
-//
-//    SPI1CONbits.MODE32 = 0;
-//
-//    SPI1BUF = crc;
-//    while (SPI1STATbits.SPIBUSY) ;
-//    read8 = SPI1BUF;
-//
-//    SPI1BUF = 0xFF;
-//    while (SPI1STATbits.SPIBUSY) ;
-//    ret = SPI1BUF;
-//
-//    if (restype == SD_R3 || restype == SD_R7)
-//    {
-//        SPI1CONbits.MODE32 = 1;
-//        SPI1BUF = 0xFFFFFFFF;
-//        while (SPI1STATbits.SPIBUSY) ;
-//        SD_return = SPI1BUF;
-//        SPI1CONbits.MODE32 = 0;
-//    }
-//    SS_MCP_ENCODERS = 0x1;
-//    SPI1BUF = 0xFF;
-//    while (SPI1STATbits.SPIBUSY) ;
-//    read8 = SPI1BUF;
-//    return (ret);
-//}
 
 u8  SD_command_retry(u8 cmd, u32 arg, u8 crc, u8 restype)
 {
@@ -299,4 +259,96 @@ u8  SD_card_write_block(u32 block)
     while (SPI1STATbits.SPIBUSY) ;
     read8 = SPI1BUF;
     return (SD_WRITE_NO_ERROR);
+}
+
+void    copy_EEPROM_to_SD(void)
+{
+    u32  address;
+    u32  count;
+    u32  block;
+    u8  read;
+    u8  sd_errcode;
+
+    address = 0;
+    block = 0;
+    while (address < eeprom_size)
+    {
+        CS_EEPROM = CS_LINE_DOWN;
+        SPI1BUF = E_EEPROM_READ;
+        while (SPI1STATbits.SPIBUSY);
+        read = SPI1BUF;
+
+        SPI1BUF = (u8)(address >> 8);
+        while (SPI1STATbits.SPIBUSY);
+        read = SPI1BUF;
+        SPI1BUF = (u8)(address);
+        while (SPI1STATbits.SPIBUSY);
+        read = SPI1BUF;
+
+        count = 0;
+        while (count < SD_BLOCK_SIZE)
+        {
+            SPI1BUF = 0xFF;
+            while (SPI1STATbits.SPIBUSY);
+            SD_write_buf[count++] = SPI1BUF;
+        }
+        CS_EEPROM = CS_LINE_UP;
+        address += SD_BLOCK_SIZE;
+        if ((sd_errcode = SD_card_write_block(block++)) != SD_WRITE_NO_ERROR)
+            return ;
+    }
+}
+
+void    copy_SD_to_EEPROM(void)
+{
+    u32  address;
+    u32  count;
+    u32  block;
+    u8  read;
+    u8  i;
+    u32 wait;
+
+    address = 0;
+    block = 0;
+    while (address < eeprom_size)
+    {
+        SD_card_read_block(block++);
+
+        count = 0;
+        while (count < SD_BLOCK_SIZE)
+        {
+
+            CS_EEPROM = CS_LINE_DOWN;
+            SPI1BUF = E_EEPROM_WREN;
+            while (SPI1STATbits.SPIBUSY);
+            read = SPI1BUF;
+            CS_EEPROM = CS_LINE_UP;
+
+            CS_EEPROM = CS_LINE_DOWN;
+            SPI1BUF = E_EEPROM_WRITE;
+            while (SPI1STATbits.SPIBUSY);
+            read = SPI1BUF;
+
+            SPI1BUF = (u8)(address >> 8);
+            while (SPI1STATbits.SPIBUSY);
+            read = SPI1BUF;
+            SPI1BUF = (u8)(address);
+            while (SPI1STATbits.SPIBUSY);
+            read = SPI1BUF;
+
+            i = 0;
+            while (i < 128)
+            {
+                SPI1BUF = SD_read_buf[i++];
+                while (SPI1STATbits.SPIBUSY);
+                read = SPI1BUF;
+            }
+            CS_EEPROM = CS_LINE_UP;
+            count += 128;
+            wait = 0;
+            while (wait++ < 80000)
+                asm("nop");
+        }
+        address += SD_BLOCK_SIZE;
+    }
 }

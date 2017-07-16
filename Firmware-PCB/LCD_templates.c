@@ -128,6 +128,14 @@ void    display_current_template(void)
                 snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "PATTERN RECORDED", 0);
                 snprintf(lines[3], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
                 break ;
+            case TEMPLATE_LOADING_STARTED:
+                snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "LOADING ...", 0);
+                snprintf(lines[3], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
+                break ;
+            case TEMPLATE_LOADING_SUCCESSFUL:
+                snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "LOADING SUCCESSFUL", 0);
+                snprintf(lines[3], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
+                break ;
 
         }
         while (i < LINES_COUNT)

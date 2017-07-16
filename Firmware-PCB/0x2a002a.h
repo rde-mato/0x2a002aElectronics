@@ -32,6 +32,7 @@ typedef void                    (* generic_callback)(void);
 #define BUTTON_POLLS_PER_SECOND	10
 #define SCREEN_DURATION_MS	1000
 #define INITIAL_BPM_x100        14200
+#define CLEAR_WATCHDOG          WDTCONbits.WDTCLR = 1
 
 #define INSTRUMENTS_COUNT       16
 #define PATTERNS_PER_INSTRUMENT 16
@@ -194,7 +195,8 @@ enum E_EVENT_TYPE
     E_KEY_RELEASED,
     E_KEY_LONG_PRESSED,
     E_ENCODER_TURNED_RIGHT,
-    E_ENCODER_TURNED_LEFT
+    E_ENCODER_TURNED_LEFT,
+    E_ENCODER_NO_DIRECTION
 };
 
 

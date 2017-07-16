@@ -5,10 +5,10 @@
 int main(void)
 {
 
-    //    u8 ret1;
-    //    u8 ret2;
-    //    u8 ret3;
-    //    u32 block = 2200;
+//        u8 ret1;
+//        u8 ret2;
+//        u8 ret3;
+//        u32 block = 0;
 
     GPIO_and_PPS_init();
     TIMER_init();
@@ -21,12 +21,10 @@ int main(void)
     UART1_init();
 //    eeprom_chip_erase();
     initial_eeprom_download();
-
-
-    //		SD_card_init();
-    //		ret1 = SD_card_read_block(block);
-    //		ret2 = SD_card_write_block(block);
-    //		ret3 = SD_card_read_block(block);
+    SD_card_init();
+//    		ret1 = SD_card_read_block(block);
+//    		ret2 = SD_card_write_block(block);
+//    		ret3 = SD_card_read_block(block);
 
     INT_init();
     HT16_init();
@@ -37,7 +35,7 @@ int main(void)
     {
         I2C1_manager();
         SPI1_manager();
-        WDTCONbits.WDTCLR = 1; // CLEAR WATCHDOG
+        CLEAR_WATCHDOG;
     }
     return (0);
 }
