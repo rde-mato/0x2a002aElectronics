@@ -4,6 +4,10 @@
 #define SD_RETRIES      1000
 #define SD_BLOCK_SIZE   512
 
+
+#define SD_PRESENCE_GPIO    TRISAbits.TRISA4
+#define SD_IS_PRESENT       LATAbits.LATA4 == 0
+
 enum E_SD_CARD
 {
     SD_R1,

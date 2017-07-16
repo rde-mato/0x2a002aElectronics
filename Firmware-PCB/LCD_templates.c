@@ -8,6 +8,8 @@ extern u8	cur_instrument;
 extern u8	cur_pattern;
 extern u8       default_template;
 extern u8       menu_item_highlighted;
+extern u8       menu_items[6];
+extern u8       menu_items_count;
 extern u8	cur_note;
 extern u8	cur_octave;
 extern u8	cur_velocity;
@@ -95,9 +97,17 @@ void    display_current_template(void)
             case TEMPLATE_MAIN_MENU:
                 snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "MAIN MENU", 0);
                 snprintf(lines[0], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
-                snprintf(lines[2], CHARS_PER_LINE + 1, "%c %s", (menu_item_highlighted == E_MENU_ITEMS_LOAD_FROM_SD) ? '>': ' ', "Load from SD card");
-                snprintf(lines[3], CHARS_PER_LINE + 1, "%c %s", (menu_item_highlighted == E_MENU_ITEMS_LOAD_TO_SD) ? '>': ' ', "Load to SD card");
-                snprintf(lines[4], CHARS_PER_LINE + 1, "%c %s", (menu_item_highlighted == E_MENU_ITEMS_EXIT) ? '>': ' ', "Exit");
+                i = 0;
+                while (i < menu_items_count)
+                {
+                    if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_LOAD_FROM_SD)
+                        snprintf(lines[i + 2], CHARS_PER_LINE + 1, "%c %s", (i == menu_item_highlighted) ? '>': ' ', "Load from SD card");
+                    else if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_LOAD_TO_SD)
+                        snprintf(lines[i + 2], CHARS_PER_LINE + 1, "%c %s", (i == menu_item_highlighted) ? '>': ' ', "Load to SD card");
+                    else if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_EXIT)
+                        snprintf(lines[i + 2], CHARS_PER_LINE + 1, "%c %s", (i == menu_item_highlighted) ? '>': ' ', "Exit");
+                    ++i;
+                }
                 break;
             case TEMPLATE_NOTE:
                 snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "NOTE", 0);

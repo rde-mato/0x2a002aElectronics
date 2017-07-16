@@ -14,6 +14,7 @@ void GPIO_and_PPS_init(void)
     pps_init_encoders();
     pps_init_SPI1();
     pps_init_UART();
+    gpio_init_SD_card();
 
     SYSKEY = 0x0;
     SYSKEY = 0xAA996655;

@@ -21,7 +21,8 @@ int main(void)
     UART1_init();
 //    eeprom_chip_erase();
     initial_eeprom_download();
-    SD_card_init();
+    if (SD_IS_PRESENT)
+        SD_card_init();
 //    		ret1 = SD_card_read_block(block);
 //    		ret2 = SD_card_write_block(block);
 //    		ret3 = SD_card_read_block(block);

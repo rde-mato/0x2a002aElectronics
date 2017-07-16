@@ -352,3 +352,8 @@ void    copy_SD_to_EEPROM(void)
         address += SD_BLOCK_SIZE;
     }
 }
+
+void    gpio_init_SD_card(void)
+{
+    SD_PRESENCE_GPIO = GPIO_INPUT;
+}

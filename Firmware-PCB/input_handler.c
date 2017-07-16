@@ -32,8 +32,8 @@ u8          cur_octave = 3;
 u8          cur_velocity = 0x40;
 u8          cur_encoder;
 u8          playing = MUSIC_PAUSE;
-u8          menu_current_level = 0;
-u8          menu_level_1 = 0;
+u8          menu_items[6];
+u8          menu_items_count;
 u8          menu_item_highlighted;
 
 void	keys_handler(u8 event_type, u8 event_source)
@@ -181,6 +181,14 @@ void	main_encoder_handler(u8 event_type)
 //    static u8 truc = 0;
     static u8   prev_turn_direction = E_ENCODER_NO_DIRECTION;
 
+    menu_items_count = 0;
+    if (SD_IS_PRESENT)
+    {
+        menu_items[menu_items_count++] = E_MENU_ITEMS_LOAD_FROM_SD;
+        menu_items[menu_items_count++] = E_MENU_ITEMS_LOAD_TO_SD;
+    }
+    menu_items[menu_items_count++] = E_MENU_ITEMS_LOAD_TO_SD;
+
     switch (event_type)
         {
         case E_KEY_PRESSED:
@@ -193,12 +201,12 @@ void	main_encoder_handler(u8 event_type)
             }
             else if (default_template == TEMPLATE_MAIN_MENU)
             {
-                if (menu_item_highlighted == E_MENU_ITEMS_EXIT)
+                if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_EXIT)
                 {
                     default_template = TEMPLATE_DEFAULT;
                     request_template(TEMPLATE_DEFAULT);
                 }
-                else if (menu_item_highlighted == E_MENU_ITEMS_LOAD_TO_SD)
+                else if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_LOAD_TO_SD)
                 {
                     playing = MUSIC_PAUSE;
                     request_template(TEMPLATE_LOADING_STARTED);
@@ -206,7 +214,7 @@ void	main_encoder_handler(u8 event_type)
                     default_template = TEMPLATE_DEFAULT;
                     request_template(TEMPLATE_LOADING_SUCCESSFUL);
                 }
-                else if (menu_item_highlighted == E_MENU_ITEMS_LOAD_FROM_SD)
+                else if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_LOAD_FROM_SD)
                 {
                     playing = MUSIC_PAUSE;
                     request_template(TEMPLATE_LOADING_STARTED);
@@ -235,7 +243,7 @@ void	main_encoder_handler(u8 event_type)
                     prev_turn_direction = E_ENCODER_TURNED_RIGHT;
                 else if (default_template == TEMPLATE_MAIN_MENU)
                 {
-                    if (menu_item_highlighted == E_MENU_ITEMS_EXIT)
+                    if (menu_item_highlighted == menu_items_count - 1)
                         menu_item_highlighted = 0;
                     else
                         menu_item_highlighted++;
@@ -266,7 +274,7 @@ void	main_encoder_handler(u8 event_type)
                     if (menu_item_highlighted > 0)
                         menu_item_highlighted--;
                     else
-                        menu_item_highlighted = E_MENU_ITEMS_EXIT;
+                        menu_item_highlighted = menu_items_count - 1;
                     prev_turn_direction = E_ENCODER_NO_DIRECTION;
                     request_template(TEMPLATE_MAIN_MENU);
                 }
@@ -430,19 +438,6 @@ void    combination_handler(u32 source)
             while (i < 32 && !(source & (1 << i)))
                 i++;
             finish = i;
-
-//            if (i == source)
-//            {
-//                while (++i < 32 && !(current_key_scan & (1 << i)))
-//                    ;
-//                start = source;
-//                finish = i - 1;
-//            }
-//            else
-//            {
-//                start = i + 1;
-//                finish = source;
-//            }
             if (start >= E_SOURCE_KEY_0 && finish <= E_SOURCE_KEY_15)
             {
                 all_notes_on = 1;
