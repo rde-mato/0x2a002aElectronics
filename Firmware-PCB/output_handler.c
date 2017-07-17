@@ -114,7 +114,7 @@ void    update_leds_base_case(void)
             {
                 n = 0;
                 while (n < NOTES_PER_QTIME)
-                    if (cur_active_pattern[qt][n++][0] == cur_note)
+                    if (NOTE_VALUE(cur_active_pattern[qt][n++][0]) == cur_note)
                         leds_base_case |= (1 << qt);
                 qt++;
             }

@@ -57,7 +57,7 @@ void	keys_handler(u8 event_type, u8 event_source)
             switch (event_type)
             {
                 case E_KEY_PRESSED:
-                    add_note(event_source, 0);
+                    add_note(event_source, 0, E_NOTE_ATTACK);
                     update_leds_base_case();
                     break;
                 case E_KEY_RELEASED:
@@ -89,19 +89,19 @@ void	keys_handler(u8 event_type, u8 event_source)
         {
             switch (event_type)
             {
-                    case E_KEY_PRESSED:
-                        if ((n = key_to_note(event_source, cur_octave)) == -1)
-                                break;
-                        cur_note = n;
-                        midi_note_on(00, cur_note, cur_velocity);
-                        update_leds_base_case();
-                        request_template(TEMPLATE_NOTE);
+                case E_KEY_PRESSED:
+                    if ((n = key_to_note(event_source, cur_octave)) == -1)
                         break;
-                    case E_KEY_RELEASED:
-                        midi_note_off(00, cur_note, cur_velocity);
-                            break;
-                    case E_KEY_LONG_PRESSED:
-                            break;
+                    cur_note = n;
+                    midi_note_on(cur_instrument, cur_note, cur_velocity);
+                    update_leds_base_case();
+                    request_template(TEMPLATE_NOTE);
+                    break;
+                case E_KEY_RELEASED:
+                    midi_note_off(cur_instrument, cur_note, cur_velocity);
+                    break;
+                case E_KEY_LONG_PRESSED:
+                    break;
             }
             break ;
         }
@@ -493,8 +493,9 @@ void    combination_handler(u32 source)
                 }
                 else
                 {
+                    add_note(i++, 1, E_NOTE_ATTACK);
                     while (i <= finish)
-                        add_note(i++, 1);
+                        add_note(i++, 1, E_NOTE_CONTINUOUS);
                 }
                 update_leds_base_case();
             }
