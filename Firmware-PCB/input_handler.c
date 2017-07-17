@@ -47,7 +47,7 @@ void	keys_handler(u8 event_type, u8 event_source)
             switch (event_type)
             {
                 case E_KEY_PRESSED:
-                    add_note(event_source, 0, E_NOTE_STACCATO);
+                    add_note(event_source, 0, E_NOTE_ATTACK);
                     update_leds_base_case();
                     break;
                 case E_KEY_RELEASED:
@@ -457,9 +457,9 @@ void    combination_handler(u32 source)
                 }
                 else
                 {
-                    add_note(i++, 1, E_NOTE_STACCATO);
+                    add_note(i++, 1, E_NOTE_ATTACK);
                     while (i <= finish)
-                        add_note(i++, 1, E_NOTE_LEGATO);
+                        add_note(i++, 1, E_NOTE_CONTINUOUS);
                 }
                 update_leds_base_case();
             }

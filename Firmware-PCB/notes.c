@@ -52,15 +52,12 @@ void    pop_note(u8 qtime)
     {
         if (NOTE_VALUE(cur_active_pattern[qtime][i][E_NOTE_VALUE]) == cur_note)
         {
-            if (IS_NOTE_LEGATO(cur_active_pattern[qtime][i][E_NOTE_VALUE]))
+            for (j = 0; j < NOTES_PER_QTIME; j++)
             {
-                for (j = 0; j < NOTES_PER_QTIME; j++)
+                if (NOTE_VALUE(cur_active_pattern[(qtime + 1) & 0xF][j][E_NOTE_VALUE]) == cur_note)
                 {
-                    if (NOTE_VALUE(cur_active_pattern[(qtime + 1) & 0xF][j][E_NOTE_VALUE]) == cur_note)
-                    {
-                        cur_active_pattern[(qtime + 1) & 0xF][j][E_NOTE_VALUE] &= ~E_NOTE_LEGATO;
-                        break;
-                    }
+                    cur_active_pattern[(qtime + 1) & 0xF][j][E_NOTE_VALUE] &= ~E_NOTE_CONTINUOUS;
+                    break;
                 }
             }
             break ;

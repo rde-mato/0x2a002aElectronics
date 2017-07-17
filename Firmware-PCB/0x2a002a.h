@@ -25,8 +25,8 @@ typedef void                    (* generic_callback)(void);
 
 //#define GET_BPM() ((((float)FREQUENCY / 256) * 15) / __g_qbeat_pr)
 ////#define GET_BPM() ((((float)FREQUENCY / (float)__g_qbeat_pr) * 15) / 256)
-#define IS_NOTE_STACCATO(x)     (!(IS_NOTE_LEGATO(x)))
-#define IS_NOTE_LEGATO(x)       (x & E_NOTE_LEGATO)
+#define IS_NOTE_ATTACK(x)     (!(IS_NOTE_CONTINUOUS(x)))
+#define IS_NOTE_CONTINUOUS(x)       (x & E_NOTE_CONTINUOUS)
 #define NOTE_VALUE(x)           (x & 0x7F)
 
 #define FREQUENCY		(8000000ul)
@@ -154,8 +154,8 @@ enum E_NOTE_ATTRS
 
 enum E_NOTE_MODS
 {
-    E_NOTE_STACCATO = 0x00,
-    E_NOTE_LEGATO = 0x80,
+    E_NOTE_ATTACK = 0x00,
+    E_NOTE_CONTINUOUS = 0x80,
 };
 
 enum E_EVENT_SOURCE // dans l'ordre de mapping des boutons, ne pas changer
