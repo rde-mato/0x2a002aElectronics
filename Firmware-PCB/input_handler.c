@@ -15,7 +15,9 @@ u8          edit_pressed = 0;
 u8          tap_pressed = 0;
 u8          cue_pressed = 0;
 
-u8          cur_active_pattern[QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE] = { NO_NOTE };
+u8          cur_active_pattern[QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
+u8          pattern_pastebin[QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
+u8          pattern_in_pastebin = 0;
 u8          active_patterns_array[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 u8          active_instrument[PATTERNS_PER_INSTRUMENT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 u16         active_instruments_u16 = 1;
@@ -36,6 +38,14 @@ u8          menu_items[6];
 u8          menu_items_count;
 u8          menu_item_highlighted;
 
+
+void    no_notes_everywhere(void)
+{
+    memset(cur_active_pattern, 0xFF, QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE);
+    memset(pattern_pastebin, 0xFF, QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE);
+    memset(active_patterns_array, 0xFF, INSTRUMENTS_COUNT * QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE);
+    memset(active_instrument, 0xFF, PATTERNS_PER_INSTRUMENT * QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE);
+}
 void	keys_handler(u8 event_type, u8 event_source)
 {
     s8  n;
@@ -182,12 +192,17 @@ void	main_encoder_handler(u8 event_type)
     static u8   prev_turn_direction = E_ENCODER_NO_DIRECTION;
 
     menu_items_count = 0;
-    if (SD_IS_PRESENT)
+//    if (SD_IS_PRESENT)
+    if (pattern_in_pastebin)
+        menu_items[menu_items_count++] = E_MENU_ITEMS_PASTE_PATTERN;
+    menu_items[menu_items_count++] = E_MENU_ITEMS_COPY_PATTERN;
+    if (1)
     {
         menu_items[menu_items_count++] = E_MENU_ITEMS_LOAD_FROM_SD;
         menu_items[menu_items_count++] = E_MENU_ITEMS_LOAD_TO_SD;
     }
-    menu_items[menu_items_count++] = E_MENU_ITEMS_LOAD_TO_SD;
+    menu_items[menu_items_count++] = E_MENU_ITEMS_CLEAR_EEPROM;
+    menu_items[menu_items_count++] = E_MENU_ITEMS_EXIT;
 
     switch (event_type)
         {
@@ -221,6 +236,27 @@ void	main_encoder_handler(u8 event_type)
                     copy_SD_to_EEPROM();
                     default_template = TEMPLATE_DEFAULT;
                     request_template(TEMPLATE_LOADING_SUCCESSFUL);
+                }
+                else if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_PASTE_PATTERN)
+                {
+                    memcpy(cur_active_pattern, pattern_pastebin, QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE);
+                    update_leds_base_case();
+                    default_template = TEMPLATE_DEFAULT;
+                    request_template(TEMPLATE_DEFAULT);
+                }
+                else if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_COPY_PATTERN)
+                {
+                    pattern_in_pastebin = 1;
+                    memcpy(pattern_pastebin, cur_active_pattern, QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE);
+                    default_template = TEMPLATE_DEFAULT;
+                    request_template(TEMPLATE_DEFAULT);
+                }
+                else if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_CLEAR_EEPROM)
+                {
+                    eeprom_chip_erase();
+                    update_leds_base_case();
+                    default_template = TEMPLATE_DEFAULT;
+                    request_template(TEMPLATE_CHIP_ERASED);
                 }
             }
             break;

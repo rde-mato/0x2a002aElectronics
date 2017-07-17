@@ -375,4 +375,5 @@ void    eeprom_chip_erase(void)
     read = SPI1BUF;
     CS_EEPROM = CS_LINE_UP;
 
+    no_notes_everywhere();
 }

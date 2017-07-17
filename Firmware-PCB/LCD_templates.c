@@ -100,11 +100,17 @@ void    display_current_template(void)
                 i = 0;
                 while (i < menu_items_count)
                 {
-                    if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_LOAD_FROM_SD)
+                    if (menu_items[i] == E_MENU_ITEMS_LOAD_FROM_SD)
                         snprintf(lines[i + 2], CHARS_PER_LINE + 1, "%c %s", (i == menu_item_highlighted) ? '>': ' ', "Load from SD card");
-                    else if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_LOAD_TO_SD)
+                    else if (menu_items[i] == E_MENU_ITEMS_LOAD_TO_SD)
                         snprintf(lines[i + 2], CHARS_PER_LINE + 1, "%c %s", (i == menu_item_highlighted) ? '>': ' ', "Load to SD card");
-                    else if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_EXIT)
+                    else if (menu_items[i] == E_MENU_ITEMS_COPY_PATTERN)
+                        snprintf(lines[i + 2], CHARS_PER_LINE + 1, "%c %s", (i == menu_item_highlighted) ? '>': ' ', "Copy pattern");
+                    else if (menu_items[i] == E_MENU_ITEMS_PASTE_PATTERN)
+                        snprintf(lines[i + 2], CHARS_PER_LINE + 1, "%c %s", (i == menu_item_highlighted) ? '>': ' ', "Paste pattern");
+                    else if (menu_items[i] == E_MENU_ITEMS_CLEAR_EEPROM)
+                        snprintf(lines[i + 2], CHARS_PER_LINE + 1, "%c %s", (i == menu_item_highlighted) ? '>': ' ', "Reset memory");
+                    else if (menu_items[i] == E_MENU_ITEMS_EXIT)
                         snprintf(lines[i + 2], CHARS_PER_LINE + 1, "%c %s", (i == menu_item_highlighted) ? '>': ' ', "Exit");
                     ++i;
                 }
@@ -146,8 +152,13 @@ void    display_current_template(void)
                 snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "LOADING SUCCESSFUL", 0);
                 snprintf(lines[3], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
                 break ;
+            case TEMPLATE_CHIP_ERASED:
+                snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "MEMORY CLEARED", 0);
+                snprintf(lines[3], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
+                break ;
 
         }
+        i = 0;
         while (i < LINES_COUNT)
         {
             LCD_putstr(i, 0, lines[i]);
@@ -155,7 +166,7 @@ void    display_current_template(void)
         }
         LCD_print_changed_chars();
     }
-    if (cur_template != TEMPLATE_DEFAULT)
+    if (cur_template != default_template)
         timer4_push(1000, &LCD_back_to_default);
     previous = cur_template;
 }

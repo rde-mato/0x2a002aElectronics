@@ -20,6 +20,7 @@ int main(void)
     MCP_ENCODERS_init_blocking();
     UART1_init();
 //    eeprom_chip_erase();
+    no_notes_everywhere();
     initial_eeprom_download();
     if (SD_IS_PRESENT)
         SD_card_init();
