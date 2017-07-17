@@ -17,20 +17,18 @@ extern u8	active_patterns_array[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_
 extern u8       cur_active_pattern[QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 extern u8       playing;
 
-void    generate_notes_list_for_qtime(u8 qt)
+void    qtime_generate_pattern_notes(u8 qt, u8 pattern[][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE])
 {
-    u8  instrument;
     u8  note;
     u8  n;
 
-    sequencer_notes_count = 0;
     note = 0;
     while (note < NOTES_PER_QTIME && sequencer_notes_count < MAX_NOTES_PER_QTIME)
     {
-        if ((n = cur_active_pattern[qt][note][0]) != NO_NOTE && IS_NOTE_ATTACK(n))
+        if ((n = pattern[qt][note][0]) != NO_NOTE && IS_NOTE_ATTACK(n))
         {
             sequencer_notes[sequencer_notes_count] = n;
-            sequencer_velocities[sequencer_notes_count] = cur_active_pattern[qt][note][1];
+            sequencer_velocities[sequencer_notes_count] = pattern[qt][note][1];
             if (++sequencer_notes_count >= 32)
                 break;
             else
@@ -39,27 +37,22 @@ void    generate_notes_list_for_qtime(u8 qt)
         else
             note = NOTES_PER_QTIME;
     }
+}
+
+void    qtime_generate_all_notes(u8 qt)
+{
+    u8  instrument;
+
+    sequencer_notes_count = 0;
+
+    qtime_generate_pattern_notes(qt, cur_active_pattern);
 
     instrument = 0;
     while (instrument < INSTRUMENTS_COUNT && sequencer_notes_count < MAX_NOTES_PER_QTIME)
     {
         if (instrument != cur_instrument)
         {
-            note = 0;
-            while (note < NOTES_PER_QTIME && sequencer_notes_count < MAX_NOTES_PER_QTIME)
-            {
-                if ((n = active_patterns_array[instrument][qt][note][0]) != NO_NOTE && IS_NOTE_ATTACK(n))
-                {
-                    sequencer_notes[sequencer_notes_count] = n;
-                    sequencer_velocities[sequencer_notes_count] = active_patterns_array[instrument][qt][note][1];
-                    if (++sequencer_notes_count >= 32)
-                        break;
-                    else
-                        note++;
-                }
-                else
-                    note = NOTES_PER_QTIME;
-            }
+            qtime_generate_pattern_notes(qt, active_patterns_array[instrument]);
             if (sequencer_notes_count >= 32)
                 break;
         }
@@ -113,8 +106,7 @@ void __ISR(_TIMER_2_VECTOR, IPL7AUTO) Timer2QTime(void)
         display_LEDs();
         if (playing == MUSIC_PLAYING)
         {
-
-            generate_notes_list_for_qtime(qtime);
+            qtime_generate_all_notes(qtime);
             send_MIDI_for_qtime();
             if (current_mode == E_MODE_KEYBOARD)
                 update_leds_base_case();
