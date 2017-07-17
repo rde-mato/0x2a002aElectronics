@@ -45,12 +45,26 @@ void    push_note(u8 qtime, u8 note, u8 velocity)
 void    pop_note(u8 qtime)
 {
     u8 i = 0;
+    u8 j;
 
 
     while (i < NOTES_PER_QTIME - 1)
     {
-        if (cur_active_pattern[qtime][i][E_NOTE_VALUE] == cur_note)
+        if (NOTE_VALUE(cur_active_pattern[qtime][i][E_NOTE_VALUE]) == cur_note)
+        {
+            if (IS_NOTE_LEGATO(cur_active_pattern[qtime][i][E_NOTE_VALUE]))
+            {
+                for (j = 0; j < NOTES_PER_QTIME; j++)
+                {
+                    if (NOTE_VALUE(cur_active_pattern[(qtime + 1) & 0xF][j][E_NOTE_VALUE]) == cur_note)
+                    {
+                        cur_active_pattern[(qtime + 1) & 0xF][j][E_NOTE_VALUE] &= ~E_NOTE_LEGATO;
+                        break;
+                    }
+                }
+            }
             break ;
+        }
         ++i;
     }
     while (i < NOTES_PER_QTIME - 1)
@@ -64,24 +78,27 @@ void    pop_note(u8 qtime)
 }
 
 
-void    add_note(u8 qt, u8 force)
+void    add_note(u8 qt, u8 force, u8 note_mod)
 {
     u8  i = 0;
 
     while (i < NOTES_PER_QTIME)
     {
-        if (cur_active_pattern[qt][i][E_NOTE_VALUE] == cur_note)
+        if (NOTE_VALUE(cur_active_pattern[qt][i][E_NOTE_VALUE]) == cur_note)
         {
             if (cur_active_pattern[qt][i][E_NOTE_VELOCITY] == cur_velocity && !force)
                 pop_note(qt);
             else
+            {
+                cur_active_pattern[qt][i][E_NOTE_VALUE] |= note_mod;
                 cur_active_pattern[qt][i][E_NOTE_VELOCITY] = cur_velocity;
+            }
             break;
         }
         i++;
     }
     if (i == NOTES_PER_QTIME)
-        push_note(qt, cur_note, cur_velocity);
+        push_note(qt, cur_note | note_mod, cur_velocity);
 }
 
 void    remove_note(u8 qt)
@@ -90,7 +107,7 @@ void    remove_note(u8 qt)
 
     while (i < NOTES_PER_QTIME)
     {
-        if (cur_active_pattern[qt][i][E_NOTE_VALUE] == cur_note)
+        if (NOTE_VALUE(cur_active_pattern[qt][i][E_NOTE_VALUE]) == cur_note)
         {
             pop_note(qt);
             break;

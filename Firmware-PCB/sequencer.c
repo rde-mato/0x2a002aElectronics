@@ -26,7 +26,7 @@ void    generate_notes_list_for_qtime(u8 qt)
     note = 0;
     while (note < NOTES_PER_QTIME && sequencer_notes_count < MAX_NOTES_PER_QTIME)
     {
-        if ((n = cur_active_pattern[qt][note][0]) != NO_NOTE)
+        if ((n = cur_active_pattern[qt][note][0]) != NO_NOTE && IS_NOTE_STACCATO(n))
         {
             sequencer_notes[sequencer_notes_count] = n;
             sequencer_velocities[sequencer_notes_count] = cur_active_pattern[qt][note][1];
@@ -47,7 +47,7 @@ void    generate_notes_list_for_qtime(u8 qt)
             note = 0;
             while (note < NOTES_PER_QTIME && sequencer_notes_count < MAX_NOTES_PER_QTIME)
             {
-                if ((n = active_patterns_array[instrument][qt][note][0]) != NO_NOTE)
+                if ((n = active_patterns_array[instrument][qt][note][0]) != NO_NOTE && IS_NOTE_STACCATO(n))
                 {
                     sequencer_notes[sequencer_notes_count] = n;
                     sequencer_velocities[sequencer_notes_count] = active_patterns_array[instrument][qt][note][1];
@@ -73,8 +73,8 @@ void    send_MIDI_for_qtime(void)
     i = 0;
     while (i < sequencer_notes_count)
     {
-        midi_note_on(00, sequencer_notes[i], sequencer_velocities[i]);
-        midi_note_off(00, sequencer_notes[i], sequencer_velocities[i]);
+        midi_note_on(00, NOTE_VALUE(sequencer_notes[i]), sequencer_velocities[i]);
+        midi_note_off(00, NOTE_VALUE(sequencer_notes[i]), sequencer_velocities[i]);
         ++i;
     }
     return ;
@@ -101,8 +101,14 @@ void __ISR(_TIMER_2_VECTOR, IPL7AUTO) Timer2QTime(void)
     static u8 ppqn_count = 0;
 
     TIMER2_INT_FLAG_CLR;
+    if (++ppqn_count == NOTE_OFF_PPQN)
+    {
+        if (playing == MUSIC_PLAYING)
+        {
 
-    if (++ppqn_count == MIDI_PPQN)
+        }
+    }
+    else if (ppqn_count == MIDI_PPQN)
     {
         display_LEDs();
         if (playing == MUSIC_PLAYING)

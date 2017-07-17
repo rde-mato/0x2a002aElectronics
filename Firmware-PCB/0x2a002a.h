@@ -25,6 +25,9 @@ typedef void                    (* generic_callback)(void);
 
 //#define GET_BPM() ((((float)FREQUENCY / 256) * 15) / __g_qbeat_pr)
 ////#define GET_BPM() ((((float)FREQUENCY / (float)__g_qbeat_pr) * 15) / 256)
+#define IS_NOTE_STACCATO(x)     (!(IS_NOTE_LEGATO(x)))
+#define IS_NOTE_LEGATO(x)       (x & E_NOTE_LEGATO)
+#define NOTE_VALUE(x)           (x & 0x7F)
 
 #define FREQUENCY		(8000000ul)
 #define ONE_MILLISECOND         FREQUENCY / 1000
@@ -34,6 +37,8 @@ typedef void                    (* generic_callback)(void);
 #define INITIAL_BPM_x100        14200
 #define CLEAR_WATCHDOG          WDTCONbits.WDTCLR = 1
 
+#define MIDI_PPQN               6
+#define NOTE_OFF_PPQN           MIDI_PPQN - 1
 #define INSTRUMENTS_COUNT       16
 #define PATTERNS_PER_INSTRUMENT 16
 #define QTIME_PER_PATTERN       16
@@ -145,6 +150,12 @@ enum E_NOTE_ATTRS
 {
     E_NOTE_VALUE = 0,
     E_NOTE_VELOCITY,
+};
+
+enum E_NOTE_MODS
+{
+    E_NOTE_STACCATO = 0x00,
+    E_NOTE_LEGATO = 0x80,
 };
 
 enum E_EVENT_SOURCE // dans l'ordre de mapping des boutons, ne pas changer
