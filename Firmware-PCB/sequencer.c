@@ -6,7 +6,6 @@ u8              qtime = 0;
 u8              sequencer_notes[MAX_NOTES_PER_QTIME] = { 0 };
 u8              sequencer_velocities[MAX_NOTES_PER_QTIME] = { 0 };
 u8              sequencer_notes_count = 0;
-u8              ppqn_count = 0;
 extern u32      current_leds_on;
 extern u8	cur_note;
 extern u8       cur_instrument;
@@ -17,7 +16,7 @@ extern u8	active_patterns_array[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_
 extern u8       cur_active_pattern[QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 extern u8       playing;
 
-void    qtime_generate_pattern_notes(u8 qt, u8 pattern[][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE])
+inline void    qtime_generate_pattern_notes(u8 qt, u8 pattern[][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE])
 {
     u8  note;
     u8  n;
@@ -25,7 +24,7 @@ void    qtime_generate_pattern_notes(u8 qt, u8 pattern[][NOTES_PER_QTIME][ATTRIB
     note = 0;
     while (note < NOTES_PER_QTIME && sequencer_notes_count < MAX_NOTES_PER_QTIME)
     {
-        if ((n = pattern[qt][note][0]) != NO_NOTE)
+        if ((n = pattern[qt][note][E_NOTE_VALUE]) != NO_NOTE)
         {
             if (IS_NOTE_ATTACK(n))
             {
@@ -40,6 +39,26 @@ void    qtime_generate_pattern_notes(u8 qt, u8 pattern[][NOTES_PER_QTIME][ATTRIB
             note = NOTES_PER_QTIME;
     }
 }
+
+//void    qtime_generate_all_notes(u8 qt)
+//{
+//    u8  instrument;
+//    u8  note;
+//    u8  prev_qt;
+//    u8  n;
+//
+//    prev_qt = (qt - 1) & 0xF;
+//    for (instrument = 0; instrument < INSTRUMENTS_COUNT; instrument++)
+//    {
+//        for (note = 0; note < NOTES_PER_QTIME; note++)
+//        {
+//            if ((n = active_patterns_array[instrument][qt][]))
+//            if (active_patterns_array[instrument][prev_qt][note][E_NOTE_VALUE])
+//            if (NO_NOTE)
+//                break;
+//        }
+//    }
+//}
 
 void    qtime_generate_all_notes(u8 qt)
 {
@@ -81,7 +100,7 @@ void    timer_2_init(void)
 {
     TIMER2_STOP_AND_RESET;
     TIMER2_VALUE = 0;
-    TIMER2_PERIOD = (FREQUENCY * 15) / (MIDI_PPQN * 256 /100 * INITIAL_BPM_x100);
+    TIMER2_PERIOD = (FREQUENCY * 15) / (256 /100 * INITIAL_BPM_x100);
     TIMER2_PRESCALE = TIMER_B_PRESCALE_256;
 }
 
@@ -96,26 +115,15 @@ void __ISR(_TIMER_2_VECTOR, IPL7AUTO) Timer2QTime(void)
 {
 
     TIMER2_INT_FLAG_CLR;
-    if (++ppqn_count == NOTE_OFF_PPQN)
+    display_LEDs();
+    if (playing == MUSIC_PLAYING)
     {
-        if (playing == MUSIC_PLAYING)
-        {
-
-        }
+        qtime_generate_all_notes(qtime);
+        send_MIDI_for_qtime();
+        if (current_mode == E_MODE_KEYBOARD)
+            update_leds_base_case();
+        qtime = (qtime + 1) & 15;
     }
-    else if (ppqn_count == MIDI_PPQN)
-    {
-        display_LEDs();
-        if (playing == MUSIC_PLAYING)
-        {
-            qtime_generate_all_notes(qtime);
-            send_MIDI_for_qtime();
-            if (current_mode == E_MODE_KEYBOARD)
-                update_leds_base_case();
-            qtime = (qtime + 1) & 15;
-        }
-        ppqn_count = 0;
 
-    }
 //    UART1_send(TIMING_CLOCK);
 }

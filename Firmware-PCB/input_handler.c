@@ -93,18 +93,18 @@ void	keys_handler(u8 event_type, u8 event_source)
         }
         case E_MODE_KEYBOARD:
         {
+            if ((n = key_to_note(event_source, cur_octave)) == -1)
+                break;
             switch (event_type)
             {
                 case E_KEY_PRESSED:
-                    if ((n = key_to_note(event_source, cur_octave)) == -1)
-                        break;
                     cur_note = n;
-                    midi_note_on(cur_instrument, cur_note, cur_velocity);
+                    midi_note_on(cur_instrument, n, cur_velocity);
                     update_leds_base_case();
                     request_template(TEMPLATE_NOTE);
                     break;
                 case E_KEY_RELEASED:
-                    midi_note_off(cur_instrument, cur_note, cur_velocity);
+                    midi_note_off(cur_instrument, n, cur_velocity);
                     break;
                 case E_KEY_LONG_PRESSED:
                     break;
@@ -113,7 +113,7 @@ void	keys_handler(u8 event_type, u8 event_source)
         }
         case E_MODE_EDIT_KEYBOARD:
         {
-            quantiz = ppqn_count > (MIDI_PPQN / 2);
+            quantiz = TIMER2_VALUE > (TIMER2_PERIOD / 2);
             switch (event_type)
             {
                     case E_KEY_PRESSED:
@@ -155,7 +155,7 @@ void	keys_handler(u8 event_type, u8 event_source)
             switch (event_type)
             {
                     case E_KEY_PRESSED:
-                        active_instruments_u16 ^= (1 << event_source);
+                        active_instruments_u16 ^= (1 << event_source); //TODO: restreindre l event source.
                         update_leds_base_case();
                         break;
                     case E_KEY_RELEASED:

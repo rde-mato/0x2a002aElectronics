@@ -37,7 +37,7 @@ void    timer_3_init(void)
 
 void set_bpm(void)
 {
-    TIMER2_PERIOD = (FREQUENCY * 15) / (MIDI_PPQN * 256 / 100 * bpm_x100);
+    TIMER2_PERIOD = (FREQUENCY * 15) / (256 * bpm_x100 / 100);
     TIMER2_VALUE = 0;
 }
 

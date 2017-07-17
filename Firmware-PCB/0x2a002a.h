@@ -37,8 +37,6 @@ typedef void                    (* generic_callback)(void);
 #define INITIAL_BPM_x100        14200
 #define CLEAR_WATCHDOG          WDTCONbits.WDTCLR = 1
 
-#define MIDI_PPQN               6
-#define NOTE_OFF_PPQN           MIDI_PPQN - 1
 #define INSTRUMENTS_COUNT       16
 #define PATTERNS_PER_INSTRUMENT 16
 #define QTIME_PER_PATTERN       16
