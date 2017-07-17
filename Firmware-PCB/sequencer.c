@@ -6,6 +6,7 @@ u8              qtime = 0;
 u8              sequencer_notes[MAX_NOTES_PER_QTIME] = { 0 };
 u8              sequencer_velocities[MAX_NOTES_PER_QTIME] = { 0 };
 u8              sequencer_notes_count = 0;
+u8              ppqn_count = 0;
 extern u32      current_leds_on;
 extern u8	cur_note;
 extern u8       cur_instrument;
@@ -98,7 +99,6 @@ void    int_init_timer2(void)
 
 void __ISR(_TIMER_2_VECTOR, IPL7AUTO) Timer2QTime(void)
 {
-    static u8 ppqn_count = 0;
 
     TIMER2_INT_FLAG_CLR;
     if (++ppqn_count == NOTE_OFF_PPQN)

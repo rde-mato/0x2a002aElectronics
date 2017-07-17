@@ -11,6 +11,8 @@ extern u32  leds_base_case;
 extern u32  bpm_x100;
 extern u32  current_leds_on;
 extern u32  current_key_scan;
+extern u8   keysnotes[16];
+extern u8   ppqn_count;
 u8          edit_pressed = 0;
 u8          tap_pressed = 0;
 u8          cue_pressed = 0;
@@ -46,9 +48,13 @@ void    no_notes_everywhere(void)
     memset(active_patterns_array, 0xFF, INSTRUMENTS_COUNT * QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE);
     memset(active_instrument, 0xFF, PATTERNS_PER_INSTRUMENT * QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE);
 }
+
 void	keys_handler(u8 event_type, u8 event_source)
 {
     s8  n;
+    u8  i;
+    u8  quantiz;
+    static u8  piano_roll_start[13] = { NO_NOTE, NO_NOTE, NO_NOTE, NO_NOTE, NO_NOTE, NO_NOTE, NO_NOTE, NO_NOTE, NO_NOTE, NO_NOTE, NO_NOTE, NO_NOTE, NO_NOTE };
 
     switch (current_mode)
     {
@@ -105,6 +111,45 @@ void	keys_handler(u8 event_type, u8 event_source)
             }
             break ;
         }
+        case E_MODE_EDIT_KEYBOARD:
+        {
+            quantiz = ppqn_count > (MIDI_PPQN / 2);
+            switch (event_type)
+            {
+                    case E_KEY_PRESSED:
+                        if ((n = key_to_note(event_source, cur_octave)) == -1)
+                                break;
+                        cur_note = n;
+                        i = n - 12 * cur_octave;
+//                        if (quantiz)
+                        midi_note_on(00, cur_note, cur_velocity);
+                        piano_roll_start[i] = (qtime + quantiz) & 0xFFFF;
+                        update_leds_base_case();
+                        request_template(TEMPLATE_NOTE);
+                        break;
+                    case E_KEY_RELEASED:
+                        if ((n = key_to_note(event_source, cur_octave)) == -1)
+                                break;
+                        cur_note = n;
+                        midi_note_off(00, cur_note, cur_velocity);
+                        i = n - 12 * cur_octave;
+                        n = piano_roll_start[i];
+                        add_note(n, 1, E_NOTE_ATTACK);
+                        if (n++ > qtime)
+                        {
+                            while (n < (qtime + quantiz) & 0xFFFF)
+                                add_note(n++, 1, E_NOTE_CONTINUOUS);
+                        }
+                        piano_roll_start[i] = -1;
+                        update_leds_base_case();
+                        request_template(TEMPLATE_NOTE);
+                        break;
+                            break;
+                    case E_KEY_LONG_PRESSED:
+                            break;
+            }
+            break ;
+        }
         case E_MODE_INSTRU:
         {
             switch (event_type)
@@ -138,7 +183,6 @@ void	keys_handler(u8 event_type, u8 event_source)
         }
     }
 }
-
 
 void	encoders_handler(u8 event_type, u8 event_source)
 {
@@ -186,17 +230,18 @@ void	encoders_handler(u8 event_type, u8 event_source)
             break;
     }
 }
+
 void	main_encoder_handler(u8 event_type)
 {
 //    static u8 truc = 0;
     static u8   prev_turn_direction = E_ENCODER_NO_DIRECTION;
 
     menu_items_count = 0;
-//    if (SD_IS_PRESENT)
     if (pattern_in_pastebin)
         menu_items[menu_items_count++] = E_MENU_ITEMS_PASTE_PATTERN;
     menu_items[menu_items_count++] = E_MENU_ITEMS_COPY_PATTERN;
-    if (1)
+
+    if (1) // if (SD_IS_PRESENT)
     {
         menu_items[menu_items_count++] = E_MENU_ITEMS_LOAD_FROM_SD;
         menu_items[menu_items_count++] = E_MENU_ITEMS_LOAD_TO_SD;
@@ -434,7 +479,12 @@ void	button_rec_handler(u8 event_type)
 		case E_KEY_PRESSED:
                     if(edit_pressed)
                         save_cur_pattern_to_eeprom();
-			break;
+                    else if (current_mode == E_MODE_KEYBOARD)
+                    {
+                        current_mode = E_MODE_EDIT_KEYBOARD;
+                        update_leds_base_case();
+                    }
+                    break;
 		case E_KEY_RELEASED:
 			break;
 		case E_KEY_LONG_PRESSED:

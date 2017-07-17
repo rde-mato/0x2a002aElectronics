@@ -32,7 +32,7 @@ typedef void                    (* generic_callback)(void);
 #define FREQUENCY		(8000000ul)
 #define ONE_MILLISECOND         FREQUENCY / 1000
 #define BUTTON_POLL_DELAY_MS	50
-#define BUTTON_POLLS_PER_SECOND	10
+#define BUTTON_POLLS_PER_SECOND	20
 #define SCREEN_DURATION_MS	1000
 #define INITIAL_BPM_x100        14200
 #define CLEAR_WATCHDOG          WDTCONbits.WDTCLR = 1

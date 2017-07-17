@@ -6,8 +6,8 @@ u32 SD_return;
 u8  SD_error = 0;
 u8  SD_type = SD_SDSC;
 
-u8  SD_read_buf[SD_BLOCK_SIZE] = {0};
-u8  SD_write_buf[SD_BLOCK_SIZE] = "salut ma couille";
+u8  SD_read_buf[SD_BLOCK_SIZE] = { 0 };
+u8  SD_write_buf[SD_BLOCK_SIZE] = { 0 };
 
 const   size_t eeprom_size = INSTRUMENTS_COUNT * PATTERNS_PER_INSTRUMENT * QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE;
 

@@ -158,6 +158,7 @@ void    update_leds_base_case(void)
         case E_MODE_EDIT_KEYBOARD:
             leds_base_case |= PIANO_KEYS;
             leds_base_case |= (1 << E_SOURCE_BUTTON_KEYBOARD);
+            leds_base_case |= (1 << E_SOURCE_BUTTON_REC);
             leds_base_case |= (1 << E_SOURCE_BUTTON_EDIT);
             display_LEDs();
             break;
