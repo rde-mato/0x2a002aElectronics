@@ -25,14 +25,16 @@ void    qtime_generate_pattern_notes(u8 qt, u8 pattern[][NOTES_PER_QTIME][ATTRIB
     note = 0;
     while (note < NOTES_PER_QTIME && sequencer_notes_count < MAX_NOTES_PER_QTIME)
     {
-        if ((n = pattern[qt][note][0]) != NO_NOTE && IS_NOTE_ATTACK(n))
+        if ((n = pattern[qt][note][0]) != NO_NOTE)
         {
-            sequencer_notes[sequencer_notes_count] = n;
-            sequencer_velocities[sequencer_notes_count] = pattern[qt][note][1];
-            if (++sequencer_notes_count >= 32)
-                break;
-            else
-                note++;
+            if (IS_NOTE_ATTACK(n))
+            {
+                sequencer_notes[sequencer_notes_count] = n;
+                sequencer_velocities[sequencer_notes_count] = pattern[qt][note][1];
+                if (++sequencer_notes_count >= 32)
+                    return ;
+            }
+            note++;
         }
         else
             note = NOTES_PER_QTIME;
