@@ -79,7 +79,7 @@ void __ISR(_TIMER_2_VECTOR, IPL7AUTO) Timer2QTime(void)
 {
     TIMER2_INT_FLAG_CLR;
 
-    int i;
+    u8 i;
 
     display_LEDs();
     if (playing == MUSIC_PLAYING)

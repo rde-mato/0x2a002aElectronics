@@ -1,6 +1,6 @@
 #include "0x2a002a.h"
 
-u8  running_status;
+//u8  running_status;
 
 /*
 ** Sets MIDI Note Off.
@@ -13,15 +13,16 @@ void midi_note_off(u8 channel, u8 note, u8 velocity)
     u8  status;
     
     status = E_MS_NOTE_OFF | channel;
-    if (velocity == 0 && running_status == E_MS_NOTE_ON | channel)
-        ;
-    else if (status != running_status)
-    {
-        UART1_send(status);
-        running_status = status;
-    }
-    UART1_send(note);
-    UART1_send(velocity);
+//    if (velocity == 0 && running_status == E_MS_NOTE_ON | channel)
+//        ;
+//    else if (status != running_status)
+//    {
+//        UART1_send(status);
+//        running_status = status;
+//    }
+//    UART1_send(note);
+//    UART1_send(velocity);
+    UART1_send_3(status, note, velocity);
 }
 
 /*
@@ -35,13 +36,14 @@ void midi_note_on(u8 channel, u8 note, u8 velocity)
     u8 status;
 
     status = E_MS_NOTE_ON | channel;
-    if (status != running_status)
-    {
-        UART1_send(status);
-        running_status = status;
-    }
-    UART1_send(note);
-    UART1_send(velocity);
+//    if (status != running_status)
+//    {
+//        UART1_send(status);
+//        running_status = status;
+//    }
+//    UART1_send(note);
+//    UART1_send(velocity);
+    UART1_send_3(status, note, velocity);
 }
 
 /*
@@ -66,13 +68,14 @@ void midi_control_change(u8 channel, u8 control, u8 value)
     u8 status;
 
     status = E_MS_CONTROL_CHANGE | channel;
-    if (status != running_status)
-    {
-        UART1_send(status);
-        running_status = status;
-    }
-    UART1_send(control);
-    UART1_send(value);
+//    if (status != running_status)
+//    {
+//        UART1_send(status);
+//        running_status = status;
+//    }
+//    UART1_send(control);
+//    UART1_send(value);
+    UART1_send_3(status, control, value);
 }
 
 /*

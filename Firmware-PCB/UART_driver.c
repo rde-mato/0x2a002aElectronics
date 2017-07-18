@@ -48,3 +48,13 @@ void UART1_send(char byte)
     UART1_buf[UART1_buf_index + UART1_buf_len++] = byte;
     UART1_TX_INT_ENABLE = INT_ENABLED;
 }
+
+void UART1_send_3(char byte1, char byte2, char byte3)
+{
+    __builtin_disable_interrupts();
+    UART1_buf[UART1_buf_index + UART1_buf_len++] = byte1;
+    UART1_buf[UART1_buf_index + UART1_buf_len++] = byte2;
+    UART1_buf[UART1_buf_index + UART1_buf_len++] = byte3;
+    UART1_TX_INT_ENABLE = INT_ENABLED;
+    __builtin_enable_interrupts();
+}
