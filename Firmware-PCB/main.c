@@ -21,7 +21,8 @@ int main(void)
     UART1_init();
 //    eeprom_chip_erase();
     no_notes_everywhere();
-    //initial_eeprom_download(); TODO: EEPROM erase sets everything to 0x00 while NO_NOTE is 0xFF
+    //initial_eeprom_download(); // this starts first template
+    //TODO: EEPROM loads strange data in active_patterns and current_pattern,
     if (SD_IS_PRESENT)
         SD_card_init();
 //    		ret1 = SD_card_read_block(block);

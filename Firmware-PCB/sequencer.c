@@ -16,85 +16,49 @@ extern u8	active_patterns_array[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_
 extern u8       cur_active_pattern[QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 extern u8       playing;
 
-inline void    qtime_generate_pattern_notes(u8 qt, u8 pattern[][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE])
-{
-    u8  note;
-    u8  n;
-
-    note = 0;
-    while (note < NOTES_PER_QTIME && sequencer_notes_count < MAX_NOTES_PER_QTIME)
-    {
-        if ((n = pattern[qt][note][E_NOTE_VALUE]) != NO_NOTE)
-        {
-            if (IS_NOTE_ATTACK(n))
-            {
-                sequencer_notes[sequencer_notes_count] = n;
-                sequencer_velocities[sequencer_notes_count] = pattern[qt][note][1];
-                if (++sequencer_notes_count >= 32)
-                    return ;
-            }
-            note++;
-        }
-        else
-            note = NOTES_PER_QTIME;
-    }
-}
-
-//void    qtime_generate_all_notes(u8 qt)
-//{
-//    u8  instrument;
-//    u8  note;
-//    u8  prev_qt;
-//    u8  n;
-//
-//    prev_qt = (qt - 1) & 0xF;
-//    for (instrument = 0; instrument < INSTRUMENTS_COUNT; instrument++)
-//    {
-//        for (note = 0; note < NOTES_PER_QTIME; note++)
-//        {
-//            if ((n = active_patterns_array[instrument][qt][]))
-//            if (active_patterns_array[instrument][prev_qt][note][E_NOTE_VALUE])
-//            if (NO_NOTE)
-//                break;
-//        }
-//    }
-//}
-
-void    qtime_generate_all_notes(u8 qt)
-{
-    u8  instrument;
-
-    sequencer_notes_count = 0;
-
-    qtime_generate_pattern_notes(qt, cur_active_pattern);
-
-    instrument = 0;
-    while (instrument < INSTRUMENTS_COUNT && sequencer_notes_count < MAX_NOTES_PER_QTIME)
-    {
-        if (instrument != cur_instrument)
-        {
-            qtime_generate_pattern_notes(qt, active_patterns_array[instrument]);
-            if (sequencer_notes_count >= 32)
-                break;
-        }
-        ++instrument;
-    }
-}
-
-void    send_MIDI_for_qtime(void)
+void    qtime_generate_note_off(u8 instrument, u8 last_qt[][ATTRIBUTES_PER_NOTE], u8 new_qt[][ATTRIBUTES_PER_NOTE])
 {
     u8  i;
+    u8  j;
+    u8  still;
+    u8  old_n;
+    u8  new_n;
 
-    i = 0;
-    while (i < sequencer_notes_count)
+    for (i = 0; i < NOTES_PER_QTIME; i++)
     {
-        midi_note_on(00, NOTE_VALUE(sequencer_notes[i]), sequencer_velocities[i]);
-        midi_note_off(00, NOTE_VALUE(sequencer_notes[i]), sequencer_velocities[i]);
-        ++i;
+        old_n = last_qt[i][E_NOTE_VALUE];
+        if (old_n == NO_NOTE)
+            break;
+        still = 0;
+        for (j = 0; j < NOTES_PER_QTIME; j++)
+        {
+            new_n = new_qt[j][E_NOTE_VALUE];
+            if (NOTE_VALUE(new_n) == NOTE_VALUE(old_n))
+            {
+                if (IS_NOTE_CONTINUOUS(new_n))
+                    still = 1;
+                break;
+            }
+        }
+        if (!still)
+            midi_note_off(instrument, NOTE_VALUE(old_n), last_qt[i][E_NOTE_VELOCITY]);
     }
-    return ;
 }
 
+void qtime_generate_note_on(u8 instrument, u8 qt[][ATTRIBUTES_PER_NOTE])
+{
+    u8  i;
+    u8  *new_n;
+
+    for (i = 0; i < NOTES_PER_QTIME; i++)
+    {
+        new_n = qt[i];
+        if (new_n[E_NOTE_VALUE] == NO_NOTE)
+            break;
+        else if (IS_NOTE_ATTACK(new_n[E_NOTE_VALUE]))
+            midi_note_on(instrument, NOTE_VALUE(new_n[E_NOTE_VALUE]), new_n[E_NOTE_VELOCITY]);
+    }
+}
 
 void    timer_2_init(void)
 {
@@ -113,17 +77,30 @@ void    int_init_timer2(void)
 
 void __ISR(_TIMER_2_VECTOR, IPL7AUTO) Timer2QTime(void)
 {
-
     TIMER2_INT_FLAG_CLR;
+
+    int i;
+
     display_LEDs();
     if (playing == MUSIC_PLAYING)
     {
-        qtime_generate_all_notes(qtime);
-        send_MIDI_for_qtime();
+        for (i = 0; i < INSTRUMENTS_COUNT; i++)
+        {
+            if (i == cur_instrument)
+                qtime_generate_note_off(cur_instrument, cur_active_pattern[(qtime - 1) & 0xF], cur_active_pattern[qtime]);
+            else
+                qtime_generate_note_off(i, active_patterns_array[i][(qtime - 1) & 0xF], active_patterns_array[i][qtime]);
+        }
+        for (i = 0; i < INSTRUMENTS_COUNT; i++)
+        {
+            if (i == cur_instrument)
+                qtime_generate_note_on(cur_instrument, cur_active_pattern[qtime]);
+            else
+                qtime_generate_note_on(i, active_patterns_array[i][qtime]);
+        }
+
         if (current_mode == E_MODE_KEYBOARD)
             update_leds_base_case();
         qtime = (qtime + 1) & 15;
     }
-
-//    UART1_send(TIMING_CLOCK);
 }
