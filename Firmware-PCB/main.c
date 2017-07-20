@@ -21,7 +21,7 @@ int main(void)
     UART1_init();
 //    eeprom_chip_erase();
     no_notes_everywhere();
-    //initial_eeprom_download(); // this starts first template
+    initial_eeprom_download(); // this starts first template
     //TODO: EEPROM loads strange data in active_patterns and current_pattern,
     if (SD_IS_PRESENT)
         SD_card_init();
