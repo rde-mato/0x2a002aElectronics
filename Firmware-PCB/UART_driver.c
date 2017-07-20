@@ -38,23 +38,16 @@ void __ISR(_UART_1_VECTOR, IPL5AUTO) UART1_TX_handler(void)
 {
     U1TXREG = UART1_buf[UART1_buf_index++];
     if (--UART1_buf_len == 0)
-        UART1_TX_INT_ENABLE = INT_DISABLED;
-}
-
-// Unsafe for midi if used from different places. XXX
-void UART1_send(char byte)
-{
-    UART1_TX_INT_ENABLE = INT_DISABLED;
-    UART1_buf[UART1_buf_index + UART1_buf_len++] = byte;
-    UART1_TX_INT_ENABLE = INT_ENABLED;
+       UART1_TX_INT_ENABLE = INT_DISABLED;
+    UART1_TX_INT_FLAG_CLR;
 }
 
 void UART1_send_3(char byte1, char byte2, char byte3)
 {
     __builtin_disable_interrupts();
-    UART1_buf[UART1_buf_index + UART1_buf_len++] = byte1;
-    UART1_buf[UART1_buf_index + UART1_buf_len++] = byte2;
-    UART1_buf[UART1_buf_index + UART1_buf_len++] = byte3;
+    UART1_buf[(UART1_buf_index + UART1_buf_len++) & 0xFF] = byte1;
+    UART1_buf[(UART1_buf_index + UART1_buf_len++) & 0xFF] = byte2;
+    UART1_buf[(UART1_buf_index + UART1_buf_len++) & 0xFF] = byte3;
     UART1_TX_INT_ENABLE = INT_ENABLED;
     __builtin_enable_interrupts();
 }

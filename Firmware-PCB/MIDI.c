@@ -31,6 +31,7 @@ void midi_note_off(u8 channel, u8 note, u8 velocity)
 ** note: 0-127 MIDI Note
 ** velocity: 0-127 MIDI Velocity. If 0 => Note Off.
 */
+
 void midi_note_on(u8 channel, u8 note, u8 velocity)
 {
     u8 status;

@@ -33,6 +33,8 @@ void    qtime_generate_note_off(u8 instrument, u8 last_qt[][ATTRIBUTES_PER_NOTE]
         for (j = 0; j < NOTES_PER_QTIME; j++)
         {
             new_n = new_qt[j][E_NOTE_VALUE];
+            if (new_n == NO_NOTE)
+                break;
             if (NOTE_VALUE(new_n) == NOTE_VALUE(old_n))
             {
                 if (IS_NOTE_CONTINUOUS(new_n))
