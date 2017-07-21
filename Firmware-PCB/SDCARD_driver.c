@@ -15,7 +15,7 @@ u8 SPI_SDCARD_write_request = 0;
 
 u8  SD_read_buf[SD_BLOCK_SIZE] = { 0 };
 u16 SD_read_buf_index = 0;
-u8  SD_write_buf[SD_BLOCK_SIZE] = "j'aime les mouettes au nutella";
+u8  SD_write_buf[SD_BLOCK_SIZE] = "lorem ipsum";
 u16 SD_write_buf_index = 0;
 
 const   size_t eeprom_size = INSTRUMENTS_COUNT * PATTERNS_PER_INSTRUMENT * QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE;
@@ -345,7 +345,7 @@ void    SD_card_write_state_machine(void)
         case E_SPI1_SDCARD_WRITE_SEND_ONE_BYTE:
             read8 = SPI1BUF;
             SPI1BUF = SD_write_buf[SD_write_buf_index++];
-            if (SD_write_buf_index > SD_RETRIES)
+            if (SD_write_buf_index > SD_BLOCK_SIZE)
             {
                 retries = SD_RETRIES;
                 SPI1_state = E_SPI1_SDCARD_WRITE_RETRY_TILL_DATA_RESPONSE;

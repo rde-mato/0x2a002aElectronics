@@ -2,6 +2,8 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
+u8 sdhere = 0;
+
 int main(void)
 {
 
@@ -16,12 +18,10 @@ int main(void)
     LCD_init();
     MCP_ENCODERS_init_blocking();
     UART1_init();
-//    eeprom_chip_erase();
     no_notes_everywhere();
     initial_eeprom_download(); // this starts first template
-    //TODO: EEPROM loads strange data in active_patterns and current_pattern,
 //    if (SD_IS_PRESENT)
-        SD_card_init();
+    SD_card_init();
 //    ret2 = SD_card_write_block(block);
 //    ret3 = SD_card_read_block(block);
 
@@ -31,8 +31,10 @@ int main(void)
     TIMER2_ON;
 
 
-//    SD_card_read_block(block);
-    SD_card_write_block(block);
+    SD_card_read_block(block);
+//    SD_card_write_block(block);
+
+
 
     while (42)
     {
