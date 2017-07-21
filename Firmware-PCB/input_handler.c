@@ -478,7 +478,7 @@ void	button_rec_handler(u8 event_type)
 	{
 		case E_KEY_PRESSED:
                     if(edit_pressed)
-                        save_cur_pattern_to_eeprom();
+                        save_cur_pattern();
                     else if (current_mode == E_MODE_KEYBOARD)
                     {
                         current_mode = E_MODE_EDIT_KEYBOARD;

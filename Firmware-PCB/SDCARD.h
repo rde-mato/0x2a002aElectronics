@@ -8,6 +8,14 @@
 #define SD_PRESENCE_GPIO    TRISAbits.TRISA4
 #define SD_IS_PRESENT       LATAbits.LATA4 == 0
 
+#define SD_CMD_READ_SINGLE_BLOCK    0x40 | 17
+#define SD_CMD_WRITE_SINGLE_BLOCK   0x40 | 24
+#define SD_CMD_DUMMY_CRC            0x01
+
+#define SPI1_SD_READ                0
+#define SPI1_SD_WRITE               1
+
+
 enum E_SD_CARD
 {
     SD_R1,
@@ -22,7 +30,9 @@ enum E_SD_CARD
     SD_WRITE_ERROR_WRONG_TOKEN,
     SD_READ_NO_ERROR,
     SD_READ_ERROR_WRONG_R1,
-    SD_READ_ERROR_WRONG_TOKEN
+    SD_WRITE_ERROR_TOO_MANY_RETRIES,
+    SD_READ_ERROR_WRONG_TOKEN,
+    SD_READ_ERROR_TOO_MANY_RETRIES
 };
 
 #endif	/* SDCARD_H */

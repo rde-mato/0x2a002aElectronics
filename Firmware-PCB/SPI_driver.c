@@ -8,6 +8,9 @@ extern u8   SPI_encoders_dirty;
 extern u8   LCD_dirty;
 extern u8   LCD_writing;
 extern u8   SPI_LCD_clear;
+extern u8   SPI_SDCARD_read_request;
+extern u8   SPI_SDCARD_write_request;
+extern u8   SPI1_SD_RW;
 
 u8          SPI1_state = E_SPI1_DONE;
 u8          SPI1_slave = E_SPI1_CS_MCP_ENC;
@@ -68,6 +71,11 @@ void __ISR(_SPI_1_VECTOR, IPL4AUTO) SPI1Handler(void)
         case E_SPI1_CS_EEPROM:
             SPI1_eeprom_state_machine();
             break;
+        case E_SPI1_CS_SD:
+            if (SPI1_SD_RW == SPI1_SD_READ)
+                SD_card_read_state_machine();
+            else
+                SD_card_write_state_machine();
     }
 }
 
@@ -101,6 +109,20 @@ void    SPI1_manager(void)
     {
         SPI1_slave = E_SPI1_CS_EEPROM;
         SPI1_state = E_SPI1_EEPROM_READ_INSTRUCTION;
+        SPI1_TRANSMIT_ENABLE = INT_ENABLED;
+    }
+    else if (SPI_SDCARD_read_request)
+    {
+        SPI1_slave = E_SPI1_CS_SD;
+        SPI1_state = E_SPI1_SDCARD_READ_INIT;
+        SPI1_SD_RW = SPI1_SD_READ;
+        SPI1_TRANSMIT_ENABLE = INT_ENABLED;
+    }
+    else if (SPI_SDCARD_write_request)
+    {
+        SPI1_slave = E_SPI1_CS_SD;
+        SPI1_state = E_SPI1_SDCARD_WRITE_INIT;
+        SPI1_SD_RW = SPI1_SD_WRITE;
         SPI1_TRANSMIT_ENABLE = INT_ENABLED;
     }
 }

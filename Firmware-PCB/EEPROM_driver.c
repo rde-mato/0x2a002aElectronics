@@ -15,11 +15,12 @@ u8          SPI_eeprom_read_request = 0;
 u16         eeprom_address;
 u32         eeprom_read_size;
 u32         eeprom_read_index = 0;
-u8          eeprom_write_buf[QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE];
+u8          eeprom_write_buf[EEPROM_BLOCK_SIZE];
 u32         eeprom_write_size;
 u32         eeprom_write_index = 0;
 u8          eeprom_buf_size;
 u8          eeprom_buf[128];
+generic_callback    eeprom_write_callback = NULL;
 
 const   size_t pattern_size = QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE;
 const   size_t instrument_size = PATTERNS_PER_INSTRUMENT * QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE;
@@ -113,14 +114,42 @@ void    update_after_pattern_change(void)
     memcpy(cur_active_pattern, active_instrument[cur_pattern], pattern_size);
 }
 
-void    save_cur_pattern_to_eeprom(void)
+void    enable_spi_interrupt(void)
+{
+    SPI1_TRANSMIT_ENABLE = INT_ENABLED;
+}
+
+void    cb_save_cur_pattern_to_eeprom(void)
+{
+    eeprom_write_callback = NULL;
+
+    if (eeprom_write_index >= eeprom_write_size)
+    {
+        eeprom_write_index = 0;
+        SPI1_state = E_SPI1_DONE;
+        eeprom_write_size = 0;
+        eeprom_write_index = 0;
+        SPI_eeprom_write_request = 0;
+        request_template(TEMPLATE_PATTERN_RECORDED);
+    }
+    else
+    {
+        memcpy(eeprom_write_buf, (u8 *)cur_active_pattern + eeprom_write_index, EEPROM_BLOCK_SIZE);
+        eeprom_address = (PATTERNS_PER_INSTRUMENT * cur_instrument + cur_pattern) * pattern_size + eeprom_write_index;
+        SPI1_state = E_SPI1_EEPROM_CHECK_BUSY;
+        eeprom_write_callback = &cb_save_cur_pattern_to_eeprom;
+    }
+}
+
+
+void    save_cur_pattern(void)
 {
     memcpy(active_instrument[cur_pattern], cur_active_pattern, pattern_size);
     memcpy(active_patterns_array[cur_instrument], cur_active_pattern, pattern_size);
-    memcpy(eeprom_write_buf, cur_active_pattern, pattern_size);
-    eeprom_address = (PATTERNS_PER_INSTRUMENT * cur_instrument + cur_pattern) * pattern_size;
     eeprom_write_size = pattern_size;
     eeprom_write_index = 0;
+    eeprom_write_callback = &cb_save_cur_pattern_to_eeprom;
+    memcpy(eeprom_write_buf, cur_active_pattern + eeprom_write_index, EEPROM_BLOCK_SIZE);
     SPI_eeprom_write_request = 1;
 }
 
@@ -133,11 +162,6 @@ void    load_cur_instrument_from_eeprom(void)
 void    active_instrument_init(void)
 {
     load_cur_instrument_from_eeprom();
-}
-
-void    eeprom_state_machine_write_callback(void)
-{
-    SPI1_TRANSMIT_ENABLE = INT_ENABLED;
 }
 
 
@@ -170,8 +194,8 @@ void	eeprom_state_machine_write(void)
             else
                 SPI1_state = E_SPI1_EEPROM_CHECK_BUSY;
             CS_EEPROM = CS_LINE_UP;
-            timer4_push(100, &eeprom_state_machine_write_callback);
 //            SPI1_TRANSMIT_ENABLE = INT_ENABLED;
+            timer4_push(100, &enable_spi_interrupt);
             break ;
 
         case E_SPI1_EEPROM_WRITE_ENABLE_1:
@@ -188,7 +212,7 @@ void	eeprom_state_machine_write(void)
             CS_EEPROM = CS_LINE_UP;
             SPI1_state = E_SPI1_EEPROM_CHECK_WREN;
 //            SPI1_TRANSMIT_ENABLE = INT_ENABLED;
-            timer4_push(100, &eeprom_state_machine_write_callback);
+            timer4_push(100, &enable_spi_interrupt);
             break ;
 
         case E_SPI1_EEPROM_CHECK_WREN:
@@ -215,7 +239,7 @@ void	eeprom_state_machine_write(void)
                 SPI1_state = E_SPI1_EEPROM_WRITE_ENABLE_1;
             CS_EEPROM = CS_LINE_UP;
 //            SPI1_TRANSMIT_ENABLE = INT_ENABLED;
-            timer4_push(100, &eeprom_state_machine_write_callback);
+            timer4_push(100, &enable_spi_interrupt);
             break ;
 
         case E_SPI1_EEPROM_WRITE_INSTRUCTION:
@@ -259,19 +283,19 @@ void	eeprom_state_machine_write(void)
         case E_SPI1_EEPROM_WRITE_PAGE_DONE:
             read8 = SPI1BUF;
             CS_EEPROM = CS_LINE_UP;
-            if (eeprom_write_index >= eeprom_write_size - 1)
+            SPI1_state = E_SPI1_EEPROM_WRITE_CALLBACK;
+            timer4_push(100, &enable_spi_interrupt);
+
+        case E_SPI1_EEPROM_WRITE_CALLBACK:
+
+            if (eeprom_write_callback != NULL)
+                (*eeprom_write_callback)();
+            else
             {
                 SPI1_state = E_SPI1_DONE;
                 eeprom_write_size = 0;
                 eeprom_write_index = 0;
                 SPI_eeprom_write_request = 0;
-                request_template(TEMPLATE_PATTERN_RECORDED);
-            }
-            else
-            {
-                SPI1_state = E_SPI1_EEPROM_CHECK_BUSY;
-                timer4_push(100, &eeprom_state_machine_write_callback);
-//                SPI1_TRANSMIT_ENABLE = INT_ENABLED;
             }
             break;
     }
