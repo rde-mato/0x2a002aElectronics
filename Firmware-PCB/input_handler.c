@@ -12,7 +12,6 @@ extern u32  bpm_x100;
 extern u32  current_leds_on;
 extern u32  current_key_scan;
 extern u8   keysnotes[16];
-extern u8   ppqn_count;
 u8          edit_pressed = 0;
 u8          tap_pressed = 0;
 u8          cue_pressed = 0;
@@ -137,7 +136,7 @@ void	keys_handler(u8 event_type, u8 event_source)
                         add_note(n, 1, E_NOTE_ATTACK);
                         if (n++ > qtime)
                         {
-                            while (n < (qtime + quantiz) & 0xFFFF)
+                            while (n < ((qtime + quantiz) & 0xFFFF))
                                 add_note(n++, 1, E_NOTE_CONTINUOUS);
                         }
                         piano_roll_start[i] = -1;

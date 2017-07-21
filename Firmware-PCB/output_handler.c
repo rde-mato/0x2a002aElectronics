@@ -85,7 +85,7 @@ void    update_leds_base_case(void)
         leds_base_case |= (1 << E_SOURCE_BUTTON_PLAY_PAUSE);
     if (cue_pressed)
         leds_base_case |= (1 << E_SOURCE_BUTTON_CUE);
-    leds_base_case |= (1 << cur_octave + E_SOURCE_ENCODER_0);
+    leds_base_case |= (1 << (cur_octave + E_SOURCE_ENCODER_0));
     switch (current_mode)
     {
         case E_MODE_INSTRU:
