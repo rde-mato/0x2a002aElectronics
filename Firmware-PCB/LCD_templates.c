@@ -17,7 +17,7 @@ extern u8       LCD_dirty;
 extern u8       cur_encoder;
 extern u8       encoders_values[];
 extern u8       encoders_scale[];
-extern const u8 *notesnames[3];
+extern const u8 notesnames[][3];
 extern u8	lcd_chars[8][21];
 u8              cur_template = TEMPLATE_DEFAULT;
 
