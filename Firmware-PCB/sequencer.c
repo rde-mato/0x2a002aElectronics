@@ -3,9 +3,6 @@
 #include "0x2a002a.h"
 
 u8              qtime = 0;
-u8              sequencer_notes[MAX_NOTES_PER_QTIME] = { 0 };
-u8              sequencer_velocities[MAX_NOTES_PER_QTIME] = { 0 };
-u8              sequencer_notes_count = 0;
 extern u32      current_leds_on;
 extern u8	cur_note;
 extern u8       cur_instrument;
