@@ -122,7 +122,7 @@ void	keys_handler(u8 event_type, u8 event_source)
                         i = n - 12 * cur_octave;
 //                        if (quantiz)
                         midi_note_on(00, cur_note, cur_velocity);
-                        piano_roll_start[i] = (qtime + quantiz /* -1 ? */) & 0xFFFF;
+                        piano_roll_start[i] = ((u8)(qtime + quantiz - 1) & 0xF);
                         update_leds_base_case();
                         request_template(TEMPLATE_NOTE);
                         break;
@@ -136,7 +136,7 @@ void	keys_handler(u8 event_type, u8 event_source)
                         add_note(n, 1, E_NOTE_ATTACK);
                         if (n++ > qtime)
                         {
-                            while (n < ((qtime + quantiz) & 0xFFFF))
+                            while (n < ((u8)(qtime + quantiz - 1) & 0xF))
                                 add_note(n++, 1, E_NOTE_CONTINUOUS);
                         }
                         piano_roll_start[i] = -1;
