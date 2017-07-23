@@ -483,6 +483,11 @@ void	button_rec_handler(u8 event_type)
                         current_mode = E_MODE_EDIT_KEYBOARD;
                         update_leds_base_case();
                     }
+                    else if (current_mode == E_MODE_EDIT_KEYBOARD)
+                    {
+                        current_mode = E_MODE_KEYBOARD;
+                        update_leds_base_case();
+                    }
                     break;
 		case E_KEY_RELEASED:
 			break;
