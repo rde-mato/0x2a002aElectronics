@@ -4,6 +4,8 @@
 
 
 extern u8 SPI1_state;
+extern u8 default_template;
+extern u16 eeprom_address;
 u8  SPI1_SD_RW;
 u32 SD_return;
 u8  SD_error = 0;
@@ -12,17 +14,18 @@ u32 block = 0;
 u32 retries = SD_RETRIES;
 u8 SPI_SDCARD_read_request = 0;
 u8 SPI_SDCARD_write_request = 0;
-
 u8  SD_read_buf[SD_BLOCK_SIZE] = { 0 };
 u16 SD_read_buf_index = 0;
 u8  SD_write_buf[SD_BLOCK_SIZE] = "lorem ipsum";
 u16 SD_write_buf_index = 0;
-
-u32 SD_to_eeprom_index = 0;
+u32 SD_to_eeprom_block = 0;
+size_t sd_to_eeprom_address = 0;
+size_t eeprom_size = INSTRUMENTS_COUNT * PATTERNS_PER_INSTRUMENT * QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE;
 
 generic_callback    SD_read_callback = NULL;
+generic_callback    SD_write_callback = NULL;
+void    cb_copy_one_sd_block_to_eeprom(void);
 
-const   size_t eeprom_size = INSTRUMENTS_COUNT * PATTERNS_PER_INSTRUMENT * QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE;
 
 void    send_lots_clk(void)
 {
@@ -150,19 +153,11 @@ void    SD_card_read_state_machine(void)
 
         case E_SPI1_SDCARD_READ_RETRY_TILL_NOT_BUSY:
             read8 = SPI1BUF;
-            if (read8 != 0xFF)
+            if (read8 == 0x00)
             {
-                if (read8 == 0x00)
-                {
-                    retries = SD_RETRIES;
-                    SPI1_state = E_SPI1_SDCARD_READ_RETRY_TILL_TOKEN;
-                    SPI1BUF = 0xFF;
-                }
-                else
-                {
-                    SPI1_state = E_SPI1_SDCARD_READ_ERROR;
-                    SD_error = SD_READ_ERROR_WRONG_R1;
-                }
+                retries = SD_RETRIES;
+                SPI1_state = E_SPI1_SDCARD_READ_RETRY_TILL_TOKEN;
+                SPI1BUF = 0xFF;
             }
             else if (retries)
             {
@@ -443,22 +438,25 @@ void    SD_card_write_state_machine(void)
 }
 
 
-u8  SD_card_write_block(u32 block_address)
+u8  SD_card_write_block(u32 block_address, generic_callback cb)
 {
+    SD_write_callback = cb;
     SPI_SDCARD_write_request = 1;
     block = block_address;
 }
+
+
 
 void    copy_EEPROM_to_SD(void)
 {
     u32  address;
     u32  count;
-    u32  block;
+    u32  bl;
     u8  read;
     u8  sd_errcode;
 
     address = 0;
-    block = 0;
+    bl = 0;
     while (address < eeprom_size)
     {
         CS_EEPROM = CS_LINE_DOWN;
@@ -482,124 +480,22 @@ void    copy_EEPROM_to_SD(void)
         }
         CS_EEPROM = CS_LINE_UP;
         address += SD_BLOCK_SIZE;
-        if ((sd_errcode = SD_card_write_block(block++)) != SD_WRITE_NO_ERROR)
+        if ((sd_errcode = SD_card_write_block(bl++, NULL)) != SD_WRITE_NO_ERROR)
             return ;
     }
 }
 
-void    copy_SD_block_to_eeprom(void)
-{
-
-}
-
-
 void    copy_SD_to_EEPROM(void)
 {
-    u32  address;
-    u32  count;
-    u32  block;
-    u8  read;
-    u8  i;
-    u32 wait;
-
-    address = 0;
-    block = 0;
-    while (SD_to_eeprom_index < eeprom_size)
+    if (SPI_SDCARD_write_request == 0)
     {
-        SD_card_read_block(block++, &copy_SD_block_to_eeprom);
-
-        count = 0;
-        while (count < SD_BLOCK_SIZE)
-        {
-
-            CS_EEPROM = CS_LINE_DOWN;
-            SPI1BUF = E_EEPROM_WREN;
-            while (SPI1STATbits.SPIBUSY);
-            read = SPI1BUF;
-            CS_EEPROM = CS_LINE_UP;
-
-            CS_EEPROM = CS_LINE_DOWN;
-            SPI1BUF = E_EEPROM_WRITE;
-            while (SPI1STATbits.SPIBUSY);
-            read = SPI1BUF;
-
-            SPI1BUF = (u8)(address >> 8);
-            while (SPI1STATbits.SPIBUSY);
-            read = SPI1BUF;
-            SPI1BUF = (u8)(address);
-            while (SPI1STATbits.SPIBUSY);
-            read = SPI1BUF;
-
-            i = 0;
-            while (i < 128)
-            {
-                SPI1BUF = SD_read_buf[i++];
-                while (SPI1STATbits.SPIBUSY);
-                read = SPI1BUF;
-            }
-            CS_EEPROM = CS_LINE_UP;
-            count += 128;
-            wait = 0;
-            while (wait++ < 80000)
-                asm("nop");
-        }
-        address += SD_BLOCK_SIZE;
+        sd_to_eeprom_address = 0;
+        SD_card_read_block(SD_to_eeprom_block++, &cb_copy_one_sd_block_to_eeprom);
     }
-}
 
-//void    copy_SD_to_EEPROM(void)
-//{
-//    u32  address;
-//    u32  count;
-//    u32  block;
-//    u8  read;
-//    u8  i;
-//    u32 wait;
-//
-//    address = 0;
-//    block = 0;
-//    while (address < eeprom_size)
-//    {
-//        SD_card_read_block(block++);
-//
-//        count = 0;
-//        while (count < SD_BLOCK_SIZE)
-//        {
-//
-//            CS_EEPROM = CS_LINE_DOWN;
-//            SPI1BUF = E_EEPROM_WREN;
-//            while (SPI1STATbits.SPIBUSY);
-//            read = SPI1BUF;
-//            CS_EEPROM = CS_LINE_UP;
-//
-//            CS_EEPROM = CS_LINE_DOWN;
-//            SPI1BUF = E_EEPROM_WRITE;
-//            while (SPI1STATbits.SPIBUSY);
-//            read = SPI1BUF;
-//
-//            SPI1BUF = (u8)(address >> 8);
-//            while (SPI1STATbits.SPIBUSY);
-//            read = SPI1BUF;
-//            SPI1BUF = (u8)(address);
-//            while (SPI1STATbits.SPIBUSY);
-//            read = SPI1BUF;
-//
-//            i = 0;
-//            while (i < 128)
-//            {
-//                SPI1BUF = SD_read_buf[i++];
-//                while (SPI1STATbits.SPIBUSY);
-//                read = SPI1BUF;
-//            }
-//            CS_EEPROM = CS_LINE_UP;
-//            count += 128;
-//            wait = 0;
-//            while (wait++ < 80000)
-//                asm("nop");
-//        }
-//        address += SD_BLOCK_SIZE;
-//    }
-//}
+//                    default_template = TEMPLATE_DEFAULT;
+//                    request_template(TEMPLATE_LOADING_SUCCESSFUL);
+}
 
 void    gpio_init_SD_card(void)
 {

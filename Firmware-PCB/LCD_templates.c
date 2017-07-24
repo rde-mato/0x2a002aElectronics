@@ -160,6 +160,10 @@ void    display_current_template(void)
                 snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "SD CARD ERROR", 0);
                 snprintf(lines[3], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
                 break ;
+            case TEMPLATE_SD_BLOCK_RECORDED:
+                snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "SD BLOCK COPIED", 0);
+                snprintf(lines[3], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
+                break ;
 
         }
         i = 0;
@@ -170,7 +174,7 @@ void    display_current_template(void)
         }
         LCD_print_changed_chars();
     }
-    if (cur_template != default_template)
+    if (cur_template != default_template && cur_template != TEMPLATE_LOADING_STARTED)
         timer4_push(1000, &LCD_back_to_default);
     previous = cur_template;
 }

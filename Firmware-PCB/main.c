@@ -21,7 +21,7 @@ int main(void)
     no_notes_everywhere();
     initial_eeprom_download();
 //    if (SD_IS_PRESENT)
-//    SD_card_init();
+    SD_card_init();
 
     INT_init();
     HT16_init();

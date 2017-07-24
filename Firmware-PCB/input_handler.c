@@ -261,9 +261,9 @@ void	main_encoder_handler(u8 event_type)
             }
             else if (default_template == TEMPLATE_MAIN_MENU)
             {
+                default_template = TEMPLATE_DEFAULT;
                 if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_EXIT)
                 {
-                    default_template = TEMPLATE_DEFAULT;
                     request_template(TEMPLATE_DEFAULT);
                 }
                 else if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_LOAD_TO_SD)
@@ -271,7 +271,6 @@ void	main_encoder_handler(u8 event_type)
                     playing = MUSIC_PAUSE;
                     request_template(TEMPLATE_LOADING_STARTED);
                     copy_EEPROM_to_SD();
-                    default_template = TEMPLATE_DEFAULT;
                     request_template(TEMPLATE_LOADING_SUCCESSFUL);
                 }
                 else if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_LOAD_FROM_SD)
@@ -279,28 +278,23 @@ void	main_encoder_handler(u8 event_type)
                     playing = MUSIC_PAUSE;
                     request_template(TEMPLATE_LOADING_STARTED);
                     copy_SD_to_EEPROM();
-                    default_template = TEMPLATE_DEFAULT;
-                    request_template(TEMPLATE_LOADING_SUCCESSFUL);
                 }
                 else if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_PASTE_PATTERN)
                 {
                     memcpy(cur_active_pattern, pattern_pastebin, QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE);
                     update_leds_base_case();
-                    default_template = TEMPLATE_DEFAULT;
                     request_template(TEMPLATE_DEFAULT);
                 }
                 else if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_COPY_PATTERN)
                 {
                     pattern_in_pastebin = 1;
                     memcpy(pattern_pastebin, cur_active_pattern, QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE);
-                    default_template = TEMPLATE_DEFAULT;
                     request_template(TEMPLATE_DEFAULT);
                 }
                 else if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_CLEAR_EEPROM)
                 {
                     eeprom_chip_erase();
                     update_leds_base_case();
-                    default_template = TEMPLATE_DEFAULT;
                     request_template(TEMPLATE_CHIP_ERASED);
                 }
             }

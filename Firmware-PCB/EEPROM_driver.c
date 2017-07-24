@@ -9,21 +9,30 @@ extern u8   active_patterns_array[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PE
 extern u8   cur_active_pattern[QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 extern u8   active_instrument[PATTERNS_PER_INSTRUMENT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 extern u8   current_mode;
+extern u8  SD_read_buf[SD_BLOCK_SIZE];
+extern u32 SD_to_eeprom_block;
+extern size_t sd_to_eeprom_address;
+extern size_t eeprom_size;
 
 u8          SPI_eeprom_write_request = 0;
 u8          SPI_eeprom_read_request = 0;
 u16         eeprom_address;
 u32         eeprom_read_size;
+u8          *eeprom_read_dest;
 u32         eeprom_read_index = 0;
 u8          eeprom_write_buf[EEPROM_BLOCK_SIZE];
 u32         eeprom_write_size;
 u32         eeprom_write_index = 0;
 u8          eeprom_buf_size;
-u8          eeprom_buf[128];
+u8          eeprom_buf[EEPROM_BLOCK_SIZE];
 generic_callback    eeprom_write_callback = NULL;
+generic_callback    eeprom_read_callback = NULL;
 
 const   size_t pattern_size = QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE;
 const   size_t instrument_size = PATTERNS_PER_INSTRUMENT * QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE;
+
+void    cb_copy_one_eeprom_block_from_sd(void);
+void    cb_copy_one_sd_block_to_eeprom(void);
 
 void    initial_eeprom_download(void)
 {
@@ -154,9 +163,25 @@ void    save_cur_pattern(void)
     SPI_eeprom_write_request = 1;
 }
 
+void    cb_cur_instrument_from_eeprom(void)
+{
+    eeprom_read_callback = NULL;
+    SPI1_state = E_SPI1_DONE;
+    eeprom_read_index = 0;
+    eeprom_read_size = 0;
+    SPI_eeprom_read_request = 0;
+    memcpy(cur_active_pattern, active_instrument[cur_pattern], pattern_size);
+    request_template(TEMPLATE_INSTRUMENT);
+    current_mode = E_MODE_PATTERN;
+    update_leds_base_case();
+}
+
 void    load_cur_instrument_from_eeprom(void)
 {
     eeprom_address = cur_instrument * instrument_size;
+    eeprom_read_dest = (u8 *)active_instrument;
+    eeprom_read_size = instrument_size;
+    eeprom_read_callback = cb_cur_instrument_from_eeprom;
     SPI_eeprom_read_request = 1;
 }
 
@@ -339,9 +364,9 @@ void	eeprom_state_machine_read(void)
             break ;
 
         case E_SPI1_EEPROM_READ_DATA:
-            *((u8 *)active_instrument + eeprom_read_index++) = SPI1BUF;
-            if (eeprom_read_index >= instrument_size)
-                SPI1_state = E_SPI1_EEPROM_READ_DONE;
+            eeprom_read_dest[eeprom_read_index++] = SPI1BUF;
+            if (eeprom_read_index >= eeprom_read_size)
+                SPI1_state = E_SPI1_EEPROM_READ_CALLBACK;
             else
             {
                 SPI1BUF = 0xFF;
@@ -349,15 +374,20 @@ void	eeprom_state_machine_read(void)
                 break ;
             }
 
-        case E_SPI1_EEPROM_READ_DONE:
+
+
+        case E_SPI1_EEPROM_READ_CALLBACK:
             CS_EEPROM = CS_LINE_UP;
-            SPI1_state = E_SPI1_DONE;
-            eeprom_read_index = 0;
-            SPI_eeprom_read_request = 0;
-            memcpy(cur_active_pattern, active_instrument[cur_pattern], pattern_size);
-            request_template(TEMPLATE_INSTRUMENT);
-            current_mode = E_MODE_PATTERN;
-            update_leds_base_case();
+
+            if (eeprom_read_callback != NULL)
+                (*eeprom_read_callback)();
+            else
+            {
+                SPI1_state = E_SPI1_DONE;
+                eeprom_read_size = 0;
+                eeprom_read_index = 0;
+                SPI_eeprom_read_request = 0;
+            }
             break;
     }
 }
@@ -401,4 +431,42 @@ void    eeprom_chip_erase(void)
     CS_EEPROM = CS_LINE_UP;
 
     no_notes_everywhere();
+}
+
+
+
+void    cb_copy_one_sd_block_to_eeprom(void)
+{
+    eeprom_write_size = SD_BLOCK_SIZE;
+    eeprom_write_index = 0;
+    eeprom_write_callback = &cb_copy_one_eeprom_block_from_sd;
+    memcpy(eeprom_write_buf, SD_read_buf, EEPROM_BLOCK_SIZE);
+    SPI_eeprom_write_request = 1;
+}
+
+void    cb_copy_one_eeprom_block_from_sd(void)
+{
+    eeprom_write_callback = NULL;
+
+    sd_to_eeprom_address += EEPROM_BLOCK_SIZE;
+    if (eeprom_write_index >= eeprom_write_size)
+    {
+        eeprom_write_size = 0;
+        eeprom_write_index = 0;
+        SPI_eeprom_write_request = 0;
+        SPI1_state = E_SPI1_DONE;
+        if (sd_to_eeprom_address >= eeprom_size)
+        {
+            sd_to_eeprom_address = 0;
+            request_template(TEMPLATE_SD_BLOCK_RECORDED);
+        }
+        else
+            SD_card_read_block(SD_to_eeprom_block++, &cb_copy_one_sd_block_to_eeprom);
+    }
+    else
+    {
+        memcpy(eeprom_write_buf, SD_read_buf + eeprom_write_index, EEPROM_BLOCK_SIZE);
+        SPI1_state = E_SPI1_EEPROM_CHECK_BUSY;
+        eeprom_write_callback = &cb_copy_one_eeprom_block_from_sd;
+    }
 }
