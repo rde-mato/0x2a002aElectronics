@@ -5,7 +5,7 @@
 
 extern u8 SPI1_state;
 extern u8 default_template;
-extern u16 eeprom_address;
+extern u16 eeprom_address_start;
 u8  SPI1_SD_RW;
 u32 SD_return;
 u8  SD_error = 0;
@@ -300,19 +300,11 @@ void    SD_card_write_state_machine(void)
 
         case E_SPI1_SDCARD_WRITE_RETRY_TILL_NOT_BUSY:
             read8 = SPI1BUF;
-            if (read8 != 0xFF)
+            if (read8 == 0x00)
             {
-                if (read8 == 0x00)
-                {
-                    retries = SD_RETRIES;
-                    SPI1_state = E_SPI1_SDCARD_WRITE_SEND_START_TOKEN;
-                    SPI1BUF = 0xFF;
-                }
-                else
-                {
-                    SPI1_state = E_SPI1_SDCARD_WRITE_ERROR;
-                    SD_error = SD_WRITE_ERROR_WRONG_R1;
-                }
+                retries = SD_RETRIES;
+                SPI1_state = E_SPI1_SDCARD_WRITE_WAIT_ONE_BYTE;
+                SPI1BUF = 0xFF;
             }
             else if (retries)
             {
@@ -358,24 +350,20 @@ void    SD_card_write_state_machine(void)
 
         case E_SPI1_SDCARD_WRITE_RETRY_TILL_DATA_RESPONSE:
             read8 = SPI1BUF;
-            if (read8 != 0xFF)
+            if ((read8 & 0b11111) == 0b0101)
             {
-                if ((read8 & 0x10) & !(read8 & 1))
-                {
-                    SPI1_state = E_SPI1_SDCARD_WRITE_ERROR;
-                    SD_error = SD_WRITE_ERROR_WRONG_DATA_RESPONSE;
-                }
-                response_status = (read8 >> 1) & 0b111;
-                if (response_status == 0b010)
-                {
-                    SPI1BUF = 0xFF;
-                    SPI1_state = E_SPI1_SDCARD_WRITE_SEND_FF_TILL_END_OF_00;
-                }
-                else
-                {
-                    SPI1_state = E_SPI1_SDCARD_WRITE_ERROR;
-                    SD_error = SD_WRITE_ERROR_WRONG_DATA_RESPONSE; // a  ameliorer
-                }
+                SPI1BUF = 0xFF;
+                SPI1_state = E_SPI1_SDCARD_WRITE_SEND_FF_TILL_END_OF_00;
+            }
+            else if ((read8 & 0b11111) == 0b1011)
+            {
+                SPI1_state = E_SPI1_SDCARD_WRITE_ERROR;
+                SD_error = SD_WRITE_ERROR_WRONG_DATA_RESPONSE; // a  ameliorer
+            }
+            else if ((read8 & 0b11111) == 0b1101)
+            {
+                SPI1_state = E_SPI1_SDCARD_WRITE_ERROR;
+                SD_error = SD_WRITE_ERROR_WRONG_DATA_RESPONSE; // a  ameliorer
             }
             else if (retries)
             {
@@ -429,9 +417,14 @@ void    SD_card_write_state_machine(void)
 
         case E_SPI1_SDCARD_WRITE_LAST_FF:
             read8 = SPI1BUF;
-            SPI1_state = E_SPI1_DONE;
-            SD_write_buf_index = 0;
-            SPI_SDCARD_write_request = 0;
+            if (SD_write_callback != NULL)
+                (*SD_write_callback)();
+            else
+            {
+                SPI1_state = E_SPI1_DONE;
+                SD_write_buf_index = 0;
+                SPI_SDCARD_write_request = 0;
+            }
             break;
 
     }
@@ -447,43 +440,43 @@ u8  SD_card_write_block(u32 block_address, generic_callback cb)
 
 
 
-void    copy_EEPROM_to_SD(void)
-{
-    u32  address;
-    u32  count;
-    u32  bl;
-    u8  read;
-    u8  sd_errcode;
-
-    address = 0;
-    bl = 0;
-    while (address < eeprom_size)
-    {
-        CS_EEPROM = CS_LINE_DOWN;
-        SPI1BUF = E_EEPROM_READ;
-        while (SPI1STATbits.SPIBUSY);
-        read = SPI1BUF;
-
-        SPI1BUF = (u8)(address >> 8);
-        while (SPI1STATbits.SPIBUSY);
-        read = SPI1BUF;
-        SPI1BUF = (u8)(address);
-        while (SPI1STATbits.SPIBUSY);
-        read = SPI1BUF;
-
-        count = 0;
-        while (count < SD_BLOCK_SIZE)
-        {
-            SPI1BUF = 0xFF;
-            while (SPI1STATbits.SPIBUSY);
-            SD_write_buf[count++] = SPI1BUF;
-        }
-        CS_EEPROM = CS_LINE_UP;
-        address += SD_BLOCK_SIZE;
-        if ((sd_errcode = SD_card_write_block(bl++, NULL)) != SD_WRITE_NO_ERROR)
-            return ;
-    }
-}
+//void    copy_EEPROM_to_SD(void)
+//{
+//    u32  address;
+//    u32  count;
+//    u32  bl;
+//    u8  read;
+//    u8  sd_errcode;
+//
+//    address = 0;
+//    bl = 0;
+//    while (address < eeprom_size)
+//    {
+//        CS_EEPROM = CS_LINE_DOWN;
+//        SPI1BUF = E_EEPROM_READ;
+//        while (SPI1STATbits.SPIBUSY);
+//        read = SPI1BUF;
+//
+//        SPI1BUF = (u8)(address >> 8);
+//        while (SPI1STATbits.SPIBUSY);
+//        read = SPI1BUF;
+//        SPI1BUF = (u8)(address);
+//        while (SPI1STATbits.SPIBUSY);
+//        read = SPI1BUF;
+//
+//        count = 0;
+//        while (count < SD_BLOCK_SIZE)
+//        {
+//            SPI1BUF = 0xFF;
+//            while (SPI1STATbits.SPIBUSY);
+//            SD_write_buf[count++] = SPI1BUF;
+//        }
+//        CS_EEPROM = CS_LINE_UP;
+//        address += SD_BLOCK_SIZE;
+//        if ((sd_errcode = SD_card_write_block(bl++, NULL)) != SD_WRITE_NO_ERROR)
+//            return ;
+//    }
+//}
 
 void    copy_SD_to_EEPROM(void)
 {

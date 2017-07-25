@@ -271,7 +271,6 @@ void	main_encoder_handler(u8 event_type)
                     playing = MUSIC_PAUSE;
                     request_template(TEMPLATE_LOADING_STARTED);
                     copy_EEPROM_to_SD();
-                    request_template(TEMPLATE_LOADING_SUCCESSFUL);
                 }
                 else if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_LOAD_FROM_SD)
                 {
@@ -472,7 +471,7 @@ void	button_rec_handler(u8 event_type)
 	{
 		case E_KEY_PRESSED:
                     if(edit_pressed)
-                        save_cur_pattern();
+                        save_cur_pattern_to_eeprom();
                     else if (current_mode == E_MODE_KEYBOARD)
                     {
                         current_mode = E_MODE_EDIT_KEYBOARD;

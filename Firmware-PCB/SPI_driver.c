@@ -79,6 +79,8 @@ void __ISR(_SPI_1_VECTOR, IPL4AUTO) SPI1Handler(void)
     }
 }
 
+
+
 void    SPI1_manager(void)
 {
     if (!SPI1_READY)
