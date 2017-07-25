@@ -6,7 +6,7 @@
 #define MIDI_BAUD_RATE          31250
 #define TIMING_CLOCK            0xF8
 
-#define UART1_TX_INT_FLAG_CLR   IFS1CLR = (1 << 8)
+#define UART1_TX_INT_FLAG_CLR   IFS1CLR = (1 << 9)
 #define UART1_TX_INT_ENABLE     IEC1bits.U1TXIE
 #define UART1_TX_INT_PRIORITY   IPC8bits.U1IP
 #define UART1_TX_INT_FLAG       IFS1bits.U1TXIF
