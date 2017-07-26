@@ -265,7 +265,6 @@ u8  SD_card_read_block(u32 block_address, generic_callback cb)
 void    SD_card_write_state_machine(void)
 {
     u8  read8;
-    u8  response_status;
     u32 read32;
 
     switch (SPI1_state)
@@ -339,7 +338,7 @@ void    SD_card_write_state_machine(void)
         case E_SPI1_SDCARD_WRITE_SEND_ONE_BYTE:
             read8 = SPI1BUF;
             SPI1BUF = SD_write_buf[SD_write_buf_index++];
-            if (SD_write_buf_index > SD_BLOCK_SIZE)
+            if (SD_write_buf_index >= SD_BLOCK_SIZE)
             {
                 retries = SD_RETRIES;
                 SPI1_state = E_SPI1_SDCARD_WRITE_RETRY_TILL_DATA_RESPONSE;
@@ -350,20 +349,28 @@ void    SD_card_write_state_machine(void)
 
         case E_SPI1_SDCARD_WRITE_RETRY_TILL_DATA_RESPONSE:
             read8 = SPI1BUF;
-            if ((read8 & 0b11111) == 0b0101)
+            if (((read8 >> 4) & 1) == 0 && (read8 & 1) == 1)
             {
-                SPI1BUF = 0xFF;
-                SPI1_state = E_SPI1_SDCARD_WRITE_SEND_FF_TILL_END_OF_00;
-            }
-            else if ((read8 & 0b11111) == 0b1011)
-            {
-                SPI1_state = E_SPI1_SDCARD_WRITE_ERROR;
-                SD_error = SD_WRITE_ERROR_WRONG_DATA_RESPONSE; // a  ameliorer
-            }
-            else if ((read8 & 0b11111) == 0b1101)
-            {
-                SPI1_state = E_SPI1_SDCARD_WRITE_ERROR;
-                SD_error = SD_WRITE_ERROR_WRONG_DATA_RESPONSE; // a  ameliorer
+                if ((read8 & 0b11111) == 0b0101)
+                {
+                    SPI1BUF = 0xFF;
+                    SPI1_state = E_SPI1_SDCARD_WRITE_SEND_FF_TILL_END_OF_00;
+                }
+                else if ((read8 & 0b11111) == 0b1011)
+                {
+                    SPI1_state = E_SPI1_SDCARD_WRITE_ERROR;
+                    SD_error = SD_WRITE_ERROR_WRONG_DATA_RESPONSE; // a  ameliorer
+                }
+                else if ((read8 & 0b11111) == 0b1101)
+                {
+                    SPI1_state = E_SPI1_SDCARD_WRITE_ERROR;
+                    SD_error = SD_WRITE_ERROR_WRONG_DATA_RESPONSE; // a  ameliorer
+                }
+                else
+                {
+                    SPI1_state = E_SPI1_SDCARD_WRITE_ERROR;
+                    SD_error = SD_WRITE_ERROR_WRONG_DATA_RESPONSE; // a  ameliorer
+                }
             }
             else if (retries)
             {
@@ -410,9 +417,13 @@ void    SD_card_write_state_machine(void)
         case E_SPI1_SDCARD_WRITE_ERROR:
             read8 = SPI1BUF;
             CS_SD = CS_LINE_UP;
-            SPI1_state = E_SPI1_DONE;
-            request_template(TEMPLATE_SD_ERROR);
-            SPI_SDCARD_write_request = 0;
+//            SPI1_state = E_SPI1_DONE;
+//            request_template(TEMPLATE_SD_ERROR);
+//            SPI_SDCARD_write_request = 0;
+            SPI1_state = E_SPI1_SDCARD_WRITE_INIT;
+            SD_write_buf_index = 0;
+            SPI1_TRANSMIT_ENABLE = INT_ENABLED;
+            //
             break;
 
         case E_SPI1_SDCARD_WRITE_LAST_FF:

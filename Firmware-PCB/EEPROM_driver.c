@@ -16,6 +16,7 @@ extern size_t eeprom_size;
 extern generic_callback    SD_write_callback;
 extern u8 SPI_SDCARD_write_request;
 extern u8  SD_write_buf[SD_BLOCK_SIZE];
+extern u16 SD_write_buf_index;
 
 u8          SPI_eeprom_write_request = 0;
 u8          SPI_eeprom_read_request = 0;
@@ -483,6 +484,7 @@ void    cb_YYY(void)
     eeprom_to_sd_address += SD_BLOCK_SIZE;
     SD_write_callback = NULL;
     SPI_SDCARD_write_request = 0;
+    SD_write_buf_index = 0;
     SPI1_state = E_SPI1_DONE;
 
     if (eeprom_to_sd_address >= eeprom_size)
