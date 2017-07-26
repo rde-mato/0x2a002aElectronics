@@ -269,13 +269,13 @@ void	main_encoder_handler(u8 event_type)
                 else if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_LOAD_TO_SD)
                 {
                     playing = MUSIC_PAUSE;
-                    request_template(TEMPLATE_LOADING_STARTED);
+                    request_template(TEMPLATE_LOADING_IN_PROGRESS);
                     copy_EEPROM_to_SD();
                 }
                 else if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_LOAD_FROM_SD)
                 {
                     playing = MUSIC_PAUSE;
-                    request_template(TEMPLATE_LOADING_STARTED);
+                    request_template(TEMPLATE_LOADING_IN_PROGRESS);
                     copy_SD_to_EEPROM();
                 }
                 else if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_PASTE_PATTERN)

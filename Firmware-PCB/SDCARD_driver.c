@@ -24,7 +24,7 @@ size_t eeprom_size = INSTRUMENTS_COUNT * PATTERNS_PER_INSTRUMENT * QTIME_PER_PAT
 
 generic_callback    SD_read_callback = NULL;
 generic_callback    SD_write_callback = NULL;
-void    cb_copy_one_sd_block_to_eeprom(void);
+void    cb_copy_sd_to_eeprom_after_sd_read(void);
 
 
 void    send_lots_clk(void)
@@ -494,11 +494,8 @@ void    copy_SD_to_EEPROM(void)
     if (SPI_SDCARD_write_request == 0)
     {
         sd_to_eeprom_address = 0;
-        SD_card_read_block(SD_to_eeprom_block++, &cb_copy_one_sd_block_to_eeprom);
+        SD_card_read_block(SD_to_eeprom_block++, &cb_copy_sd_to_eeprom_after_sd_read);
     }
-
-//                    default_template = TEMPLATE_DEFAULT;
-//                    request_template(TEMPLATE_LOADING_SUCCESSFUL);
 }
 
 void    gpio_init_SD_card(void)
