@@ -2,9 +2,10 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
-u8  UART1_buf[0x100];
-u8  UART1_buf_index = 0;
-u8  UART1_buf_len = 0;
+u32               UART1_buf[0x100];
+u8                UART1_buf_index = 0;
+u8                UART1_buf_len = 0;
+generic_callback  UART1_idle_callback = NULL;
 
 void UART1_init(void)
 {
@@ -38,7 +39,11 @@ void __ISR(_UART_1_VECTOR, IPL5AUTO) UART1_TX_handler(void)
 {
     U1TXREG = UART1_buf[UART1_buf_index++];
     if (--UART1_buf_len == 0)
+    {
        UART1_TX_INT_ENABLE = INT_DISABLED;
+       if (UART1_idle_callback)
+         UART1_idle_callback();
+    }
     UART1_TX_INT_FLAG_CLR;
 }
 
