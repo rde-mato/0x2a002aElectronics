@@ -33,17 +33,17 @@ void    int_init_main_encoder(void)
     COD_A_INT_FLAG_CLR;
     COD_A_INT_PRIORITY = 5;
     COD_A_INT_ENABLE = INT_ENABLED;
-//    COD_B_INT_POLARITY = RISING_EDGE;
-//    COD_B_INT_FLAG_CLR;
-//    COD_B_INT_PRIORITY = 2;
-//    COD_B_INT_ENABLE = INT_ENABLED;
+    COD_B_INT_POLARITY = RISING_EDGE;
+    COD_B_INT_FLAG_CLR;
+    COD_B_INT_PRIORITY = 2;
+    COD_B_INT_ENABLE = INT_ENABLED;
 }
 
 void    int_init_MCP_encoders(void)
 {
 //    COD_MCP_A_INT_POLARITY = FALLING_EDGE;
 //    COD_MCP_A_INT_FLAG_CLR;
-//    COD_MCP_A_INT_PRIORITY = 3;
+//    COD_MCP_A_INT_PRIORITY = 5;
 //    COD_MCP_A_INT_ENABLE = INT_ENABLED;
     COD_MCP_B_INT_POLARITY = FALLING_EDGE;
     COD_MCP_B_INT_FLAG_CLR;
@@ -82,11 +82,15 @@ void MCP_ENCODERS_init_blocking(void)
 }
 
 void __ISR(_EXTERNAL_2_VECTOR, IPL5AUTO) Main_encoder_A_Handler(void) {
-    if (PORTBbits.RB3)
-        event_handler(E_ENCODER_TURNED_LEFT, E_SOURCE_ENCODER_MAIN);
-    else
-        event_handler(E_ENCODER_TURNED_RIGHT, E_SOURCE_ENCODER_MAIN);
     COD_A_INT_FLAG_CLR;
+    if (PORTBbits.RB2 && !PORTBbits.RB3)
+        event_handler(E_ENCODER_TURNED_RIGHT, E_SOURCE_ENCODER_MAIN);
+}
+
+void __ISR(_EXTERNAL_4_VECTOR, IPL5AUTO) Main_encoder_B_Handler(void) {
+    COD_B_INT_FLAG_CLR;
+    if (PORTBbits.RB3 && !PORTBbits.RB2)
+        event_handler(E_ENCODER_TURNED_LEFT, E_SOURCE_ENCODER_MAIN);
 }
 
 /* void __ISR(_EXTERNAL_1_VECTOR, IPL3AUTO) MCP_encoders_port_A_Handler(void) {
