@@ -2,6 +2,8 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
+midi_callback midi_send = UART1_push;
+
 int main(void)
 {
 
