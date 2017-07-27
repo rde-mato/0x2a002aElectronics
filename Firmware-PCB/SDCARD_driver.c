@@ -500,5 +500,8 @@ void    copy_SD_to_EEPROM(void)
 
 void    gpio_init_SD_card(void)
 {
+//    CTMUCONbits.ON = 0;
     SD_PRESENCE_GPIO = GPIO_INPUT;
+//    SD_PRESENCE_GPIO = GPIO_OUTPUT;
+//    LATAbits.LATA4 = 1;
 }

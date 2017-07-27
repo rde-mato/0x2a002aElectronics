@@ -6,7 +6,7 @@
 
 
 #define SD_PRESENCE_GPIO    TRISAbits.TRISA4
-#define SD_IS_PRESENT       LATAbits.LATA4 == 0
+#define SD_IS_PRESENT       (PORTAbits.RA4 == 0)
 
 #define SD_CMD_READ_SINGLE_BLOCK    0x40 | 17
 #define SD_CMD_WRITE_SINGLE_BLOCK   0x40 | 24
