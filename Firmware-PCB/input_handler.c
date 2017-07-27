@@ -13,6 +13,7 @@ extern u32  current_leds_on;
 extern u32  current_key_scan;
 extern u8   keysnotes[16];
 extern u8   ppqn_count;
+u8          SD_initialzed = 0;
 u8          edit_pressed = 0;
 u8          tap_pressed = 0;
 u8          cue_pressed = 0;
@@ -233,15 +234,19 @@ void	encoders_handler(u8 event_type, u8 event_source)
 
 void	main_encoder_handler(u8 event_type)
 {
-//    static u8 truc = 0;
-    static u8   prev_turn_direction = E_ENCODER_NO_DIRECTION;
-
     menu_items_count = 0;
+    if (SD_IS_PRESENT && !SD_initialzed)
+    {
+        SD_card_init();
+        SD_initialzed = 1;
+    }
+    else if (!SD_IS_PRESENT && SD_initialzed)
+        SD_initialzed = 0;
     if (pattern_in_pastebin)
         menu_items[menu_items_count++] = E_MENU_ITEMS_PASTE_PATTERN;
     menu_items[menu_items_count++] = E_MENU_ITEMS_COPY_PATTERN;
 
-    if (1) // if (SD_IS_PRESENT)
+    if (SD_IS_PRESENT)
     {
         menu_items[menu_items_count++] = E_MENU_ITEMS_LOAD_FROM_SD;
         menu_items[menu_items_count++] = E_MENU_ITEMS_LOAD_TO_SD;
@@ -313,15 +318,10 @@ void	main_encoder_handler(u8 event_type)
             }
             else
             {
-                if (prev_turn_direction != E_ENCODER_TURNED_RIGHT)
-                    prev_turn_direction = E_ENCODER_TURNED_RIGHT;
-                else if (default_template == TEMPLATE_MAIN_MENU)
+                if (default_template == TEMPLATE_MAIN_MENU)
                 {
-                    if (menu_item_highlighted == menu_items_count - 1)
-                        menu_item_highlighted = 0;
-                    else
+                    if (menu_item_highlighted < menu_items_count - 1)
                         menu_item_highlighted++;
-                    prev_turn_direction = E_ENCODER_NO_DIRECTION;
                     request_template(TEMPLATE_MAIN_MENU);
                 }
             }
@@ -341,15 +341,10 @@ void	main_encoder_handler(u8 event_type)
             }
             else
             {
-                if (prev_turn_direction != E_ENCODER_TURNED_LEFT)
-                    prev_turn_direction = E_ENCODER_TURNED_LEFT;
-                else if (default_template == TEMPLATE_MAIN_MENU)
+                if (default_template == TEMPLATE_MAIN_MENU)
                 {
                     if (menu_item_highlighted > 0)
                         menu_item_highlighted--;
-                    else
-                        menu_item_highlighted = menu_items_count - 1;
-                    prev_turn_direction = E_ENCODER_NO_DIRECTION;
                     request_template(TEMPLATE_MAIN_MENU);
                 }
             }
