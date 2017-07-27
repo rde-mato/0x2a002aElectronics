@@ -154,7 +154,9 @@ void	keys_handler(u8 event_type, u8 event_source)
             switch (event_type)
             {
                     case E_KEY_PRESSED:
-                        active_instruments_u16 ^= (1 << event_source); //TODO: restreindre l event source.
+                        active_instruments_u16 ^= (1 << event_source);
+                        if (!(active_instruments_u16 & (1 << event_source)))
+                            midi_control_change(event_source, MCMM_ALL_NOTES_OFF, 0x00);
                         update_leds_base_case();
                         break;
                     case E_KEY_RELEASED:
@@ -365,12 +367,16 @@ void	main_encoder_handler(u8 event_type)
 
 void	button_play_handler(u8 event_type)
 {
+    u8 i;
+
     switch (event_type)
     {
         case E_KEY_PRESSED:
             playing = !playing;
+            for (i = 0; i < INSTRUMENTS_COUNT; i++)
+                midi_control_change(i, MCMM_ALL_NOTES_OFF, 0x00);
             update_leds_base_case();
-                break;
+            break;
         case E_KEY_RELEASED:
                 break;
         case E_KEY_LONG_PRESSED:

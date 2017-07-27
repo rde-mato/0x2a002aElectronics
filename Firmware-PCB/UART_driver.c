@@ -47,13 +47,13 @@ void __ISR(_UART_1_VECTOR, IPL5AUTO) UART1_TX_handler(void)
     UART1_TX_INT_FLAG_CLR;
 }
 
-void UART1_push(u8 buffer[], size_t size)
+void UART1_push(u8 buffer[], u8 size)
 {
   u8 i = 0;
 
-  builtin_disable_interrupts();
+  __builtin_disable_interrupts();
   while (i < size)
     UART1_buf[(UART1_buf_index + UART1_buf_len++) & 0xFF] = buffer[i++];
   UART1_TX_INT_ENABLE = INT_ENABLED;
-  builtin_enable_interrupts();
+  __builtin_enable_interrupts();
 }

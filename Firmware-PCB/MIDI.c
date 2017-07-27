@@ -1,7 +1,5 @@
 #include "0x2a002a.h"
 
-typedef void (* midi_callback)(u8 buffer[], size_t size);
-
 extern midi_callback midi_send;
 
 //u8  running_status;
@@ -14,7 +12,6 @@ extern midi_callback midi_send;
 */
 void midi_note_off(u8 channel, u8 note, u8 velocity)
 {
-    u8  status;
     u8  buf[3];
     u8  len = 0;
 
@@ -30,7 +27,7 @@ void midi_note_off(u8 channel, u8 note, u8 velocity)
 //    }
 //    UART1_send(note);
 //    UART1_send(velocity);
-    UART1_push(buffer, len);
+    UART1_push(buf, len);
 }
 
 /*
@@ -42,7 +39,6 @@ void midi_note_off(u8 channel, u8 note, u8 velocity)
 
 void midi_note_on(u8 channel, u8 note, u8 velocity)
 {
-    u8 status;
     u8 buf[3];
     u8 len = 0;
 
@@ -57,7 +53,7 @@ void midi_note_on(u8 channel, u8 note, u8 velocity)
 //    }
 //    UART1_send(note);
 //    UART1_send(velocity);
-    UART1_push(buffer, len);
+    UART1_push(buf, len);
 }
 
 /*
@@ -79,7 +75,6 @@ void midi_polyphonic_key_pressure(u8 channel, u8 note, u8 value)
 */
 void midi_control_change(u8 channel, u8 control, u8 value)
 {
-    u8 status;
     u8 buf[3];
     u8 len = 0;
 
@@ -93,7 +88,7 @@ void midi_control_change(u8 channel, u8 control, u8 value)
 //    }
 //    UART1_send(control);
 //    UART1_send(value);
-    UART1_push(buffer, len);
+    UART1_push(buf, len);
 }
 
 /*
