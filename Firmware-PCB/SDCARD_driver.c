@@ -449,59 +449,17 @@ u8  SD_card_write_block(u32 block_address, generic_callback cb)
     block = block_address;
 }
 
-
-
-//void    copy_EEPROM_to_SD(void)
-//{
-//    u32  address;
-//    u32  count;
-//    u32  bl;
-//    u8  read;
-//    u8  sd_errcode;
-//
-//    address = 0;
-//    bl = 0;
-//    while (address < eeprom_size)
-//    {
-//        CS_EEPROM = CS_LINE_DOWN;
-//        SPI1BUF = E_EEPROM_READ;
-//        while (SPI1STATbits.SPIBUSY);
-//        read = SPI1BUF;
-//
-//        SPI1BUF = (u8)(address >> 8);
-//        while (SPI1STATbits.SPIBUSY);
-//        read = SPI1BUF;
-//        SPI1BUF = (u8)(address);
-//        while (SPI1STATbits.SPIBUSY);
-//        read = SPI1BUF;
-//
-//        count = 0;
-//        while (count < SD_BLOCK_SIZE)
-//        {
-//            SPI1BUF = 0xFF;
-//            while (SPI1STATbits.SPIBUSY);
-//            SD_write_buf[count++] = SPI1BUF;
-//        }
-//        CS_EEPROM = CS_LINE_UP;
-//        address += SD_BLOCK_SIZE;
-//        if ((sd_errcode = SD_card_write_block(bl++, NULL)) != SD_WRITE_NO_ERROR)
-//            return ;
-//    }
-//}
-
 void    copy_SD_to_EEPROM(void)
 {
     if (SPI_SDCARD_write_request == 0)
     {
         sd_to_eeprom_address = 0;
+        eeprom_address_start = 0;
         SD_card_read_block(SD_to_eeprom_block++, &cb_copy_sd_to_eeprom_after_sd_read);
     }
 }
 
 void    gpio_init_SD_card(void)
 {
-//    CTMUCONbits.ON = 0;
     SD_PRESENCE_GPIO = GPIO_INPUT;
-//    SD_PRESENCE_GPIO = GPIO_OUTPUT;
-//    LATAbits.LATA4 = 1;
 }

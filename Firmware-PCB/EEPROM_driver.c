@@ -121,7 +121,6 @@ void    initial_eeprom_download(void)
         CS_EEPROM = CS_LINE_UP;
     }
     memcpy(cur_active_pattern, active_patterns_array[cur_instrument][cur_pattern], pattern_size);
-    request_template(TEMPLATE_DEFAULT);
     update_leds_base_case();
 }
 
@@ -142,6 +141,7 @@ void    cb_save_cur_pattern_to_eeprom(void)
         eeprom_write_size = 0;
         eeprom_write_index = 0;
         SPI_eeprom_write_request = 0;
+        eeprom_address_start = 0;
         request_template(TEMPLATE_PATTERN_RECORDED);
     }
     else
@@ -466,6 +466,8 @@ void    cb_copy_sd_to_eeprom_after_eeprom_write(void)
         if (sd_to_eeprom_address >= eeprom_size)
         {
             sd_to_eeprom_address = 0;
+            SD_to_eeprom_block = 0;
+            initial_eeprom_download();
             request_template(TEMPLATE_LOADING_SUCCESSFUL);
             loading_percentage = 0;
         }

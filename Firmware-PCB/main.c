@@ -20,6 +20,7 @@ int main(void)
     UART1_init();
     no_notes_everywhere();
     initial_eeprom_download();
+    request_template(TEMPLATE_DEFAULT);
 
     INT_init();
     HT16_init();
