@@ -16,7 +16,7 @@ u8 SPI_SDCARD_read_request = 0;
 u8 SPI_SDCARD_write_request = 0;
 u8  SD_read_buf[SD_BLOCK_SIZE] = { 0 };
 u16 SD_read_buf_index = 0;
-u8  SD_write_buf[SD_BLOCK_SIZE] = "lorem ipsum";
+u8  SD_write_buf[SD_BLOCK_SIZE] = { 0 };
 u16 SD_write_buf_index = 0;
 u32 SD_to_eeprom_block = 0;
 size_t sd_to_eeprom_address = 0;
@@ -121,6 +121,16 @@ void    SD_card_read_state_machine(void)
 {
     u8  read8;
     u32 read32;
+
+    if (!SD_IS_PRESENT)
+    {
+        read8 = SPI1BUF;
+        SPI1_state = E_SPI1_DONE;
+        SD_read_buf_index = 0;
+        SPI_SDCARD_read_request = 0;
+        request_template(TEMPLATE_SD_ERROR);
+        CS_SD = CS_LINE_UP;
+    }
 
     switch (SPI1_state)
     {
@@ -266,6 +276,16 @@ void    SD_card_write_state_machine(void)
 {
     u8  read8;
     u32 read32;
+
+    if (!SD_IS_PRESENT)
+    {
+        read8 = SPI1BUF;
+        SD_write_buf_index = 0;
+        SPI_SDCARD_write_request = 0;
+        SPI1_state = E_SPI1_DONE;
+        request_template(TEMPLATE_SD_ERROR);
+        CS_SD = CS_LINE_UP;
+    }
 
     switch (SPI1_state)
     {
