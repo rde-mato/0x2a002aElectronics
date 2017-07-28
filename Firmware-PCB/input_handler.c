@@ -234,6 +234,8 @@ void	encoders_handler(u8 event_type, u8 event_source)
 
 void	main_encoder_handler(u8 event_type)
 {
+    static u8   prev_turn_direction = E_ENCODER_NO_DIRECTION;
+    
     menu_items_count = 0;
     if (SD_IS_PRESENT && !SD_initialzed)
     {
@@ -304,7 +306,7 @@ void	main_encoder_handler(u8 event_type)
             }
             break;
         case E_ENCODER_TURNED_RIGHT:
-            if(tap_pressed)
+             if(tap_pressed)
             {
                 T3CONbits.ON = 0;
                 tap_index = 0;
@@ -318,10 +320,13 @@ void	main_encoder_handler(u8 event_type)
             }
             else
             {
-                if (default_template == TEMPLATE_MAIN_MENU)
+                if (prev_turn_direction != E_ENCODER_TURNED_RIGHT)
+                    prev_turn_direction = E_ENCODER_TURNED_RIGHT;
+                else if (default_template == TEMPLATE_MAIN_MENU)
                 {
                     if (menu_item_highlighted < menu_items_count - 1)
                         menu_item_highlighted++;
+                    prev_turn_direction = E_ENCODER_NO_DIRECTION;
                     request_template(TEMPLATE_MAIN_MENU);
                 }
             }
@@ -341,10 +346,13 @@ void	main_encoder_handler(u8 event_type)
             }
             else
             {
-                if (default_template == TEMPLATE_MAIN_MENU)
+                if (prev_turn_direction != E_ENCODER_TURNED_LEFT)
+                    prev_turn_direction = E_ENCODER_TURNED_LEFT;
+                else if (default_template == TEMPLATE_MAIN_MENU)
                 {
                     if (menu_item_highlighted > 0)
                         menu_item_highlighted--;
+                    prev_turn_direction = E_ENCODER_NO_DIRECTION;
                     request_template(TEMPLATE_MAIN_MENU);
                 }
             }
