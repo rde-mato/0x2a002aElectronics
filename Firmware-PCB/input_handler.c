@@ -24,7 +24,6 @@ u8          active_instrument[PATTERNS_PER_INSTRUMENT][QTIME_PER_PATTERN][NOTES_
 u16         active_instruments_u16 = 1;
 u8          active_pattern_per_instrument[INSTRUMENTS_COUNT] = { 0 };
 u8          encoders_values[8] = { 0x0F };
-u8          encoders_scale[8] = { 16 };
 u8          encoders_dirty = 0x00;
 
 u8          next_instrument = 0;
@@ -204,7 +203,8 @@ void	encoders_handler(u8 event_type, u8 event_source)
                     encoders_values[cur_encoder]++;
                 if (encoders_values[cur_encoder] & 0x01)
                 {
-                    encoders_dirty |= 1 << cur_encoder;
+                    //encoders_dirty |= 1 << cur_encoder; Entraine des problemes d affichage.
+                    midi_control_change(0x00, encoder_midi_cc[cur_encoder], encoders_values[cur_encoder] / 2);
                     request_template(TEMPLATE_ENCODER);
                 }
             }
@@ -220,7 +220,8 @@ void	encoders_handler(u8 event_type, u8 event_source)
                     encoders_values[cur_encoder]--;
                 if (encoders_values[cur_encoder] & 0x01)
                 {
-                    encoders_dirty |= 1 << cur_encoder;
+                    //encoders_dirty |= 1 << cur_encoder; Entraine des problemes d affichage.
+                    midi_control_change(0x00, encoder_midi_cc[cur_encoder], encoders_values[cur_encoder] / 2);
                     request_template(TEMPLATE_ENCODER);
                 }
             }

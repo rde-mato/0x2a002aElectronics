@@ -41,7 +41,7 @@ int main(void)
     {
         I2C1_manager();
         SPI1_manager();
-        sequencer_manager();
+//        sequencer_manager();
         CLEAR_WATCHDOG;
     }
     return (0);
