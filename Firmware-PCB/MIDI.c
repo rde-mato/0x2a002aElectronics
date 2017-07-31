@@ -1,5 +1,7 @@
 #include "0x2a002a.h"
 
+extern midi_callback midi_send;
+
 //u8  running_status;
 
 /*
@@ -10,9 +12,12 @@
 */
 void midi_note_off(u8 channel, u8 note, u8 velocity)
 {
-    u8  status;
-    
-    status = E_MS_NOTE_OFF | channel;
+    u8  buf[3];
+    u8  len = 0;
+
+    buf[len++] = E_MS_NOTE_OFF | channel;
+    buf[len++] = note;
+    buf[len++] = velocity;
 //    if (velocity == 0 && running_status == E_MS_NOTE_ON | channel)
 //        ;
 //    else if (status != running_status)
@@ -22,7 +27,7 @@ void midi_note_off(u8 channel, u8 note, u8 velocity)
 //    }
 //    UART1_send(note);
 //    UART1_send(velocity);
-    UART1_send_3(status, note, velocity);
+    UART1_push(buf, len);
 }
 
 /*
@@ -34,9 +39,13 @@ void midi_note_off(u8 channel, u8 note, u8 velocity)
 
 void midi_note_on(u8 channel, u8 note, u8 velocity)
 {
-    u8 status;
+    u8 buf[3];
+    u8 len = 0;
 
-    status = E_MS_NOTE_ON | channel;
+
+    buf[len++] = E_MS_NOTE_ON | channel;
+    buf[len++] = note;
+    buf[len++] = velocity;
 //    if (status != running_status)
 //    {
 //        UART1_send(status);
@@ -44,7 +53,7 @@ void midi_note_on(u8 channel, u8 note, u8 velocity)
 //    }
 //    UART1_send(note);
 //    UART1_send(velocity);
-    UART1_send_3(status, note, velocity);
+    UART1_push(buf, len);
 }
 
 /*
@@ -66,9 +75,12 @@ void midi_polyphonic_key_pressure(u8 channel, u8 note, u8 value)
 */
 void midi_control_change(u8 channel, u8 control, u8 value)
 {
-    u8 status;
+    u8 buf[3];
+    u8 len = 0;
 
-    status = E_MS_CONTROL_CHANGE | channel;
+    buf[len++] = E_MS_CONTROL_CHANGE | channel;
+    buf[len++] = control;
+    buf[len++] = value;
 //    if (status != running_status)
 //    {
 //        UART1_send(status);
@@ -76,7 +88,7 @@ void midi_control_change(u8 channel, u8 control, u8 value)
 //    }
 //    UART1_send(control);
 //    UART1_send(value);
-    UART1_send_3(status, control, value);
+    UART1_push(buf, len);
 }
 
 /*

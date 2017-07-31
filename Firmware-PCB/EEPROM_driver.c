@@ -3,11 +3,13 @@
 #include "0x2a002a.h"
 
 extern u8   SPI1_state;
+extern u8   next_instrument;
 extern u8   cur_instrument;
 extern u8   cur_pattern;
 extern u8   active_patterns_array[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 extern u8   cur_active_pattern[QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 extern u8   active_instrument[PATTERNS_PER_INSTRUMENT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
+extern u8   active_pattern_per_instrument[INSTRUMENTS_COUNT];
 extern u8   current_mode;
 
 u8          SPI_eeprom_write_request = 0;
@@ -124,15 +126,16 @@ void    save_cur_pattern_to_eeprom(void)
     SPI_eeprom_write_request = 1;
 }
 
-void    load_cur_instrument_from_eeprom(void)
+void    load_next_instrument_from_eeprom(void)
 {
-    eeprom_address = cur_instrument * instrument_size;
+    eeprom_address = next_instrument * instrument_size;
     SPI_eeprom_read_request = 1;
 }
 
 void    active_instrument_init(void)
 {
-    load_cur_instrument_from_eeprom();
+    next_instrument = cur_instrument;
+    load_next_instrument_from_eeprom();
 }
 
 void    eeprom_state_machine_write_callback(void)
@@ -329,7 +332,11 @@ void	eeprom_state_machine_read(void)
             SPI1_state = E_SPI1_DONE;
             eeprom_read_index = 0;
             SPI_eeprom_read_request = 0;
+            cur_instrument = next_instrument;
             memcpy(cur_active_pattern, active_instrument[cur_pattern], pattern_size);
+            midi_control_change(cur_instrument, MCMM_ALL_NOTES_OFF, 0x00); // this can be enhanced
+            cur_pattern = active_pattern_per_instrument[cur_instrument];
+
             request_template(TEMPLATE_INSTRUMENT);
             current_mode = E_MODE_PATTERN;
             update_leds_base_case();

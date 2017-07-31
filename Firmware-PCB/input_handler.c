@@ -25,7 +25,9 @@ u16         active_instruments_u16 = 1;
 u8          active_pattern_per_instrument[INSTRUMENTS_COUNT] = { 0 };
 u8          encoders_values[8] = { 0x0F };
 u8          encoders_scale[8] = { 16 };
+u8          encoders_dirty = 0x00;
 
+u8          next_instrument = 0;
 u8          cur_instrument = 0;
 u8          cur_pattern = 0;
 u8          cur_note = 36;
@@ -78,6 +80,7 @@ void	keys_handler(u8 event_type, u8 event_source)
             {
                 case E_KEY_PRESSED:
                     cur_pattern = event_source;
+                    qtime_generate_note_off(cur_instrument, cur_active_pattern[qtime - 1], active_instrument[cur_pattern][qtime]);
                     update_after_pattern_change();
                     request_template(TEMPLATE_PATTERN);
                     current_mode = E_MODE_PATTERN;
@@ -154,7 +157,9 @@ void	keys_handler(u8 event_type, u8 event_source)
             switch (event_type)
             {
                     case E_KEY_PRESSED:
-                        active_instruments_u16 ^= (1 << event_source); //TODO: restreindre l event source.
+                        active_instruments_u16 ^= (1 << event_source);
+                        if (!(active_instruments_u16 & (1 << event_source)))
+                            midi_control_change(event_source, MCMM_ALL_NOTES_OFF, 0x00);
                         update_leds_base_case();
                         break;
                     case E_KEY_RELEASED:
@@ -169,9 +174,8 @@ void	keys_handler(u8 event_type, u8 event_source)
             switch (event_type)
             {
                     case E_KEY_PRESSED:
-                        cur_instrument = event_source;
-                        cur_pattern = active_pattern_per_instrument[cur_instrument];
-                        load_cur_instrument_from_eeprom();
+                        next_instrument = event_source;
+                        load_next_instrument_from_eeprom();
                         break;
                     case E_KEY_RELEASED:
                         break;
@@ -200,7 +204,7 @@ void	encoders_handler(u8 event_type, u8 event_source)
                     encoders_values[cur_encoder]++;
                 if (encoders_values[cur_encoder] & 0x01)
                 {
-                    midi_control_change(0x00, encoder_midi_cc[cur_encoder], encoders_values[cur_encoder] / 2);
+                    encoders_dirty |= 1 << cur_encoder;
                     request_template(TEMPLATE_ENCODER);
                 }
             }
@@ -216,7 +220,7 @@ void	encoders_handler(u8 event_type, u8 event_source)
                     encoders_values[cur_encoder]--;
                 if (encoders_values[cur_encoder] & 0x01)
                 {
-                    midi_control_change(0x00, encoder_midi_cc[cur_encoder], encoders_values[cur_encoder] / 2);
+                    encoders_dirty |= 1 << cur_encoder;
                     request_template(TEMPLATE_ENCODER);
                 }
             }
@@ -365,12 +369,16 @@ void	main_encoder_handler(u8 event_type)
 
 void	button_play_handler(u8 event_type)
 {
+    u8 i;
+
     switch (event_type)
     {
         case E_KEY_PRESSED:
             playing = !playing;
+            for (i = 0; i < INSTRUMENTS_COUNT; i++)
+                midi_control_change(i, MCMM_ALL_NOTES_OFF, 0x00);
             update_leds_base_case();
-                break;
+            break;
         case E_KEY_RELEASED:
                 break;
         case E_KEY_LONG_PRESSED:
