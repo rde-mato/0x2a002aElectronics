@@ -7,6 +7,11 @@ u8                UART1_buf_index = 0;
 u8                UART1_buf_len = 0;
 generic_callback  UART1_idle_callback = NULL;
 
+inline u8   UART1_is_idle(void)
+{
+    return (UART1_buf_len == 0);
+}
+
 void UART1_init(void)
 {
     U1MODE = 0;

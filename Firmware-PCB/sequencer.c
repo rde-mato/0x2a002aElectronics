@@ -12,6 +12,27 @@ extern u8       pattern_mode;
 extern u8	active_patterns_array[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 extern u8       cur_active_pattern[QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 extern u8       playing;
+extern u8       encoders_dirty;
+extern u8       encoder_midi_cc[8];
+extern u8       encoders_values[8];
+
+void    sequencer_manager(void)
+{
+    u8  i;
+
+    if (UART1_is_idle())
+    {
+        if (encoders_dirty)
+        {
+            for (i = 0; i < 8; i++)
+            {
+                if (encoders_dirty & (1 << i))
+                    midi_control_change(0x00, encoder_midi_cc[i], encoders_values[i] / 2);
+            }
+            encoders_dirty = 0;
+        }
+    }
+}
 
 void    qtime_generate_note_off(u8 instrument, u8 last_qt[][ATTRIBUTES_PER_NOTE], u8 new_qt[][ATTRIBUTES_PER_NOTE])
 {
