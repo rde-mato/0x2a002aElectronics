@@ -80,6 +80,7 @@ void	keys_handler(u8 event_type, u8 event_source)
             {
                 case E_KEY_PRESSED:
                     cur_pattern = event_source;
+                    qtime_generate_note_off(cur_instrument, cur_active_pattern[qtime - 1], active_instrument[cur_pattern][qtime]);
                     update_after_pattern_change();
                     request_template(TEMPLATE_PATTERN);
                     current_mode = E_MODE_PATTERN;
