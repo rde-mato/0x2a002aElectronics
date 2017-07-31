@@ -27,6 +27,7 @@ u8          encoders_values[8] = { 0x0F };
 u8          encoders_scale[8] = { 16 };
 u8          encoders_dirty = 0x00;
 
+u8          next_instrument = 0;
 u8          cur_instrument = 0;
 u8          cur_pattern = 0;
 u8          cur_note = 36;
@@ -172,9 +173,8 @@ void	keys_handler(u8 event_type, u8 event_source)
             switch (event_type)
             {
                     case E_KEY_PRESSED:
-                        cur_instrument = event_source;
-                        cur_pattern = active_pattern_per_instrument[cur_instrument];
-                        load_cur_instrument_from_eeprom();
+                        next_instrument = event_source;
+                        load_next_instrument_from_eeprom();
                         break;
                     case E_KEY_RELEASED:
                         break;
