@@ -9,6 +9,7 @@ extern u8       cur_instrument;
 extern u8       current_mode;
 extern u32      leds_base_case;
 extern u8       pattern_mode;
+extern u16      active_instruments_u16;
 extern u8	active_patterns_array[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 extern u8       cur_active_pattern[QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 extern u8       playing;
@@ -106,17 +107,23 @@ void __ISR(_TIMER_2_VECTOR, IPL7AUTO) Timer2QTime(void)
     {
         for (i = 0; i < INSTRUMENTS_COUNT; i++)
         {
-            if (i == cur_instrument)
-                qtime_generate_note_off(cur_instrument, cur_active_pattern[(qtime - 1) & 0xF], cur_active_pattern[qtime]);
-            else
-                qtime_generate_note_off(i, active_patterns_array[i][(qtime - 1) & 0xF], active_patterns_array[i][qtime]);
+            if (active_instruments_u16 & (1 << i))
+            {
+                if (i == cur_instrument)
+                    qtime_generate_note_off(cur_instrument, cur_active_pattern[(qtime - 1) & 0xF], cur_active_pattern[qtime]);
+                else
+                    qtime_generate_note_off(i, active_patterns_array[i][(qtime - 1) & 0xF], active_patterns_array[i][qtime]);
+            }
         }
         for (i = 0; i < INSTRUMENTS_COUNT; i++)
         {
-            if (i == cur_instrument)
-                qtime_generate_note_on(cur_instrument, cur_active_pattern[qtime]);
-            else
-                qtime_generate_note_on(i, active_patterns_array[i][qtime]);
+            if (active_instruments_u16 & (1 << i))
+            {
+                if (i == cur_instrument)
+                    qtime_generate_note_on(cur_instrument, cur_active_pattern[qtime]);
+                else
+                    qtime_generate_note_on(i, active_patterns_array[i][qtime]);
+            }
         }
 
         if (current_mode == E_MODE_KEYBOARD)
