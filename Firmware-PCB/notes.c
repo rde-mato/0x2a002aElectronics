@@ -1,5 +1,3 @@
-#include <xc.h>
-#include <sys/attribs.h>
 #include "0x2a002a.h"
 
 extern u8          cur_active_pattern[QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];

@@ -1,4 +1,3 @@
-#include <xc.h>
 #include "0x2a002a.h"
 
 extern u32     current_leds_on;

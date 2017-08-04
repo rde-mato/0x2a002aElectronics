@@ -1,19 +1,26 @@
 #ifndef I2C_H
 #define	I2C_H
 
-#define I2C1_READY		(I2C1_state == E_I2C1_DONE)
-#define I2C1_INT_FLAG_CLR	IFS1CLR = (1 << 12)
-#define I2C1_PIN_GPIO		TRISBbits.TRISB8
-#define I2C1_PIN_LATCH 		LATBbits.LATB8
-#define I2C1_INT_PRIORITY	IPC8bits.I2C1IP
-#define I2C1_INT_ENABLE		IEC1bits.I2C1MIE
-#define I2C1_RW_READ		0
-#define I2C1_RW_WRITE		1
-#define I2C1_ACK		0
-#define I2C1_NACK		1
+#ifndef SIMULATION
+# define I2C1_READY		(I2C1_state == E_I2C1_DONE)
+# define I2C1_INT_FLAG_CLR	IFS1CLR = (1 << 12)
+# define I2C1_SET_PIN_GPIO(x)		TRISBbits.TRISB8 = x
+# define I2C1_GET_PIN_GPIO		TRISBbits.TRISB8
+# define I2C1_SET_PIN_LATCH(x) 		LATBbits.LATB8 = x
+# define I2C1_GET_PIN_LATCH 		LATBbits.LATB8
+# define I2C1_INT_PRIORITY	IPC8bits.I2C1IP
+# define I2C1_SET_INT_ENABLE(x)		IEC1bits.I2C1MIE = x
 
-#define I2C1_WRITE_BUF_SIZE     10
-#define I2C1_READ_BUF_SIZE      10
+# define I2C1_RW_READ		0
+# define I2C1_RW_WRITE		1
+# define I2C1_ACK		0
+# define I2C1_NACK		1
+
+# define I2C1_WRITE_BUF_SIZE     10
+# define I2C1_READ_BUF_SIZE      10
+#else
+# include "simulation.h"
+#endif
 
 enum E_I2C1_STATE {
     E_I2C1_DONE = 0,

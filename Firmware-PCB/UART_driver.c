@@ -1,5 +1,3 @@
-#include <xc.h>
-#include <sys/attribs.h>
 #include "0x2a002a.h"
 
 u8                UART1_buf[0x100];

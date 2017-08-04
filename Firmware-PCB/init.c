@@ -1,4 +1,3 @@
-#include <xc.h>
 #include "0x2a002a.h"
 
 void GPIO_and_PPS_init(void)

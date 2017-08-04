@@ -1,5 +1,3 @@
-#include <xc.h>
-#include <sys/attribs.h>
 #include "0x2a002a.h"
 
 extern u8   SPI_eeprom_write_request;

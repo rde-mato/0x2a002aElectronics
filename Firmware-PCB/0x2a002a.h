@@ -1,41 +1,12 @@
 #ifndef OX2A002A_H
 #define	OX2A002A_H
 
-# include "UART.h"
-# include "I2C.h"
-# include "SPI.h"
-
-# include "HT16.h"
-# include "ENCODERS.h"
-# include "LCD.h"
-# include "EEPROM.h"
-# include "SDCARD.h"
-
-# include "MIDI.h"
-
-typedef signed char             s8;
-typedef signed short            s16;
-typedef signed long             s32;
-typedef unsigned char           u8;
-typedef unsigned short          u16;
-typedef unsigned long           u32;
-typedef void                    (* generic_callback)(void);
-
-//extern u16                      __g_qbeat_pr;
-
-//#define GET_BPM() ((((float)FREQUENCY / 256) * 15) / __g_qbeat_pr)
-////#define GET_BPM() ((((float)FREQUENCY / (float)__g_qbeat_pr) * 15) / 256)
-#define IS_NOTE_ATTACK(x)     (!(IS_NOTE_CONTINUOUS(x)))
-#define IS_NOTE_CONTINUOUS(x)       (x & E_NOTE_CONTINUOUS)
-#define NOTE_VALUE(x)           (x & 0x7F)
-
 #define FREQUENCY		(8000000ul)
 #define ONE_MILLISECOND         FREQUENCY / 1000
 #define BUTTON_POLL_DELAY_MS	50
 #define BUTTON_POLLS_PER_SECOND	20
 #define SCREEN_DURATION_MS	1000
 #define INITIAL_BPM_x100        14200
-#define CLEAR_WATCHDOG          WDTCONbits.WDTCLR = 1
 
 #define INSTRUMENTS_COUNT       16
 #define PATTERNS_PER_INSTRUMENT 16
@@ -81,68 +52,121 @@ typedef void                    (* generic_callback)(void);
 #define PPS_MCP_ENC_B		INT3R = 0b0010
 #define MCP_ENC_B_ANALOG	ANSELBbits.ANSB1
 
+#ifndef SIMULATION
+
+# include "xc.h"
+# include <sys/attribs.h>
+# define CLEAR_WATCHDOG          WDTCONbits.WDTCLR = 1
+
 //TIMERS
-#define TIMER_A_PRESCALE_64       0b10
-#define TIMER_A_PRESCALE_256      0b11
-#define TIMER_B_PRESCALE_1        0b000
-#define TIMER_B_PRESCALE_2        0b001
-#define TIMER_B_PRESCALE_4        0b010
-#define TIMER_B_PRESCALE_8        0b011
-#define TIMER_B_PRESCALE_16       0b100
-#define TIMER_B_PRESCALE_32       0b101
-#define TIMER_B_PRESCALE_64       0b110
-#define TIMER_B_PRESCALE_256      0b111
+# define TIMER_A_PRESCALE_64       0b10
+# define TIMER_A_PRESCALE_256      0b11
+# define TIMER_B_PRESCALE_1        0b000
+# define TIMER_B_PRESCALE_2        0b001
+# define TIMER_B_PRESCALE_4        0b010
+# define TIMER_B_PRESCALE_8        0b011
+# define TIMER_B_PRESCALE_16       0b100
+# define TIMER_B_PRESCALE_32       0b101
+# define TIMER_B_PRESCALE_64       0b110
+# define TIMER_B_PRESCALE_256      0b111
 
 // timer 1 used for long press management
-#define TIMER1_STOP_AND_RESET	T1CON = 0
-#define TIMER1_VALUE		TMR1
-#define TIMER1_PRESCALE         T1CONbits.TCKPS
-#define TIMER1_ON              T1CONbits.ON = 1
-#define LONG_PRESS_DONE         0xFFFFFFFF
+# define TIMER1_STOP_AND_RESET	T1CON = 0
+# define TIMER1_SET_VALUE(x)    TMR1 = x
+# define TIMER1_GET_VALUE	      TMR1
+# define TIMER1_GET_PRESCALE    T1CONbits.TCKPS
+# define TIMER1_SET_PRESCALE(x) T1CONbits.TCKPS = x
+# define TIMER1_ON              T1CONbits.ON = 1
+# define LONG_PRESS_DONE         0xFFFFFFFF
 
 // timer 2 used for pattern management and blinking during pause
-#define TIMER2_STOP_AND_RESET	T2CON = 0
-#define TIMER2_VALUE		TMR2
-#define TIMER2_PERIOD           PR2
-#define TIMER2_PRESCALE         T2CONbits.TCKPS
-#define TIMER2_INT_FLAG_CLR     IFS0CLR = (1 << 9)
-#define TIMER2_INT_PRIORITY     IPC2bits.T2IP
-#define TIMER2_INT_ENABLE	IEC0bits.T2IE
-#define TIMER2_ON              T2CONbits.ON = 1
+# define TIMER2_STOP_AND_RESET	T2CON = 0
+# define TIMER2_SET_VALUE(x)		TMR2 = x
+# define TIMER2_GET_VALUE		    TMR2
+# define TIMER2_SET_PERIOD(x)   PR2 = x
+# define TIMER2_GET_PERIOD      PR2
+# define TIMER2_SET_PRESCALE(x) T2CONbits.TCKPS = x
+# define TIMER2_GET_PRESCALE    T2CONbits.TCKPS
+# define TIMER2_INT_FLAG_CLR    IFS0CLR = (1 << 9)
+# define TIMER2_INT_PRIORITY    IPC2bits.T2IP
+# define TIMER2_SET_INT_ENABLE(x)	IEC0bits.T2IE = x
+# define TIMER2_ON              T2CONbits.ON = 1
 
 // timer 3 used for bpm button
-#define TIMER3_STOP_AND_RESET   T3CON = 0
-#define TIMER3_VALUE            TMR3
-#define TIMER3_PERIOD           PR3
-#define TIMER3_PRESCALE         T3CONbits.TCKPS
-#define TIMER3_INT_FLAG_CLR     IFS0CLR = (1 << 14)
-#define TIMER3_INT_PRIORITY     IPC3bits.T3IP
-#define TIMER3_INT_ENABLE       IEC0bits.T3IE
+# define TIMER3_STOP_AND_RESET   T3CON = 0
+# define TIMER3_SET_VALUE(x)     TMR3
+# define TIMER3_GET_VALUE        TMR3
+# define TIMER3_SET_PERIOD(x)    PR3
+# define TIMER3_GET_PERIOD       PR3
+# define TIMER3_SET_PRESCALE(x)  T3CONbits.TCKPS
+# define TIMER3_GET_PRESCALE     T3CONbits.TCKPS
+# define TIMER3_INT_FLAG_CLR     IFS0CLR = (1 << 14)
+# define TIMER3_INT_PRIORITY     IPC3bits.T3IP
+# define TIMER3_SET_INT_ENABLE(x) IEC0bits.T3IE = x
+# define TIMER3_IS_ON            T3CONbits.ON
+# define TIMER3_ON               T3CONbits.ON = 1
+# define TIMER3_OFF              T3CONbits.ON = 1
 
 // timer 4 used for callback timer : duration of templates, EEPROM write etc
-#define TIMER4_BUF_SIZE         10
-#define TIMER4_STOP_AND_RESET	T4CON = 0
-#define TIMER4_VALUE		TMR4
-#define TIMER4_PERIOD		PR4
-#define TIMER4_PRESCALE		T4CONbits.TCKPS
-#define TIMER4_INT_FLAG_CLR	IFS0CLR = (1 << 19)
-#define TIMER4_INT_PRIORITY	IPC4bits.T4IP
-#define TIMER4_INT_ENABLE	IEC0bits.T4IE
-#define TIMER4_IS_ON            T4CONbits.ON == 1
-#define TIMER4_ON               T4CONbits.ON = 1
-#define TIMER4_OFF              T4CONbits.ON = 0
+# define TIMER4_BUF_SIZE         10
+# define TIMER4_STOP_AND_RESET	 T4CON = 0
+# define TIMER4_SET_VALUE(x)	 	 TMR4
+# define TIMER4_GET_VALUE		     TMR4
+# define TIMER4_SET_PERIOD(x)	 	 PR4
+# define TIMER4_GET_PERIOD		   PR4
+# define TIMER4_SET_PRESCALE(x)	 T4CONbits.TCKPS
+# define TIMER4_GET_PRESCALE		 T4CONbits.TCKPS
+# define TIMER4_INT_FLAG_CLR	   IFS0CLR = (1 << 19)
+# define TIMER4_INT_PRIORITY	   IPC4bits.T4IP
+# define TIMER4_SET_INT_ENABLE(x)	IEC0bits.T4IE = x
+# define TIMER4_IS_ON            T4CONbits.ON == 1
+# define TIMER4_ON               T4CONbits.ON = 1
+# define TIMER4_OFF              T4CONbits.ON = 0
 
 // timer 5 used for key press management
-#define TIMER5_STOP_AND_RESET	T5CON = 0
-#define TIMER5_VALUE		TMR5
-#define TIMER5_PERIOD		PR5
-#define TIMER5_PRESCALE		T5CONbits.TCKPS
-#define TIMER5_INT_FLAG_CLR	IFS0CLR = (1 << 24)
-#define TIMER5_INT_PRIORITY	IPC5bits.T5IP
-#define TIMER5_INT_ENABLE	IEC0bits.T5IE
-#define TIMER5_ON              T5CONbits.ON = 1
-#define TIMER5_OFF              T5CONbits.ON = 0
+# define TIMER5_STOP_AND_RESET	 T5CON = 0
+# define TIMER5_SET_VALUE(x)		 TMR5 = x
+# define TIMER5_GET_VALUE		     TMR5
+# define TIMER5_SET_PERIOD(x)		 PR5 = x
+# define TIMER5_PERIOD		       PR5
+# define TIMER5_SET_PRESCALE(x)  T5CONbits.TCKPS = x
+# define TIMER5_GET_PRESCALE		 T5CONbits.TCKPS
+# define TIMER5_INT_FLAG_CLR	   IFS0CLR = (1 << 24)
+# define TIMER5_INT_PRIORITY	   IPC5bits.T5IP
+# define TIMER5_SET_INT_ENABLE(x)	IEC0bits.T5IE = x
+# define TIMER5_ON               T5CONbits.ON = 1
+# define TIMER5_OFF              T5CONbits.ON = 0
 
+#else
+
+# include "simulation.h"
+
+#endif
+
+# include "UART.h"
+# include "I2C.h"
+# include "SPI.h"
+
+# include "HT16.h"
+# include "ENCODERS.h"
+# include "LCD.h"
+# include "EEPROM.h"
+# include "SDCARD.h"
+
+# include "MIDI.h"
+
+typedef signed char             s8;
+typedef signed short            s16;
+typedef signed long             s32;
+typedef unsigned char           u8;
+typedef unsigned short          u16;
+typedef unsigned long           u32;
+typedef void                    (* generic_callback)(void);
+
+
+#define IS_NOTE_ATTACK(x)     (!(IS_NOTE_CONTINUOUS(x)))
+#define IS_NOTE_CONTINUOUS(x)       (x & E_NOTE_CONTINUOUS)
+#define NOTE_VALUE(x)           (x & 0x7F)
 
 enum E_NOTE_ATTRS
 {

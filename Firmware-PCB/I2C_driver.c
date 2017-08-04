@@ -1,5 +1,3 @@
-#include <xc.h>
-#include <sys/attribs.h>
 #include "0x2a002a.h"
 
 extern u8               HT16_write_leds_request;
