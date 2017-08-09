@@ -12,6 +12,7 @@ extern u32  bpm_x100;
 extern u32  current_leds_on;
 extern u32  current_key_scan;
 extern u8   keysnotes[16];
+u8          SD_initialzed = 0;
 u8          edit_pressed = 0;
 u8          tap_pressed = 0;
 u8          cue_pressed = 0;
@@ -26,7 +27,6 @@ u8          active_pattern_per_instrument[INSTRUMENTS_COUNT] = { 0 };
 u8          encoders_values[8] = { 0x0F };
 u8          encoders_dirty = 0x00;
 
-u8          next_instrument = 0;
 u8          cur_instrument = 0;
 u8          cur_pattern = 0;
 u8          cur_note = 36;
@@ -173,8 +173,9 @@ void	keys_handler(u8 event_type, u8 event_source)
             switch (event_type)
             {
                     case E_KEY_PRESSED:
-                        next_instrument = event_source;
-                        load_next_instrument_from_eeprom();
+                        midi_control_change(cur_instrument, MCMM_ALL_NOTES_OFF, 0x00); // this can be enhanced
+                        cur_instrument = event_source;
+                        load_cur_instrument_from_eeprom();
                         break;
                     case E_KEY_RELEASED:
                         break;
@@ -237,15 +238,21 @@ void	encoders_handler(u8 event_type, u8 event_source)
 
 void	main_encoder_handler(u8 event_type)
 {
-//    static u8 truc = 0;
     static u8   prev_turn_direction = E_ENCODER_NO_DIRECTION;
-
+    
     menu_items_count = 0;
+    if (SD_IS_PRESENT && !SD_initialzed)
+    {
+        SD_card_init();
+        SD_initialzed = 1;
+    }
+    else if (!SD_IS_PRESENT && SD_initialzed)
+        SD_initialzed = 0;
     if (pattern_in_pastebin)
         menu_items[menu_items_count++] = E_MENU_ITEMS_PASTE_PATTERN;
     menu_items[menu_items_count++] = E_MENU_ITEMS_COPY_PATTERN;
 
-    if (1) // if (SD_IS_PRESENT)
+    if (SD_IS_PRESENT)
     {
         menu_items[menu_items_count++] = E_MENU_ITEMS_LOAD_FROM_SD;
         menu_items[menu_items_count++] = E_MENU_ITEMS_LOAD_TO_SD;
@@ -265,52 +272,45 @@ void	main_encoder_handler(u8 event_type)
             }
             else if (default_template == TEMPLATE_MAIN_MENU)
             {
+                default_template = TEMPLATE_DEFAULT;
                 if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_EXIT)
                 {
-                    default_template = TEMPLATE_DEFAULT;
                     request_template(TEMPLATE_DEFAULT);
                 }
                 else if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_LOAD_TO_SD)
                 {
                     playing = MUSIC_PAUSE;
-                    request_template(TEMPLATE_LOADING_STARTED);
+                    request_template(TEMPLATE_LOADING_IN_PROGRESS);
                     copy_EEPROM_to_SD();
-                    default_template = TEMPLATE_DEFAULT;
-                    request_template(TEMPLATE_LOADING_SUCCESSFUL);
                 }
                 else if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_LOAD_FROM_SD)
                 {
                     playing = MUSIC_PAUSE;
-                    request_template(TEMPLATE_LOADING_STARTED);
+                    request_template(TEMPLATE_LOADING_IN_PROGRESS);
                     copy_SD_to_EEPROM();
-                    default_template = TEMPLATE_DEFAULT;
-                    request_template(TEMPLATE_LOADING_SUCCESSFUL);
                 }
                 else if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_PASTE_PATTERN)
                 {
                     memcpy(cur_active_pattern, pattern_pastebin, QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE);
                     update_leds_base_case();
-                    default_template = TEMPLATE_DEFAULT;
                     request_template(TEMPLATE_DEFAULT);
                 }
                 else if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_COPY_PATTERN)
                 {
                     pattern_in_pastebin = 1;
                     memcpy(pattern_pastebin, cur_active_pattern, QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE);
-                    default_template = TEMPLATE_DEFAULT;
                     request_template(TEMPLATE_DEFAULT);
                 }
                 else if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_CLEAR_EEPROM)
                 {
                     eeprom_chip_erase();
                     update_leds_base_case();
-                    default_template = TEMPLATE_DEFAULT;
                     request_template(TEMPLATE_CHIP_ERASED);
                 }
             }
             break;
         case E_ENCODER_TURNED_RIGHT:
-            if(tap_pressed)
+             if(tap_pressed)
             {
                 T3CONbits.ON = 0;
                 tap_index = 0;
@@ -328,9 +328,7 @@ void	main_encoder_handler(u8 event_type)
                     prev_turn_direction = E_ENCODER_TURNED_RIGHT;
                 else if (default_template == TEMPLATE_MAIN_MENU)
                 {
-                    if (menu_item_highlighted == menu_items_count - 1)
-                        menu_item_highlighted = 0;
-                    else
+                    if (menu_item_highlighted < menu_items_count - 1)
                         menu_item_highlighted++;
                     prev_turn_direction = E_ENCODER_NO_DIRECTION;
                     request_template(TEMPLATE_MAIN_MENU);
@@ -358,8 +356,6 @@ void	main_encoder_handler(u8 event_type)
                 {
                     if (menu_item_highlighted > 0)
                         menu_item_highlighted--;
-                    else
-                        menu_item_highlighted = menu_items_count - 1;
                     prev_turn_direction = E_ENCODER_NO_DIRECTION;
                     request_template(TEMPLATE_MAIN_MENU);
                 }

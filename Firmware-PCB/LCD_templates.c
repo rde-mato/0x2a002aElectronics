@@ -19,6 +19,7 @@ extern u8       encoders_values[];
 extern u8       encoders_scale[];
 extern const u8 notesnames[][3];
 extern u8	lcd_chars[8][21];
+extern u8       loading_percentage;
 u8              cur_template = TEMPLATE_DEFAULT;
 
 void    request_template(u8 template)
@@ -143,8 +144,8 @@ void    display_current_template(void)
                 snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "PATTERN RECORDED", 0);
                 snprintf(lines[3], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
                 break ;
-            case TEMPLATE_LOADING_STARTED:
-                snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "LOADING ...", 0);
+            case TEMPLATE_LOADING_IN_PROGRESS:
+                snprintf(s1, CHARS_PER_LINE + 1, "%10s %2d%%%20c", "LOADING :", loading_percentage, 0);
                 snprintf(lines[3], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
                 break ;
             case TEMPLATE_LOADING_SUCCESSFUL:
@@ -153,6 +154,10 @@ void    display_current_template(void)
                 break ;
             case TEMPLATE_CHIP_ERASED:
                 snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "MEMORY CLEARED", 0);
+                snprintf(lines[3], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
+                break ;
+            case TEMPLATE_SD_ERROR:
+                snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "SD CARD ERROR", 0);
                 snprintf(lines[3], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
                 break ;
 
@@ -165,7 +170,7 @@ void    display_current_template(void)
         }
         LCD_print_changed_chars();
     }
-    if (cur_template != default_template)
+    if (cur_template != default_template && cur_template != TEMPLATE_LOADING_IN_PROGRESS)
         timer4_push(1000, &LCD_back_to_default);
     previous = cur_template;
 }
