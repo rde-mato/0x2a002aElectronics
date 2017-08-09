@@ -175,7 +175,7 @@ void    cb_cur_instrument_from_eeprom(void)
     eeprom_read_index = 0;
     eeprom_read_size = 0;
     SPI_eeprom_read_request = 0;
-    memcpy(cur_active_pattern, active_instrument[cur_pattern], pattern_size);
+    //memcpy(cur_active_pattern, active_instrument[cur_pattern], pattern_size);
     request_template(TEMPLATE_INSTRUMENT);
     current_mode = E_MODE_PATTERN;
     update_leds_base_case();

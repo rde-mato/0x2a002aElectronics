@@ -173,7 +173,7 @@ void	keys_handler(u8 event_type, u8 event_source)
             switch (event_type)
             {
                     case E_KEY_PRESSED:
-                        midi_control_change(cur_instrument, MCMM_ALL_NOTES_OFF, 0x00); // this can be enhanced
+                        memcpy(cur_active_pattern, active_patterns_array[event_source], sizeof(cur_active_pattern));
                         cur_instrument = event_source;
                         load_cur_instrument_from_eeprom();
                         break;
