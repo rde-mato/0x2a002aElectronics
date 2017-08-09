@@ -9,8 +9,8 @@ u8   LCD_dirty = 0;
 
 u16  SPI_buf_LCD[LCD_BUF_MAX] = { 0 };
 u32  SPI_LCD_index = 0;
- u8	lcd_chars[8][21] = { ' ' };
- u8      lcd_changed_chars[8][21] = { 0 };
+u8	lcd_chars[8][21] = { ' ' };
+u8      lcd_changed_chars[8][21] = { 0 };
 u8      lcd_line_ptr = 0;
 u8      lcd_col_ptr = 1;
 u8      lcd_pos_ptr = 0;

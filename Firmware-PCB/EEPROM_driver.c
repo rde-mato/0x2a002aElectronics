@@ -3,11 +3,13 @@
 #include "0x2a002a.h"
 
 extern u8   SPI1_state;
+extern u8   next_instrument;
 extern u8   cur_instrument;
 extern u8   cur_pattern;
 extern u8   active_patterns_array[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 extern u8   cur_active_pattern[QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 extern u8   active_instrument[PATTERNS_PER_INSTRUMENT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
+extern u8   active_pattern_per_instrument[INSTRUMENTS_COUNT];
 extern u8   current_mode;
 extern u8  SD_read_buf[SD_BLOCK_SIZE];
 extern u32 SD_to_eeprom_block;

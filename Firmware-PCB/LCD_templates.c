@@ -17,21 +17,20 @@ extern u8       LCD_dirty;
 extern u8       cur_encoder;
 extern u8       encoders_values[];
 extern u8       encoders_scale[];
-extern const u8 *notesnames[];
+extern const u8 notesnames[][3];
 extern u8	lcd_chars[8][21];
 extern u8       loading_percentage;
 u8              cur_template = TEMPLATE_DEFAULT;
-
-
-void    LCD_back_to_default(void)
-{
-        request_template(default_template);
-}
 
 void    request_template(u8 template)
 {
     cur_template = template;
     LCD_dirty = 1;
+}
+
+void    LCD_back_to_default(void)
+{
+        request_template(default_template);
 }
 
 u8      *negate_string(u8 *str, u8 *dest)

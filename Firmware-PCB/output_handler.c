@@ -12,9 +12,6 @@ extern u8          active_instrument[PATTERNS_PER_INSTRUMENT][QTIME_PER_PATTERN]
 extern u8          qtime;
 extern u16         active_instruments_u16;
 extern u8          HT16_write_leds_request;
-extern u8          sequencer_notes[MAX_NOTES_PER_QTIME];
-extern u8          sequencer_velocities[MAX_NOTES_PER_QTIME];
-extern u8          sequencer_notes_count;
 extern u8          noteskeys[13];
 extern u8          playing;
 extern u8          cue_pressed;
@@ -73,6 +70,28 @@ void    display_LEDs(void)
     current_leds_on = to_display;
 }
 
+u32     keyboard_get_playing_notes(void)
+{
+    u8  i;
+    u8  j;
+    u8  note;
+    u32 ret;
+
+    ret = 0;
+    for (i = 0; i < NOTES_PER_QTIME; i++)
+    {
+        note = cur_active_pattern[qtime][i][E_NOTE_VALUE];
+        if (note == NO_NOTE)
+            break;
+        note = NOTE_VALUE(note);
+        if (note / 12 == cur_octave)
+            ret ^= 1 << (noteskeys[note % 12]);
+        else if (note == 12 * (cur_octave + 1))
+            ret ^= 1 << (E_SOURCE_KEY_15);
+    }
+    return (ret);
+}
+
 void    update_leds_base_case(void)
 {
     u8  qt = 0;
@@ -85,7 +104,7 @@ void    update_leds_base_case(void)
         leds_base_case |= (1 << E_SOURCE_BUTTON_PLAY_PAUSE);
     if (cue_pressed)
         leds_base_case |= (1 << E_SOURCE_BUTTON_CUE);
-    leds_base_case |= (1 << cur_octave + E_SOURCE_ENCODER_0);
+    leds_base_case |= (1 << (cur_octave + E_SOURCE_ENCODER_0));
     switch (current_mode)
     {
         case E_MODE_INSTRU:
@@ -141,18 +160,7 @@ void    update_leds_base_case(void)
         case E_MODE_KEYBOARD:
             leds_base_case |= PIANO_KEYS;
             leds_base_case |= (1 << E_SOURCE_BUTTON_KEYBOARD);
-            if (sequencer_notes_count)
-            {
-                i = 0;
-                while (i < sequencer_notes_count)
-                {
-                    if (sequencer_notes[i] / 12 == cur_octave)
-                        leds_base_case ^= 1 << (noteskeys[sequencer_notes[i] % 12]);
-                    else if (sequencer_notes[i] == 12 * (cur_octave + 1))
-                        leds_base_case ^= 1 << (E_SOURCE_KEY_15);
-                    ++i;
-                }
-            }
+            leds_base_case ^= keyboard_get_playing_notes();
             display_LEDs();
             break;
         case E_MODE_EDIT_KEYBOARD:
