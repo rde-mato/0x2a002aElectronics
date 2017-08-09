@@ -42,12 +42,16 @@ void    int_init_UART(void)
 
 void __ISR(_UART_1_VECTOR, IPL5AUTO) UART1_TX_handler(void)
 {
-    U1TXREG = UART1_buf[UART1_buf_index++];
-    if (--UART1_buf_len == 0)
+    if (UART1_buf_len == 0)
     {
-       UART1_TX_INT_ENABLE = INT_DISABLED;
-       if (UART1_idle_callback)
-         UART1_idle_callback();
+        UART1_TX_INT_ENABLE = INT_DISABLED;
+        if (UART1_idle_callback)
+            UART1_idle_callback();
+    }
+    else
+    {
+        U1TXREG = UART1_buf[UART1_buf_index++];
+        UART1_buf_len--;
     }
     UART1_TX_INT_FLAG_CLR;
 }
