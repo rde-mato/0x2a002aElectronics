@@ -441,6 +441,7 @@ void    eeprom_chip_erase(void)
     CS_EEPROM = CS_LINE_UP;
 
     no_notes_everywhere();
+    sequencer_pause();
 }
 
 
