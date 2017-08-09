@@ -279,13 +279,13 @@ void	main_encoder_handler(u8 event_type)
                 }
                 else if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_LOAD_TO_SD)
                 {
-                    playing = MUSIC_PAUSE;
+                    sequencer_pause();
                     request_template(TEMPLATE_LOADING_IN_PROGRESS);
                     copy_EEPROM_to_SD();
                 }
                 else if (menu_items[menu_item_highlighted] == E_MENU_ITEMS_LOAD_FROM_SD)
                 {
-                    playing = MUSIC_PAUSE;
+                    sequencer_pause();
                     request_template(TEMPLATE_LOADING_IN_PROGRESS);
                     copy_SD_to_EEPROM();
                 }
@@ -366,14 +366,13 @@ void	main_encoder_handler(u8 event_type)
 
 void	button_play_handler(u8 event_type)
 {
-    u8 i;
-
     switch (event_type)
     {
         case E_KEY_PRESSED:
-            playing = !playing;
-            for (i = 0; i < INSTRUMENTS_COUNT; i++)
-                midi_control_change(i, MCMM_ALL_NOTES_OFF, 0x00);
+            if (playing)
+                sequencer_pause();
+            else
+                sequencer_play();
             update_leds_base_case();
             break;
         case E_KEY_RELEASED:

@@ -36,6 +36,20 @@ void    sequencer_manager(void)
     }
 }*/
 
+void    sequencer_pause(void)
+{
+    int i;
+
+    playing = MUSIC_PAUSE;
+    for (i = 0; i < INSTRUMENTS_COUNT; i++)
+        midi_control_change(i, MCMM_ALL_NOTES_OFF, 0x00);
+}
+
+void    sequencer_play(void)
+{
+    playing = MUSIC_PLAYING;
+}
+
 void    qtime_generate_note_off(u8 instrument, u8 last_qt[][ATTRIBUTES_PER_NOTE], u8 new_qt[][ATTRIBUTES_PER_NOTE])
 {
     u8  i;
