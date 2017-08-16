@@ -172,6 +172,7 @@ void	active_instrument_init(void)
 
 void	update_cur_instrument(u8 new_cur_instrument)
 {
+	memcpy(active_patterns_array[cur_instrument], cur_active_pattern, pattern_size);
 	cur_instrument = new_cur_instrument;
 	cur_pattern = active_pattern_per_instrument[new_cur_instrument];
 	memcpy(cur_active_pattern, active_patterns_array[new_cur_instrument], pattern_size);

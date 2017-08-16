@@ -160,6 +160,10 @@ void	display_current_template(void)
 				snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "SD CARD ERROR", 0);
 				snprintf(lines[3], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
 				break ;
+			case TEMPLATE_SD_INIT_SUCCESSFUL:
+				snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "SD INIT SUCCESS", 0);
+				snprintf(lines[3], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
+				break ;
 
 		}
 		i = 0;

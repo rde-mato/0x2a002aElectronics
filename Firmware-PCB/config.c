@@ -1,21 +1,16 @@
-
 // PIC32MX150F128B Configuration Bit Settings
 
 // 'C' source line config statements
-
-#include <xc.h>
 
 // DEVCFG3
 // USERID = No Setting
 #pragma config PMDL1WAY = ON            // Peripheral Module Disable Configuration (Allow only one reconfiguration)
 #pragma config IOL1WAY = ON             // Peripheral Pin Select Configuration (Allow only one reconfiguration)
-//#pragma config FUSBIDIO = ON            // USB USID Selection (Controlled by the USB Module)
-//#pragma config FVBUSONIO = ON           // USB VBUS ON Selection (Controlled by USB Module)
 
 // DEVCFG2
 #pragma config FPLLIDIV = DIV_12        // PLL Input Divider (12x Divider)
 #pragma config FPLLMUL = MUL_24         // PLL Multiplier (24x Multiplier)
-#pragma config FPLLODIV = DIV_256       // System PLL Output Clock Divider (PLL Divide by 256)
+#pragma config FPLLODIV = DIV_2         // System PLL Output Clock Divider (PLL Divide by 2)
 
 // DEVCFG1
 #pragma config FNOSC = PRI              // Oscillator Selection Bits (Primary Osc (XT,HS,EC))
@@ -37,8 +32,11 @@
 #pragma config BWP = OFF                // Boot Flash Write Protect bit (Protection Disabled)
 #pragma config CP = OFF                 // Code Protect (Protection Disabled)
 
+// #pragma config statements should precede project file includes.
+// Use project enums instead of #define for ON and OFF.
 
-//
+#include <xc.h>
+
 //// PIC32MX150F128B Configuration Bit Settings
 //
 //// 'C' source line config statements
@@ -49,16 +47,16 @@
 //// USERID = No Setting
 //#pragma config PMDL1WAY = ON            // Peripheral Module Disable Configuration (Allow only one reconfiguration)
 //#pragma config IOL1WAY = ON             // Peripheral Pin Select Configuration (Allow only one reconfiguration)
-//#pragma config FUSBIDIO = ON            // USB USID Selection (Controlled by the USB Module)
-//#pragma config FVBUSONIO = ON           // USB VBUS ON Selection (Controlled by USB Module)
+////#pragma config FUSBIDIO = ON            // USB USID Selection (Controlled by the USB Module)
+////#pragma config FVBUSONIO = ON           // USB VBUS ON Selection (Controlled by USB Module)
 //
 //// DEVCFG2
-//#pragma config FPLLIDIV = DIV_1         // PLL Input Divider (1x Divider)
-//#pragma config FPLLMUL = MUL_16         // PLL Multiplier (16x Multiplier)
-//#pragma config FPLLODIV = DIV_4         // System PLL Output Clock Divider (PLL Divide by 4)
+//#pragma config FPLLIDIV = DIV_12        // PLL Input Divider (12x Divider)
+//#pragma config FPLLMUL = MUL_24         // PLL Multiplier (24x Multiplier)
+//#pragma config FPLLODIV = DIV_256       // System PLL Output Clock Divider (PLL Divide by 256)
 //
 //// DEVCFG1
-//#pragma config FNOSC = PRIPLL           // Oscillator Selection Bits (Primary Osc w/PLL (XT+,HS+,EC+PLL))
+//#pragma config FNOSC = PRI              // Oscillator Selection Bits (Primary Osc (XT,HS,EC))
 //#pragma config FSOSCEN = OFF            // Secondary Oscillator Enable (Disabled)
 //#pragma config IESO = ON                // Internal/External Switch Over (Enabled)
 //#pragma config POSCMOD = XT             // Primary Oscillator Configuration (XT osc mode)
@@ -76,4 +74,4 @@
 //#pragma config PWP = OFF                // Program Flash Write Protect (Disable)
 //#pragma config BWP = OFF                // Boot Flash Write Protect bit (Protection Disabled)
 //#pragma config CP = OFF                 // Code Protect (Protection Disabled)
-//
+

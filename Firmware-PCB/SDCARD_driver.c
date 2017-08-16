@@ -5,6 +5,7 @@
 
 u32					SD_return; // trouver un nom explicite - je ne sais plus ce que ca fait
 u8					SD_error = 0;
+u8					SD_init_success = FALSE; // temporaire, pour le debug
 static u8				SD_type = SD_SDSC;
 static u32				SD_block_number = 0;
 static u16				SD_rw_length;
@@ -92,7 +93,10 @@ void	SD_card_init(void)
 		R1_response = SD_command_retry(55, 0x0, 0x65, SD_R1);
 		R1_response = SD_command_retry(41, 0x0, 0xE5, SD_R1);
 		if (R1_response == 0x00)
-			break ;
+				{
+					SD_init_success = TRUE;
+					break ;
+				}
 	}
 	R1_response = SD_command_retry(58, 0x0, 0x01, SD_R3); // reads the OCR register, if bit 30 of OCR is 0 then SDSC else SDHC or SDXC
 	if (SD_return & (1 << 30))

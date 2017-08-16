@@ -27,6 +27,7 @@ extern u8	cur_octave;
 extern u8	cur_velocity;
 extern u8	cur_encoder;
 extern u8	playing;
+extern u8					SD_init_success; // temporaire, pour le debug
 u8			SD_initialzed = 0;
 u8			edit_pressed = 0;
 u8			tap_pressed = 0;
@@ -240,7 +241,10 @@ void	main_encoder_handler(u8 event_type)
 			{
 				default_template = TEMPLATE_MAIN_MENU;
 				menu_item_highlighted = 0;
-				request_template(TEMPLATE_MAIN_MENU);
+				if (SD_init_success)
+					request_template(TEMPLATE_SD_INIT_SUCCESSFUL);
+				else
+					request_template(TEMPLATE_MAIN_MENU);
 
 			}
 			else if (default_template == TEMPLATE_MAIN_MENU)
