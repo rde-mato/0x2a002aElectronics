@@ -1,3 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?><project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1"/>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/Users/laurent/0x2a002a/Firmware-PCB/HT16_leds_driver.c</file>
+            <file>file:/Users/laurent/0x2a002a/Firmware-PCB/config.c</file>
+            <file>file:/Users/laurent/0x2a002a/Firmware-PCB/I2C_driver.c</file>
+            <file>file:/Users/laurent/0x2a002a/Firmware-PCB/memory_and_save.c</file>
+            <file>file:/Users/laurent/0x2a002a/Firmware-PCB/HT16_keys_driver.c</file>
+            <file>file:/Users/laurent/0x2a002a/Firmware-PCB/LCD.h</file>
+            <file>file:/Users/laurent/0x2a002a/Firmware-PCB/encoders_driver.c</file>
+            <file>file:/Users/laurent/0x2a002a/Firmware-PCB/LCD_driver.c</file>
+            <file>file:/Users/laurent/0x2a002a/Firmware-PCB/SPI_driver.c</file>
+            <file>file:/Users/laurent/0x2a002a/Firmware-PCB/EEPROM_driver.c</file>
+            <file>file:/Users/laurent/0x2a002a/Firmware-PCB/LCD_templates.c</file>
+            <file>file:/Users/laurent/0x2a002a/Firmware-PCB/timers_driver.c</file>
+            <file>file:/Users/laurent/0x2a002a/Firmware-PCB/SDCARD_driver.c</file>
+            <file>file:/Users/laurent/0x2a002a/Firmware-PCB/UART_driver.c</file>
+            <file>file:/Users/laurent/0x2a002a/Firmware-PCB/input_handler.c</file>
+        </group>
+    </open-files>
 </project-private>
