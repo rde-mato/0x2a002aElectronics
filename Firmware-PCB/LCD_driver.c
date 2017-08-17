@@ -347,7 +347,7 @@ void    LCD_clear(void)
     while (line < 8)
     {
         pos = 0;
-        while (pos < 21)
+        while (pos < CHARS_PER_LINE)
             LCD_putchar(line, pos++, ' ');
         line++;
     }

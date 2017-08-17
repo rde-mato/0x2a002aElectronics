@@ -55,8 +55,8 @@ void    display_current_template(void)
     static u8 last_encoder = 0;
     u8  lines[LINES_COUNT][CHARS_PER_LINE + 1] = { 0 };
     u8  i = 0;
-    u8  s1[CHARS_PER_LINE + 1];
-    u8  s2[CHARS_PER_LINE + 1];
+    u8  s1[CHARS_PER_LINE + 1] = "";
+    u8  s2[CHARS_PER_LINE + 1] = "";
 
     if (cur_template == TEMPLATE_ENCODER && cur_template == previous)
     {
