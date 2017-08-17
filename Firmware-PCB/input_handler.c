@@ -2,6 +2,7 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
+
 extern u8   encoder_midi_cc[8];
 extern u8   qtime;
 extern u8   HT16_write_leds_request;
@@ -33,7 +34,7 @@ u8          cur_note = 36;
 u8          current_mode = E_MODE_PATTERN;
 u8          default_template = TEMPLATE_DEFAULT;
 u8          cur_octave = 3;
-u8          cur_velocity = 0x40;
+u8          cur_velocity = 100;
 u8          cur_encoder;
 u8          playing = MUSIC_PAUSE;
 u8          menu_items[6];
@@ -194,6 +195,7 @@ void	keys_handler(u8 event_type, u8 event_source)
 
 void	encoders_handler(u8 event_type, u8 event_source)
 {
+    u16 new_value;
 
     cur_encoder = event_source - E_SOURCE_ENCODER_0;
     switch (event_type)
@@ -205,12 +207,11 @@ void	encoders_handler(u8 event_type, u8 event_source)
             }
             else
             {
-                if (encoders_values[cur_encoder] != 0xFF)
-                    encoders_values[cur_encoder]++;
-                if (encoders_values[cur_encoder] & 0x01)
+                if ((new_value = encoders_values[cur_encoder] + ENCODERS_STEP) <= 0xFF)
                 {
+                    encoders_values[cur_encoder] = new_value;
                     //encoders_dirty |= 1 << cur_encoder; Entraine des problemes d affichage.
-                    midi_control_change(0x00, encoder_midi_cc[cur_encoder], encoders_values[cur_encoder] / 2);
+                    midi_control_change(0x00, encoder_midi_cc[cur_encoder], new_value);
                     request_template(TEMPLATE_ENCODER);
                 }
             }
@@ -222,12 +223,11 @@ void	encoders_handler(u8 event_type, u8 event_source)
             }
             else
             {
-                if (encoders_values[cur_encoder] != 0x00)
-                    encoders_values[cur_encoder]--;
-                if (encoders_values[cur_encoder] & 0x01)
+                if ((new_value = encoders_values[cur_encoder] - ENCODERS_STEP) <= 0xFF)
                 {
+                    encoders_values[cur_encoder] = new_value;
                     //encoders_dirty |= 1 << cur_encoder; Entraine des problemes d affichage.
-                    midi_control_change(0x00, encoder_midi_cc[cur_encoder], encoders_values[cur_encoder] / 2);
+                    midi_control_change(0x00, encoder_midi_cc[cur_encoder], new_value);
                     request_template(TEMPLATE_ENCODER);
                 }
             }
@@ -324,7 +324,8 @@ void	main_encoder_handler(u8 event_type)
             }
             else if (edit_pressed)
             {
-                cur_velocity++;
+                if (cur_velocity < 127)
+                    cur_velocity++;
                 request_template(TEMPLATE_VELOCITY);
             }
             else
@@ -350,7 +351,8 @@ void	main_encoder_handler(u8 event_type)
             }
             else if (edit_pressed)
             {
-                cur_velocity--;
+                if (cur_velocity > 0)
+                    cur_velocity--;
                 request_template(TEMPLATE_VELOCITY);
             }
             else
