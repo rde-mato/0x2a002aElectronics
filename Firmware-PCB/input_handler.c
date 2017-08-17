@@ -40,6 +40,8 @@ u8          menu_items[6];
 u8          menu_items_count;
 u8          menu_item_highlighted;
 
+extern const   size_t pattern_size;
+
 
 void    no_notes_everywhere(void)
 {
@@ -79,6 +81,7 @@ void	keys_handler(u8 event_type, u8 event_source)
             {
                 case E_KEY_PRESSED:
                     cur_pattern = event_source;
+                    active_pattern_per_instrument[cur_instrument] = event_source;
                     qtime_generate_note_off(cur_instrument, cur_active_pattern[qtime - 1], active_instrument[cur_pattern][qtime]);
                     update_after_pattern_change();
                     request_template(TEMPLATE_PATTERN);
@@ -173,8 +176,10 @@ void	keys_handler(u8 event_type, u8 event_source)
             switch (event_type)
             {
                     case E_KEY_PRESSED:
-                        memcpy(cur_active_pattern, active_patterns_array[event_source], sizeof(cur_active_pattern));
+                        memcpy(active_patterns_array[cur_instrument], cur_active_pattern, pattern_size);
+                        memcpy(cur_active_pattern, active_patterns_array[event_source], pattern_size);
                         cur_instrument = event_source;
+                        cur_pattern = active_pattern_per_instrument[cur_instrument];
                         load_cur_instrument_from_eeprom();
                         break;
                     case E_KEY_RELEASED:
@@ -243,8 +248,8 @@ void	main_encoder_handler(u8 event_type)
     menu_items_count = 0;
     if (SD_IS_PRESENT && !SD_initialzed)
     {
-        SD_card_init();
-        SD_initialzed = 1;
+        if (SD_card_init())
+            SD_initialzed = 1;
     }
     else if (!SD_IS_PRESENT && SD_initialzed)
         SD_initialzed = 0;
