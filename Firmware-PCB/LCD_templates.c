@@ -60,7 +60,7 @@ void    display_current_template(void)
 
     if (cur_template == TEMPLATE_ENCODER && cur_template == previous)
     {
-        snprintf(s1, CHARS_PER_LINE + 1, "%3d", encoders_values[cur_encoder]);
+        snprintf(s1, CHARS_PER_LINE + 1, "%3d", (encoders_values[cur_encoder] + ENCODERS_STEP >= ENCODERS_MAX ? 100 :  100 * encoders_values[cur_encoder] / ENCODERS_MAX));
         LCD_print_char(3, 11, cur_encoder + '1' + 0x80);
         lcd_chars[3][11] = cur_encoder + '1' + 0x80;
         LCD_print_char(4, 7, s1[0]);
@@ -92,7 +92,7 @@ void    display_current_template(void)
             case TEMPLATE_ENCODER:
                 snprintf(s1, CHARS_PER_LINE + 1, "%10s %d%20c", "ENCODER", cur_encoder + 1, 0);
                 snprintf(lines[3], CHARS_PER_LINE + 1, "%10s", negate_string(s1, s2));
-                snprintf(lines[4], CHARS_PER_LINE + 1, "%10d", encoders_values[cur_encoder]);
+                snprintf(lines[4], CHARS_PER_LINE + 1, "%10d%%", (encoders_values[cur_encoder] + ENCODERS_STEP >= ENCODERS_MAX ? 100 :  100 * encoders_values[cur_encoder] / ENCODERS_MAX));
                 break;
             case TEMPLATE_MAIN_MENU:
                 snprintf(s1, CHARS_PER_LINE + 1, "%10s%20c", "MAIN MENU", 0);

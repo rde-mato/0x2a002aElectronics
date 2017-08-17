@@ -25,7 +25,7 @@ u8          active_patterns_array[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PE
 u8          active_instrument[PATTERNS_PER_INSTRUMENT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 u16         active_instruments_u16 = 1;
 u8          active_pattern_per_instrument[INSTRUMENTS_COUNT] = { 0 };
-u8          encoders_values[8] = { 0x0F };
+u8          encoders_values[8] = { 0 };
 u8          encoders_dirty = 0x00;
 
 u8          cur_instrument = 0;
@@ -207,7 +207,7 @@ void	encoders_handler(u8 event_type, u8 event_source)
             }
             else
             {
-                if ((new_value = encoders_values[cur_encoder] + ENCODERS_STEP) <= 0xFF)
+                if ((new_value = encoders_values[cur_encoder] + ENCODERS_STEP) <= ENCODERS_MAX)
                 {
                     encoders_values[cur_encoder] = new_value;
                     //encoders_dirty |= 1 << cur_encoder; Entraine des problemes d affichage.
@@ -223,7 +223,7 @@ void	encoders_handler(u8 event_type, u8 event_source)
             }
             else
             {
-                if ((new_value = encoders_values[cur_encoder] - ENCODERS_STEP) <= 0xFF)
+                if ((new_value = encoders_values[cur_encoder] - ENCODERS_STEP) <= ENCODERS_MAX)
                 {
                     encoders_values[cur_encoder] = new_value;
                     //encoders_dirty |= 1 << cur_encoder; Entraine des problemes d affichage.
@@ -233,6 +233,7 @@ void	encoders_handler(u8 event_type, u8 event_source)
             }
             break;
         case E_KEY_PRESSED:
+            midi_note_off(cur_instrument, cur_note, cur_velocity);
             cur_octave = cur_encoder;
             cur_note = cur_note % 12 + 12 * cur_octave;
             update_leds_base_case();
@@ -395,7 +396,9 @@ void	button_cue_handler(u8 event_type)
     {
         case E_KEY_PRESSED:
             TIMER2_VALUE = 0;
+            sequencer_pause();
             qtime = 0;
+            sequencer_play();
             cue_pressed = 1;
             update_leds_base_case();
             break;
@@ -541,6 +544,8 @@ void    combination_handler(u32 source)
             finish = i;
             if (start >= E_SOURCE_KEY_0 && finish <= E_SOURCE_KEY_15)
             {
+                if (qtime >= start && qtime < finish && leds_base_case & (1 << qtime))
+                        midi_note_off(cur_instrument, cur_note, cur_velocity);
                 all_notes_on = 1;
                 i = start + 1;
                 while (all_notes_on && i < finish)

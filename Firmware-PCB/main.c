@@ -21,6 +21,7 @@ int main(void)
     no_notes_everywhere();
     initial_eeprom_download();
     request_template(TEMPLATE_DEFAULT);
+    set_bpm();
 
     INT_init();
     HT16_init();
