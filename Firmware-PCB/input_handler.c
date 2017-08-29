@@ -27,8 +27,7 @@ extern u8	cur_octave;
 extern u8	cur_velocity;
 extern u8	cur_encoder;
 extern u8	playing;
-extern u8					SD_init_success; // temporaire, pour le debug
-u8			SD_initialzed = 0;
+u8			SD_initialized = 0;
 u8			edit_pressed = 0;
 u8			tap_pressed = 0;
 u8			cue_pressed = 0;
@@ -164,50 +163,51 @@ void	keys_handler(u8 event_type, u8 event_source)
 
 void	encoders_handler(u8 event_type, u8 event_source)
 {
-	cur_encoder = event_source - E_SOURCE_ENCODER_0;
-	switch (event_type)
-	{
-		case E_ENCODER_TURNED_RIGHT:
-			if (edit_pressed)
-			{
+    u16 new_value;
 
-			}
-			else
-			{
-				if (encoders_values[cur_encoder] != 0xFF)
-					encoders_values[cur_encoder]++;
-				if (encoders_values[cur_encoder] & 0x01)
-				{
-					//encoders_dirty |= 1 << cur_encoder; Entraine des problemes d affichage.
-					midi_control_change(0x00, encoder_midi_cc[cur_encoder], encoders_values[cur_encoder] / 2);
-					request_template(TEMPLATE_ENCODER);
-				}
-			}
-			break;
-		case E_ENCODER_TURNED_LEFT:
-			if (edit_pressed)
-			{
+    cur_encoder = event_source - E_SOURCE_ENCODER_0;
+    switch (event_type)
+    {
+        case E_ENCODER_TURNED_RIGHT:
+            if (edit_pressed)
+            {
+                
+            }
+            else
+            {
+				if ((new_value = encoders_values[cur_encoder] + ENCODERS_STEP) <= ENCODERS_MAX)
+                {
+                    encoders_values[cur_encoder] = new_value;
+                    //encoders_dirty |= 1 << cur_encoder; Entraine des problemes d affichage.
+                    midi_control_change(0x00, encoder_midi_cc[cur_encoder], new_value);
+                    request_template(TEMPLATE_ENCODER);
+                }
+            }
+            break;
+        case E_ENCODER_TURNED_LEFT:
+            if (edit_pressed)
+            {
 
-			}
-			else
-			{
-				if (encoders_values[cur_encoder] != 0x00)
-					encoders_values[cur_encoder]--;
-				if (encoders_values[cur_encoder] & 0x01)
-				{
-					//encoders_dirty |= 1 << cur_encoder; Entraine des problemes d affichage.
-					midi_control_change(0x00, encoder_midi_cc[cur_encoder], encoders_values[cur_encoder] / 2);
-					request_template(TEMPLATE_ENCODER);
-				}
-			}
-			break;
-		case E_KEY_PRESSED:
-			cur_octave = cur_encoder;
-			cur_note = cur_note % 12 + 12 * cur_octave;
-			update_leds_base_case();
-			request_template(TEMPLATE_OCTAVE);
-			break;
-	}
+            }
+            else
+            {
+				if ((new_value = encoders_values[cur_encoder] - ENCODERS_STEP) <= ENCODERS_MAX)
+                {
+                    encoders_values[cur_encoder] = new_value;
+                    //encoders_dirty |= 1 << cur_encoder; Entraine des problemes d affichage.
+                    midi_control_change(0x00, encoder_midi_cc[cur_encoder], new_value);
+                    request_template(TEMPLATE_ENCODER);
+                }
+            }
+            break;
+        case E_KEY_PRESSED:
+			midi_note_off(cur_instrument, cur_note, cur_velocity);
+            cur_octave = cur_encoder;
+            cur_note = cur_note % 12 + 12 * cur_octave;
+            update_leds_base_case();
+            request_template(TEMPLATE_OCTAVE);
+            break;
+    }
 }
 
 void	main_encoder_handler(u8 event_type)
@@ -215,13 +215,13 @@ void	main_encoder_handler(u8 event_type)
 	static u8	prev_turn_direction = E_ENCODER_NO_DIRECTION;
 
 	menu_items_count = 0;
-	if (SD_IS_PRESENT && !SD_initialzed)
+	if (SD_IS_PRESENT && !SD_initialized)
 	{
-		SD_card_init();
-		SD_initialzed = 1;
+		if (SD_card_init())
+			SD_initialized = 1;
 	}
-	else if (!SD_IS_PRESENT && SD_initialzed)
-		SD_initialzed = 0;
+	else if (!SD_IS_PRESENT && SD_initialized)
+		SD_initialized = 0;
 	if (pattern_in_pastebin)
 		menu_items[menu_items_count++] = E_MENU_ITEMS_PASTE_PATTERN;
 	menu_items[menu_items_count++] = E_MENU_ITEMS_COPY_PATTERN;
@@ -241,10 +241,7 @@ void	main_encoder_handler(u8 event_type)
 			{
 				default_template = TEMPLATE_MAIN_MENU;
 				menu_item_highlighted = 0;
-				if (SD_init_success)
-					request_template(TEMPLATE_SD_INIT_SUCCESSFUL);
-				else
-					request_template(TEMPLATE_MAIN_MENU);
+				request_template(TEMPLATE_MAIN_MENU);
 
 			}
 			else if (default_template == TEMPLATE_MAIN_MENU)
@@ -296,7 +293,8 @@ void	main_encoder_handler(u8 event_type)
 			}
 			else if (edit_pressed)
 			{
-				cur_velocity++;
+				if (cur_velocity < 127)
+					cur_velocity++;
 				request_template(TEMPLATE_VELOCITY);
 			}
 			else
@@ -322,7 +320,8 @@ void	main_encoder_handler(u8 event_type)
 			}
 			else if (edit_pressed)
 			{
-				cur_velocity--;
+				if (cur_velocity > 0)
+					cur_velocity--;
 				request_template(TEMPLATE_VELOCITY);
 			}
 			else
@@ -365,7 +364,9 @@ void	button_cue_handler(u8 event_type)
 	{
 		case E_KEY_PRESSED:
 			TIMER2_VALUE = 0;
+			sequencer_pause();
 			qtime = 0;
+			sequencer_play();
 			cue_pressed = 1;
 			update_leds_base_case();
 			break;
@@ -511,6 +512,8 @@ void combination_handler(u32 source)
 			finish = i;
 			if (start >= E_SOURCE_KEY_0 && finish <= E_SOURCE_KEY_15)
 			{
+				if (qtime >= start && qtime < finish && leds_base_case & (1 << qtime))
+                    midi_note_off(cur_instrument, cur_note, cur_velocity);
 				all_notes_on = 1;
 				i = start + 1;
 				while (all_notes_on && i < finish)

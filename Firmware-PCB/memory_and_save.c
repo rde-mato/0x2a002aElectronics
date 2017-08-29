@@ -13,7 +13,7 @@ u8				active_patterns_array[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_QTIM
 u8				active_instrument[PATTERNS_PER_INSTRUMENT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
 u16				active_instruments_u16 = 1;
 u8				active_pattern_per_instrument[INSTRUMENTS_COUNT] = { 0 };
-u8				encoders_values[8] = { 0x0F };
+u8				encoders_values[8] = { 0x00 };
 u8				cur_instrument = 0;
 u8				cur_pattern = 0;
 u8				cur_note = 36;

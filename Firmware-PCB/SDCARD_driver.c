@@ -75,13 +75,12 @@ u8	SD_command_retry(u8 cmd, u32 arg, u8 crc, u8 restype)
 	return (ret);
 }
 
-void	SD_card_init(void)
+u8	SD_card_init(void)
 {
 	u8	R1_response;
 	u32	retries = SD_RETRIES;
+	u8 ret = 0;
 
-	// baisser le baud rate du spi
-	// SPI1BRG = 9; //divise la frequence de SCK par 20 = 2 * (9 + 1)
 	SPI1BRG = 3; //divise la frequence de SCK par 6 = 2 * (2 + 1)
 	send_lots_clk();
 	R1_response = SD_command_retry(0, 0x0, 0x95, SD_R1);
@@ -93,17 +92,16 @@ void	SD_card_init(void)
 		R1_response = SD_command_retry(55, 0x0, 0x65, SD_R1);
 		R1_response = SD_command_retry(41, 0x0, 0xE5, SD_R1);
 		if (R1_response == 0x00)
-				{
-					SD_init_success = TRUE;
-					break ;
-				}
+			break;
 	}
+	if (R1_response == 0x00)
+		ret = 1;
 	R1_response = SD_command_retry(58, 0x0, 0x01, SD_R3); // reads the OCR register, if bit 30 of OCR is 0 then SDSC else SDHC or SDXC
 	if (SD_return & (1 << 30))
 		SD_type = SD_SDHC;
 	R1_response = SD_command_retry(16, SD_BLOCK_SIZE, 0x01, SD_R1); // set block length to 512
-	// remonter le baud rate du spi
 	SPI1BRG = 0; //set baudrate 1Mhz suivant 8 Mhz du pbclk
+	return (ret);
 }
 
 void	SM_SD_read_block_callback(void)

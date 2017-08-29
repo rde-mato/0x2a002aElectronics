@@ -8,8 +8,8 @@ u32			SPI_LCD_count = 0;
 u8			LCD_w = 0;
 u16			SPI_buf_LCD[LCD_BUF_MAX] = { 0 };
 u32			SPI_LCD_index = 0;
-u8			lcd_chars[8][21] = { ' ' };
-u8			lcd_changed_chars[8][21] = { 0 };
+u8			lcd_chars[8][CHARS_PER_LINE] = { ' ' };
+u8			lcd_changed_chars[8][CHARS_PER_LINE] = { 0 };
 u8			lcd_line_ptr = 0;
 u8			lcd_col_ptr = 1;
 u8			lcd_pos_ptr = 0;
@@ -300,7 +300,7 @@ void	LCD_print_char(u8 line, u8 pos, u8 c)
 {
 	u8	i = 0;
 
-	if (line > 8 || pos > 21)
+	if (line > 8 || pos > CHARS_PER_LINE)
 		return ;
 	pos = 6 * pos + 1;
 	while (i < 6)
@@ -317,7 +317,7 @@ void	LCD_print_changed_chars(void)
 	while (line < 8)
 	{
 		pos = 0;
-		while (pos < 21)
+		while (pos < CHARS_PER_LINE)
 		{
 			if (lcd_changed_chars[line][pos])
 			{
@@ -347,7 +347,7 @@ void	LCD_clear(void)
 	while (line < 8)
 	{
 		pos = 0;
-		while (pos < 21)
+		while (pos < CHARS_PER_LINE)
 			LCD_putchar(line, pos++, ' ');
 		line++;
 	}
