@@ -2,33 +2,20 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
-u8 			qtime = 0;
-extern u32	current_leds_on;
-extern u8	cur_note;
-extern u8	cur_instrument;
-extern u8	current_mode;
-extern u32	leds_base_case;
-extern u8	pattern_mode;
-extern u16	active_instruments_u16;
-extern u8	active_patterns_array[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
-extern u8	cur_active_pattern[QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
-extern u8	playing;
-extern u8	encoders_dirty;
-extern u8	encoder_midi_cc[8];
-extern u8	encoders_values[8];
+extern struct s_all all;
 
 void	sequencer_pause(void)
 {
 	int i;
 
-	playing = MUSIC_PAUSE;
+	all.playing = MUSIC_PAUSE;
 	for (i = 0; i < INSTRUMENTS_COUNT; i++)
 		midi_control_change(i, MCMM_ALL_NOTES_OFF, 0x00);
 }
 
 void	sequencer_play(void)
 {
-	playing = MUSIC_PLAYING;
+	all.playing = MUSIC_PLAYING;
 }
 
 void	qtime_generate_note_off(u8 instrument, u8 last_qt[][ATTRIBUTES_PER_NOTE], u8 new_qt[][ATTRIBUTES_PER_NOTE])
@@ -99,31 +86,31 @@ void	__ISR(_TIMER_2_VECTOR, IPL7AUTO) Timer2QTime(void)
 	u8	i;
 
 	display_LEDs();
-	if (playing == MUSIC_PLAYING)
+	if (all.playing == MUSIC_PLAYING)
 	{
 		for (i = 0; i < INSTRUMENTS_COUNT; i++)
 		{
-			if (active_instruments_u16 & (1 << i))
+			if (all.active_instruments_u16 & (1 << i))
 			{
-				if (i == cur_instrument)
-					qtime_generate_note_off(cur_instrument, cur_active_pattern[(qtime - 1) & 0xF], cur_active_pattern[qtime]);
+				if (i == all.cur_instrument)
+					qtime_generate_note_off(all.cur_instrument, all.cur_active_pattern[(all.qtime - 1) & 0xF], all.cur_active_pattern[all.qtime]);
 				else
-					qtime_generate_note_off(i, active_patterns_array[i][(qtime - 1) & 0xF], active_patterns_array[i][qtime]);
+					qtime_generate_note_off(i, all.active_patterns_array[i][(all.qtime - 1) & 0xF], all.active_patterns_array[i][all.qtime]);
 			}
 		}
 		for (i = 0; i < INSTRUMENTS_COUNT; i++)
 		{
-			if (active_instruments_u16 & (1 << i))
+			if (all.active_instruments_u16 & (1 << i))
 			{
-				if (i == cur_instrument)
-					qtime_generate_note_on(cur_instrument, cur_active_pattern[qtime]);
+				if (i == all.cur_instrument)
+					qtime_generate_note_on(all.cur_instrument, all.cur_active_pattern[all.qtime]);
 				else
-					qtime_generate_note_on(i, active_patterns_array[i][qtime]);
+					qtime_generate_note_on(i, all.active_patterns_array[i][all.qtime]);
 			}
 		}
 
-		if (current_mode == E_MODE_KEYBOARD)
+		if (all.cur_mode == E_MODE_KEYBOARD)
 			update_leds_base_case();
-		qtime = (qtime + 1) & 15;
+		all.qtime = (all.qtime + 1) & 15;
 	}
 }

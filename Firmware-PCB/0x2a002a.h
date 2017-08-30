@@ -25,6 +25,7 @@ typedef void			(* generic_callback)(void);
 # include "MIDI.h"
 # include <stdlib.h>
 # include <string.h>
+# include <strings.h>
 
 //extern u16 __g_qbeat_pr;
 
@@ -223,6 +224,38 @@ enum	E_MODES
 	E_MODE_INSTRU,
 	E_MODE_EDIT_KEYBOARD,
 	E_MODE_KEYBOARD
+};
+
+struct s_all {
+	u8	playing;
+	u8	qtime;
+	u8	cur_instrument;
+	u8	cur_pattern;
+	u8	cur_note;
+	u8	cur_octave;
+	u8	cur_velocity;
+	u8	cur_encoder;
+	u8	pattern_in_pastebin;
+	u8	loading_percentage;
+	u8	menu_items_count;
+	u8	SD_initialized;
+	u16 active_instruments_u16;
+	u32	current_key_scan;
+	u32	current_leds_on;
+	u32	leds_base_case;
+	u32	bpm_x100;
+	u8	encoders_values[ENCODERS_COUNT];
+	u8	cur_active_pattern[QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
+	u8	active_patterns_array[INSTRUMENTS_COUNT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
+	u8	active_instrument[PATTERNS_PER_INSTRUMENT][QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
+	u8	active_pattern_per_instrument[INSTRUMENTS_COUNT];
+	u8	pattern_pastebin[QTIME_PER_PATTERN][NOTES_PER_QTIME][ATTRIBUTES_PER_NOTE];
+	u8	lcd_chars[8][CHARS_PER_LINE];
+	enum E_MODES cur_mode;
+	enum E_LCD_TEMPLATES default_template;
+	enum E_LCD_TEMPLATES cur_template;
+	enum E_MENU_ITEMS menu_items[6];
+	enum E_MENU_ITEMS menu_item_highlighted;
 };
 
 #endif	/* OX2A002A_H */

@@ -3,12 +3,9 @@
 #include <stdlib.h>
 #include "0x2a002a.h"
 
-u32	bpm_x100 = INITIAL_BPM_x100;
-u16	__g_qbeat_pr = 0;
-u16	tap_button_old = 0;
-u16	tap_button_active = 0;
-u32	tap_timers[3] = { 0 };
-u8	tap_index = 0;
+extern struct s_all	all;
+static u32	tap_timers[3] = { 0 };
+static u8	tap_index = 0;
 
 void	__ISR(_TIMER_3_VECTOR, IPL1AUTO) Timer3TapButton(void)
 {
@@ -35,18 +32,23 @@ void	timer_3_init(void)
 
 void	set_bpm(void)
 {
-	TIMER2_PERIOD = (FREQUENCY * 15) / (256 * bpm_x100 / 100);
+	TIMER2_PERIOD = (FREQUENCY * 15) / (256 * all.bpm_x100 / 100);
 	TIMER2_VALUE = 0;
 }
 
 void	change_bpm(s8 incr, u8 rounded)
 {
-	bpm_x100 += incr;
-	if (bpm_x100 < 200)
-		bpm_x100 = 200;
+	all.bpm_x100 += incr;
+	if (all.bpm_x100 < 200)
+		all.bpm_x100 = 200;
 	if (rounded)
-		bpm_x100 = bpm_x100 - bpm_x100 % 100;
+		all.bpm_x100 = all.bpm_x100 - all.bpm_x100 % 100;
 	set_bpm();
+}
+
+inline void	bpm_reset_tap(void)
+{
+	tap_index = 0;
 }
 
 void	bpm_new_tap(void)
@@ -65,7 +67,7 @@ void	bpm_new_tap_release(void)
 	if (tap_index == 3 && T3CONbits.ON)
 	{
 		mean_tap = (tap_timers[0] + tap_timers[1] + tap_timers[2]) / 3;
-		bpm_x100 = (70.3125 * FREQUENCY) / (tap_timers[0] + tap_timers[1] + tap_timers[2]);//(100 * 60 * FREQUENCY / 256) / mean_tap;
+		all.bpm_x100 = (70.3125 * FREQUENCY) / (tap_timers[0] + tap_timers[1] + tap_timers[2]);//(100 * 60 * FREQUENCY / 256) / mean_tap;
 		tap_timers[0] = tap_timers[1];
 		tap_timers[1] = tap_timers[2];
 		tap_index = 2;

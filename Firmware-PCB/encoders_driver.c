@@ -2,8 +2,6 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
-u8	MCP_encoders_r = 0;
-
 void	pps_init_encoders(void)
 {
 	// Main encoder A

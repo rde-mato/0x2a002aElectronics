@@ -2,12 +2,11 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
-void			UART1_push(char *buf, char size);
-u8				sdhere = 0;
-midi_callback	midi_send = UART1_push;
+struct s_all	all;
 
 int	main(void)
 {
+	init_all_struct();
 	GPIO_and_PPS_init();
 	TIMER_init();
 	I2C1_init();
@@ -17,7 +16,6 @@ int	main(void)
 	LCD_init();
 	MCP_ENCODERS_init_blocking();
 	UART1_init();
-	memory_init(); // a regrouper dans une init de l'eeprom ?
 	initial_eeprom_download();
 	request_template(TEMPLATE_DEFAULT);
 	set_bpm();

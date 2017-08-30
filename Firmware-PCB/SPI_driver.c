@@ -11,11 +11,11 @@ void	SPI1_init(void)
 	SPI1BUF = 0;
 	SPI1BRG = 0; //set baudrate 1Mhz suivant 8 Mhz du pbclk
 	SPI1CONbits.CKE = 1;
-	SPI1CONbits.CKP = 0; // mode 00 tás vue
+	SPI1CONbits.CKP = 0; // mode 00
 	SPI1CONbits.MODE16 = 0;
 	SPI1CONbits.MODE32 = 0;
-	SPI1CONbits.MSTEN = 1; //activer master mode
-	SPI1CONbits.ON = 1; //ON SPI1
+	SPI1CONbits.MSTEN = 1;
+	SPI1CONbits.ON = 1;
 
 	memset(&SPI1Fbits, 0, sizeof(SPI1Fbits)); // initialisation of SPI flags
 }
@@ -71,12 +71,12 @@ void	__ISR(_SPI_1_VECTOR, IPL4AUTO) SPI1Handler(void)
 	}
 }
 
-void	SPI1_set_priority(u8 action)
+inline void	SPI1_set_priority(u8 action)
 {
 	SPI1_action = action;
 }
 
-void	SPI1_priority_manager(void)
+inline void	SPI1_priority_manager(void)
 {
 	if (!SPI1_READY)
 		return ;

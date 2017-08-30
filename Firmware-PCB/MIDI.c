@@ -1,7 +1,5 @@
 #include "0x2a002a.h"
 
-extern	 midi_callback	midi_send;
-
 void	midi_note_off(u8 channel, u8 note, u8 velocity)
 {
 	u8	buf[3];

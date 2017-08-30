@@ -32,6 +32,7 @@
 #define MCP_ENC_READ_INT_FLAG	0x410E0000
 #define MCP_ENC_READ_INT_CAP	0x41100000
 
+#define ENCODERS_COUNT			8
 #define ENCODERS_STEP           2
 #define ENCODERS_MAX			127
 

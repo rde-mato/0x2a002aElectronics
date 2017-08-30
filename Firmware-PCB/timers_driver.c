@@ -2,12 +2,11 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
-const u16			timer4_prescale = 256;
-generic_callback	timer4_callbacks[TIMER4_BUF_SIZE] = { NULL };
-u16					timer4_periods[TIMER4_BUF_SIZE] = { 0 };
-u8					timer4_count = 0;
-u8					timer4_index = 0;
-
+static const u16		timer4_prescale = 256;
+static generic_callback	timer4_callbacks[TIMER4_BUF_SIZE] = { NULL };
+static u16				timer4_periods[TIMER4_BUF_SIZE] = { 0 };
+static u8				timer4_count = 0;
+static u8				timer4_index = 0;
 
 void	timer4_start(void)
 {

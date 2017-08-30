@@ -3,12 +3,12 @@
 #include "0x2a002a.h"
 
 
+extern struct s_all all;
+
 u8			HT16_read_keys_request = 0;
-u32			current_key_scan = 0;
-u32			previous_key_scan = 0;
-u32			poll_count = 0;
-u32			buttons_timers[32] = {0};
-const u32	long_pressed_limit = FREQUENCY / 256;
+static u32			previous_key_scan = 0;
+static u32			buttons_timers[32] = {0};
+static const u32	long_pressed_limit = FREQUENCY / 256;
 extern u8	I2C1_read_buf[];
 
 void	int_init_HT16_press(void)
@@ -45,7 +45,7 @@ void	process_key_scan(void)
 	u8			unchanged_pressed_count;
 	u8			i;
 
-	current_key_scan = (I2C1_read_buf[0] << 0 )
+	all.current_key_scan = (I2C1_read_buf[0] << 0 )
 		| ((I2C1_read_buf[1] & 0b1111) << 8)
 		| (I2C1_read_buf[2] << 12)
 		| ((I2C1_read_buf[3] & 0b1111) << 20)
@@ -54,10 +54,10 @@ void	process_key_scan(void)
 	last_poll_interval = TIMER1_VALUE;
 	TIMER1_VALUE = 0;
 
-	changed_buttons = current_key_scan ^ previous_key_scan;
-	unchanged_pressed_buttons = current_key_scan & previous_key_scan;
-	newly_pressed_buttons = current_key_scan & ~previous_key_scan;
-	newly_released_buttons = ~current_key_scan & previous_key_scan;
+	changed_buttons = all.current_key_scan ^ previous_key_scan;
+	unchanged_pressed_buttons = all.current_key_scan & previous_key_scan;
+	newly_pressed_buttons = all.current_key_scan & ~previous_key_scan;
+	newly_released_buttons = ~all.current_key_scan & previous_key_scan;
 
 	if (newly_pressed_buttons)
 	{
@@ -72,7 +72,7 @@ void	process_key_scan(void)
 			++i;
 		}
 		if (unchanged_pressed_count == 1)
-			event_handler(E_KEY_COMBINATION_PRESSED, current_key_scan);
+			event_handler(E_KEY_COMBINATION_PRESSED, all.current_key_scan);
 	}
 	if (newly_released_buttons)
 	{
@@ -110,7 +110,7 @@ void	process_key_scan(void)
 		while (i < 32)
 			buttons_timers[i++] = 0;
 	}
-	previous_key_scan = current_key_scan;
+	previous_key_scan = all.current_key_scan;
 
 	if (!previous_main_encoder && main_encoder)
 	{
@@ -119,7 +119,7 @@ void	process_key_scan(void)
 	}
 	previous_main_encoder = main_encoder;
 
-	if (!current_key_scan && !main_encoder)
+	if (!all.current_key_scan && !main_encoder)
 	{
 		TIMER5_OFF;
 		HT16_INT_ENABLE = INT_ENABLED;

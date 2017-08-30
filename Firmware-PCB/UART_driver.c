@@ -2,10 +2,10 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
-u8					UART1_buf[0x100];
-u8					UART1_buf_index = 0;
-u8					UART1_buf_len = 0;
-generic_callback	UART1_idle_callback = NULL;
+static u8				UART1_buf[0x100];
+static u8				UART1_buf_index = 0;
+static u8				UART1_buf_len = 0;
+static generic_callback	UART1_idle_callback = NULL;
 
 u8	UART1_is_idle(void)
 {

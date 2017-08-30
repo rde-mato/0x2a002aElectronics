@@ -2,18 +2,15 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
-extern u8	state;
+extern struct s_all	all;
 
-u32			SPI_LCD_count = 0;
-u8			LCD_w = 0;
-u16			SPI_buf_LCD[LCD_BUF_MAX] = { 0 };
-u32			SPI_LCD_index = 0;
-u8			lcd_chars[8][CHARS_PER_LINE] = { ' ' };
-u8			lcd_changed_chars[8][CHARS_PER_LINE] = { 0 };
-u8			lcd_line_ptr = 0;
-u8			lcd_col_ptr = 1;
-u8			lcd_pos_ptr = 0;
-u8			lcd_current_side = LCD_LEFT;
+static u32			SPI_LCD_count = 0;
+static u16			SPI_buf_LCD[LCD_BUF_MAX] = { 0 };
+static u32			SPI_LCD_index = 0;
+static u8			lcd_changed_chars[8][CHARS_PER_LINE] = { 0 };
+static u8			lcd_line_ptr = 0;
+static u8			lcd_col_ptr = 1;
+static u8			lcd_current_side = LCD_LEFT;
 
 const u8	charset[][6] =
 {
@@ -322,7 +319,7 @@ void	LCD_print_changed_chars(void)
 			if (lcd_changed_chars[line][pos])
 			{
 				lcd_changed_chars[line][pos] = 0;
-				LCD_print_char(line, pos, lcd_chars[line][pos]);
+				LCD_print_char(line, pos, all.lcd_chars[line][pos]);
 			}
 			++pos;
 		}
@@ -332,9 +329,9 @@ void	LCD_print_changed_chars(void)
 
 void	LCD_putchar(u8 line, u8 pos, u8 c)
 {
-	if (lcd_chars[line][pos] != c)
+	if (all.lcd_chars[line][pos] != c)
 	{
-		lcd_chars[line][pos] = c;
+		all.lcd_chars[line][pos] = c;
 		lcd_changed_chars[line][pos] = 1;
 	}
 }

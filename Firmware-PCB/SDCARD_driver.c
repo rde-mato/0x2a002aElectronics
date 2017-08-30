@@ -3,15 +3,14 @@
 #include "0x2a002a.h"
 
 
-u32					SD_return; // trouver un nom explicite - je ne sais plus ce que ca fait
-u8					SD_error = 0;
-u8					SD_init_success = FALSE; // temporaire, pour le debug
+static u32				SD_return;
+static u8				SD_error = 0;
 static u8				SD_type = SD_SDSC;
 static u32				SD_block_number = 0;
 static u16				SD_rw_length;
 static u16				SD_rw_index = 0;
 static u8 			  	*SD_rw_ptr;
-static generic_callback			SD_rw_callback = NULL;
+static generic_callback	SD_rw_callback = NULL;
 
 void	send_lots_clk(void)
 {

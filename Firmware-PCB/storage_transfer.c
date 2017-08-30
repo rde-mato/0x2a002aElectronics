@@ -2,13 +2,11 @@
 #include <sys/attribs.h>
 #include "0x2a002a.h"
 
-u8				loading_percentage = 0;
+extern struct s_all	all;
 static u8			transfer_buffer[SD_BLOCK_SIZE];
 static u16			cur_SD_block;
 static u16			cur_eeprom_address;
-const size_t			eeprom_size = INSTRUMENTS_COUNT * PATTERNS_PER_INSTRUMENT * QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE;
-const size_t			pattern_size = QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE;
-const size_t			instrument_size = PATTERNS_PER_INSTRUMENT * QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE;
+static const size_t	eeprom_size = INSTRUMENTS_COUNT * PATTERNS_PER_INSTRUMENT * QTIME_PER_PATTERN * NOTES_PER_QTIME * ATTRIBUTES_PER_NOTE;
 
 void				cb_copy_eeprom_to_sd_after_sd_write(void);
 void				cb_copy_eeprom_to_sd_after_eeprom_read(void);
@@ -26,7 +24,7 @@ void	cb_copy_eeprom_to_sd_after_sd_write(void)
     }
     else
     {
-        loading_percentage = 100 * cur_eeprom_address / eeprom_size;
+        all.loading_percentage = 100 * cur_eeprom_address / eeprom_size;
 	eeprom_read_callback(
 		cur_eeprom_address,
 		(u8 *)transfer_buffer,
@@ -53,7 +51,7 @@ void	copy_EEPROM_to_SD(void)
     {
         cur_SD_block = 0 ;
         cur_eeprom_address = 0;
-        loading_percentage = 0;
+        all.loading_percentage = 0;
 	eeprom_read_callback(
 		cur_eeprom_address,
 		(u8 *)transfer_buffer,
@@ -75,7 +73,7 @@ void	cb_copy_sd_to_eeprom_after_eeprom_write(void)
     else
     {
         cur_eeprom_address += SD_BLOCK_SIZE;
-        loading_percentage = 100 * cur_eeprom_address / eeprom_size;
+        all.loading_percentage = 100 * cur_eeprom_address / eeprom_size;
         request_template(TEMPLATE_LOADING_IN_PROGRESS);
         SD_read_block_callback(
                 cur_SD_block,
@@ -101,7 +99,7 @@ void	copy_SD_to_EEPROM(void)
     {
         cur_SD_block = 0 ;
         cur_eeprom_address = 0;
-        loading_percentage = 0;
+        all.loading_percentage = 0;
         SD_read_block_callback(
                 cur_SD_block,
                 (u8 *)transfer_buffer,
