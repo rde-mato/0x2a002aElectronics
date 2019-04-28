@@ -2,3 +2,4 @@
 **/*.o
 TP/Firmware/build
 TP/Firmware/dist
+.DS_Store
